@@ -222,7 +222,7 @@ Note: `prs.slides._sldIdLst` is python-pptx internal API but stable across 1.x; 
 - [ ] **Step 4: Run tests to verify they pass**
 
 Run: `python -m pytest "sfnl-pptx/tests/test_template.py" -v`
-Expected: 4 passed.
+Expected: 3 passed.
 
 - [ ] **Step 5: Commit**
 
