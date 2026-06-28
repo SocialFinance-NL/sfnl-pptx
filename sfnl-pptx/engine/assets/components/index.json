@@ -1,0 +1,122 @@
+[
+  {
+    "id": "title-standard",
+    "name": "Title slide",
+    "type": "title",
+    "tags": ["opening", "cover"],
+    "renderer": "template",
+    "source_layout": "1_Titelslide",
+    "slots": {
+      "title": {"placeholder_idx": 13},
+      "subtitle": {"placeholder_idx": 14}
+    },
+    "content_schema": {"title": "", "subtitle": ""},
+    "density": "low"
+  },
+  {
+    "id": "section-divider",
+    "name": "Section divider",
+    "type": "section",
+    "tags": ["divider", "transition"],
+    "renderer": "template",
+    "source_layout": "1_sectieslide_stijl1",
+    "slots": {
+      "title": {"placeholder_idx": 13},
+      "subtitle": {"placeholder_idx": 14}
+    },
+    "content_schema": {"title": "", "subtitle": ""},
+    "density": "low"
+  },
+  {
+    "id": "content-text",
+    "name": "Title + subtitle + body text",
+    "type": "content",
+    "tags": ["text", "agenda", "inhoud"],
+    "renderer": "template",
+    "source_layout": "1_Titel, subtitel, tekst",
+    "slots": {
+      "title": {"placeholder_idx": 0},
+      "subtitle": {"placeholder_idx": 1},
+      "body": {"placeholder_idx": 10}
+    },
+    "content_schema": {"title": "", "subtitle": "", "body": ["bullet"]},
+    "density": "medium"
+  },
+  {
+    "id": "comparison-two-col",
+    "name": "Two-column comparison",
+    "type": "comparison",
+    "tags": ["compare", "2-up", "columns"],
+    "renderer": "template",
+    "source_layout": "Titel, subtitel, twee tekstvakken",
+    "slots": {
+      "title": {"placeholder_idx": 0},
+      "subtitle": {"placeholder_idx": 1},
+      "left": {"placeholder_idx": 12},
+      "right": {"placeholder_idx": 13}
+    },
+    "content_schema": {"title": "", "subtitle": "", "left": ["bullet"], "right": ["bullet"]},
+    "density": "medium"
+  },
+  {
+    "id": "quote",
+    "name": "Quote",
+    "type": "quote",
+    "tags": ["quote", "testimonial"],
+    "renderer": "template",
+    "source_layout": "Quote",
+    "slots": {
+      "title": {"placeholder_idx": 0},
+      "attribution": {"placeholder_idx": 1}
+    },
+    "content_schema": {"title": "", "attribution": ""},
+    "density": "low"
+  },
+  {
+    "id": "content-cards",
+    "name": "Content with cards",
+    "type": "content-cards",
+    "tags": ["cards", "3-up", "custom"],
+    "renderer": "python-pptx",
+    "source_layout": "Leeg",
+    "slots": {},
+    "content_schema": {"title": "", "cards": [{"heading": "", "body": ""}]},
+    "density": "medium"
+  },
+  {
+    "id": "kpi-trio",
+    "name": "Three big-number KPIs",
+    "type": "kpi",
+    "tags": ["data", "metrics", "3-up", "no-chart"],
+    "renderer": "python-pptx",
+    "source_layout": "Leeg",
+    "slots": {},
+    "content_schema": {"title": "", "kpis": [{"value": "", "label": ""}]},
+    "density": "low"
+  },
+  {
+    "id": "chart-static",
+    "name": "Simple static bar chart",
+    "type": "chart",
+    "tags": ["data", "chart", "bars", "custom"],
+    "renderer": "python-pptx",
+    "source_layout": "Leeg",
+    "slots": {},
+    "content_schema": {"title": "", "series": [{"label": "", "value": 0}]},
+    "density": "medium"
+  },
+  {
+    "id": "closing",
+    "name": "Closing / contact",
+    "type": "closing",
+    "tags": ["closing", "contact", "thanks"],
+    "renderer": "template",
+    "source_layout": "1_Titelslide",
+    "slots": {
+      "title": {"placeholder_idx": 13},
+      "subtitle": {"placeholder_idx": 14}
+    },
+    "content_schema": {"title": "", "subtitle": ""},
+    "density": "low"
+  }
+]
