@@ -1,0 +1,62 @@
+{
+  "by_slot": {
+    "dk1": {
+      "hex": "233348",
+      "name": "Dark slate"
+    },
+    "lt1": {
+      "hex": "FEFFFF",
+      "name": "White"
+    },
+    "dk2": {
+      "hex": "201B5C",
+      "name": "Navy"
+    },
+    "lt2": {
+      "hex": "FFFFFF",
+      "name": "White"
+    },
+    "accent1": {
+      "hex": "F87F4F",
+      "name": "Orange"
+    },
+    "accent2": {
+      "hex": "F95D63",
+      "name": "Grapefruit"
+    },
+    "accent3": {
+      "hex": "3B62C1",
+      "name": "Royal"
+    },
+    "accent4": {
+      "hex": "45B6E2",
+      "name": "Sky"
+    },
+    "accent5": {
+      "hex": "6AC6BA",
+      "name": "Emerald"
+    },
+    "accent6": {
+      "hex": "201B5C",
+      "name": "Navy"
+    },
+    "hlink": {
+      "hex": "3B62C1",
+      "name": "Royal"
+    },
+    "folHlink": {
+      "hex": "201B5C",
+      "name": "Navy"
+    }
+  },
+  "by_name": {
+    "dark slate": "dk1",
+    "white": "lt1",
+    "navy": "dk2",
+    "orange": "accent1",
+    "grapefruit": "accent2",
+    "royal": "accent3",
+    "sky": "accent4",
+    "emerald": "accent5"
+  }
+}
