@@ -2,5 +2,10 @@
   "name": "sfnl-pptx",
   "version": "0.1.0",
   "description": "Generate and QA Social Finance NL branded PowerPoint decks from the official sjabloon.",
-  "author": "Social Finance NL"
+  "author": {
+    "name": "Social Finance NL",
+    "email": "info@socialfinancenl.nl"
+  },
+  "license": "UNLICENSED",
+  "keywords": ["powerpoint", "pptx", "social-finance-nl", "branding", "presentation", "huisstijl"]
 }

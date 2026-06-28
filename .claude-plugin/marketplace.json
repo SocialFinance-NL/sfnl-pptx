@@ -1,0 +1,19 @@
+{
+  "name": "sfnl-pptx-dev",
+  "description": "Lokale dev-marketplace voor de SFNL PowerPoint plugin (testen vanuit deze map).",
+  "owner": {
+    "name": "Social Finance NL",
+    "email": "info@socialfinancenl.nl"
+  },
+  "plugins": [
+    {
+      "name": "sfnl-pptx",
+      "description": "Generate and QA Social Finance NL branded PowerPoint decks from the official sjabloon.",
+      "version": "0.1.0",
+      "source": "./sfnl-pptx",
+      "author": {
+        "name": "Social Finance NL"
+      }
+    }
+  ]
+}

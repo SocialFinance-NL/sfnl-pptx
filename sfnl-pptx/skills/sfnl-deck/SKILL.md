@@ -16,15 +16,20 @@ into a compact deck-spec JSON, then build deterministically.
 3. **Layout selection.** For each slide pick a component via `engine/scripts/components.py`.
    Use `find_components(type=..., tags=...)`. Use `Leeg`-based custom components only when a
    standard layout cannot carry the message.
-4. **Emit deck-spec.** Write the JSON using the schema in the design spec. Validate it with
-   `scripts.spec.validate_spec`; fix every error before building.
+4. **Emit deck-spec.** Write the JSON using the schema and component catalogue in
+   `engine/reference/deck-spec.md`. Validate it with `scripts.spec.validate_spec`; fix every
+   error before building.
 5. **Build.** Run `python -m scripts.build_from_spec <spec.json> [out.pptx]`. Default output is
    `output/<YYYY-MM-DD>-<slug>.pptx`. Colors are `schemeClr`; never hardcode hex.
 6. **QA.** Hand off to the `sfnl-deck-review` skill. Do not declare done until QA passes.
 
 ## Rules
 
+- The SFNL template is bundled at `engine/assets/sfnl-template.pptx` and loaded automatically by
+  the build. Never ask the user to upload, supply, or point at a `.potx` — the deck is always built
+  on the bundled sjabloon.
 - Run scripts from `sfnl-pptx/engine`, or set `PYTHONPATH` so `import scripts.*` resolves.
+- Deck-spec JSON schema and the full component catalogue live in `engine/reference/deck-spec.md`.
 - Brand palette and typography live in `engine/reference/brand.md`.
 - Voice and content discipline live in `engine/reference/voice.md`.
 - One accent per deck (`meta.accent`); it carries the narrative through-line.
