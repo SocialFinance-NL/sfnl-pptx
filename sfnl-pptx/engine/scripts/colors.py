@@ -131,4 +131,11 @@ def resolve_accent(meta: dict | None, category: str | None, default: str) -> str
     """Resolve a slide's accent, honoring an opt-in ``meta.accent_map`` (category -> accent).
 
     Decks that never set ``accent_map`` are unaffected: every slide keeps using ``default``
-    (the deck's single ``meta.accent``), preserving the one-accent-per-deck mod
+    (the deck's single ``meta.accent``), preserving the one-accent-per-deck mode.
+    """
+    if category:
+        accent_map = (meta or {}).get("accent_map") or {}
+        mapped = accent_map.get(category)
+        if mapped in ACCENT_TO_SLOT:
+            return mapped
+    return default

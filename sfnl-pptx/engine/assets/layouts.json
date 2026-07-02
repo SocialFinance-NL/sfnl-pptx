@@ -571,4 +571,36 @@
       },
       {
         "idx": 0,
-        "type": "TITLE
+        "type": "TITLE (1)",
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "type": "OBJECT (7)",
+        "name": "Content Placeholder 3"
+      }
+    ]
+  },
+  {
+    "name": "6_sectieslide_stijl2",
+    "master_index": 1,
+    "layout_index": 13,
+    "placeholders": [
+      {
+        "idx": 1,
+        "type": "BODY (2)",
+        "name": "Text Placeholder 2"
+      },
+      {
+        "idx": 0,
+        "type": "TITLE (1)",
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "type": "OBJECT (7)",
+        "name": "Content Placeholder 3"
+      }
+    ]
+  }
+]

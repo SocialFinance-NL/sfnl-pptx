@@ -58,4 +58,29 @@ Run all scripts from `sfnl-pptx/engine`, or set `PYTHONPATH` so `import scripts.
 
 | File | Contents |
 |------|----------|
-| [`engine/reference/deck-spec.md`](engine/reference/deck-spec.md) | Deck-
+| [`engine/reference/deck-spec.md`](engine/reference/deck-spec.md) | Deck-spec JSON schema + full component catalogue. |
+| [`engine/reference/brand.md`](engine/reference/brand.md) | Palette (theme slots), typography, spacing rules. |
+| [`engine/reference/voice.md`](engine/reference/voice.md) | SCQA narrative, action titles, big numbers, register. |
+
+## Testing
+
+```bash
+cd sfnl-pptx/engine
+python -m pytest ../tests -q
+```
+
+## Layout
+
+```
+sfnl-pptx/
+├── .codex-plugin/          Codex plugin manifest
+├── .claude-plugin/         Claude plugin manifest
+├── skills/                 sfnl-deck, sfnl-deck-research, sfnl-deck-design,
+│                           sfnl-deck-review, sfnl-deck-proof (SKILL.md each)
+├── agents/                 deck-visual-reviewer (render + inspect subagent)
+├── engine/
+│   ├── assets/             bundled template + generated palette/layouts/components
+│   ├── reference/          deck-spec.md, brand.md, voice.md
+│   └── scripts/            build_from_spec, spec, components, qa_text, render, colors, ...
+└── tests/                  pytest suite
+```

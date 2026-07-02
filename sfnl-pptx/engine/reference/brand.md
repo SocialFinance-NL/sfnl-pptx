@@ -45,4 +45,12 @@ assets): `target`, `people`, `growth`, `idea`, `house`, `book`, `calendar`, `com
 - Template-faithful slides leave runs empty and inherit fonts from the branded layouts — do not
   override them. Set fonts explicitly only on custom slides (drawn on the sjabloon's
   `Titel, subtitel` layout).
-- Theme major/minor resolve to Calibri Light / Calibri — never 
+- Theme major/minor resolve to Calibri Light / Calibri — never use these for brand text; clone
+  branded layouts instead.
+- Fonts are installed locally, never embedded.
+
+## Spacing & layout
+
+- 16:9, 13.33in × 7.5in.
+- One exhibit per slide. Generous margins; do not crowd the master's safe area.
+- Big-number pattern for KPIs: large numeral, small label beneath.

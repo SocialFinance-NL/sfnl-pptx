@@ -62,4 +62,19 @@ Idea → research → narrative → storyboard → spec → build → review →
   with 3+ recurring categories across many slides may opt into `meta.accent_map` (multi-accent
   mode, one accent per category) — decided in step 3, documented in `deck-spec.md`.
 - Every normal content slide must have a visual exhibit: cards with icon bubbles, KPI/status
-  panels, native editable charts, proces
+  panels, native editable charts, process arrows or chevrons, schema boxes/connectors, image/icon
+  columns, 2x2 matrices, layer stacks, cycles, scenario cards, assessment tables, mechanism
+  diagrams, full-bleed color dividers, dark stat banners, color-coded swimlane columns, an
+  abstract geometric closer, or a bespoke `custom-freeform` composition.
+- Tune `visual` per slide when needed. Available controls include `x`, `y`, `card_width`,
+  `card_height`, `box_width`, `box_height`, `step_width`, `step_height`, `width`, `height`, `gap`,
+  `row_gap`, `columns`, `icon_size`, `progress`, `progress_label`, and `variant`.
+- Icons are content, not decoration. For small icon bubbles inside cards/nodes/steps, choose from
+  the text-glyph set (`check`, `gear`, `heart`, `people`, `target`, `money`, `chart`, `idea`, or a
+  short custom label). For large-scale icons on `divider-block` and `custom-freeform`, use the
+  vector icon library in `engine/scripts/icons.py` (`target`, `people`, `growth`, `idea`, `house`,
+  `book`, `calendar`, `compass`, `partnership`, `check`, `flag`, `scale`, `money`, `clock`,
+  `gear`). Either way, adjust size/location through the slide's `visual` object.
+- The standalone HTML template in user references is a pattern source, not an exact template:
+  translate useful layouts into these components and update colors, spacing, typography, and
+  density so output still follows the bundled SFNL PowerPoint sjabloon.

@@ -38,4 +38,10 @@ without one completed QA pass.
 
 Report findings per axis with slide numbers and severity. State clearly whether the deck is
 clear to deliver or blocked on critical findings.
-
+
+## Handoff naar de eindproef
+
+Deze review is de adaptieve QA tijdens het bouwen. Vóór oplevering aan een klant volgt altijd
+nog de volledige eindproef via `sfnl-deck-proof`: álle slides gerenderd en beoordeeld, cijfers
+gecontroleerd tegen het bronnendossier, en een proefrapport. "Review passed" betekent dus
+"klaar voor de eindproef", niet "klaar voor de klant".

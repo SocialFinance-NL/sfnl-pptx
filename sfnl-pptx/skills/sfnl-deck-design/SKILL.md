@@ -78,4 +78,27 @@ Before moving to JSON, check the whole table at once:
 - Every `custom-freeform` row has a sketched composition and a rationale naming the rejected
   nearest named component. Bespoke exhibits are welcome where the message demands them; five
   near-identical bespoke slides in one deck is the signal that a named component is missing.
-- Every dossier-row marked viz-kandidaat `chart
+- Every dossier-row marked viz-kandidaat `chart` or `kpi` actually appears as a `chart-native`,
+  `chart-static`, `kpi-trio`, or `stat-banner` slide — numbers that stay buried in body text
+  are a missed exhibit.
+- Scan for monotony: if 5+ consecutive content slides all use `content-cards`, vary component
+  choice or introduce a `divider-block`/`stat-banner` beat to break the rhythm, matching how the
+  reference deck alternates cards, swimlanes, chevron process diagrams, and stat banners rather
+  than repeating one shape.
+
+Fix the storyboard, not the JSON, when something is wrong here — it is far cheaper to edit a
+table row than to rebuild and re-render a slide.
+
+## Step 4: Translate to deck-spec.json
+
+Once the storyboard is confirmed, each row becomes one deck-spec slide entry: `category` becomes
+the slide's `category` field, `component_id`/`icon`/`variant` become `component_id` and the
+`visual`/`content_schema_fill` values, per the schema in `engine/reference/deck-spec.md`. This
+step should require no new design judgment — if it does, the storyboard was incomplete; go back
+to Step 2 for that slide.
+
+## Handoff
+
+After deck-spec.json is built (`sfnl-deck`'s step 5), hand off to `sfnl-deck-review`. The
+storyboard from this skill is also the fastest way to explain *why* a slide looks the way it does
+during that review — keep it alongside the spec, not just in scratch memory.

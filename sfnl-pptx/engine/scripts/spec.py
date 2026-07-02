@@ -99,4 +99,91 @@ def _validate_chart_native(fill: dict, where: str, errors: list[str]) -> None:
     if chart_type not in CHART_TYPES:
         errors.append(f"{where}: chart_type {chart_type!r} must be one of {sorted(CHART_TYPES)}")
     series = fill.get("series")
- 
+    if not isinstance(series, list) or not series:
+        errors.append(f"{where}: chart-native requires a non-empty 'series' list")
+        return
+    for j, s in enumerate(series):
+        swhere = f"{where}: series[{j}]"
+        if chart_type == "scatter":
+            for key in ("x_values", "y_values"):
+                vals = s.get(key)
+                if not isinstance(vals, list) or not all(isinstance(v, (int, float)) for v in vals):
+                    errors.append(f"{swhere}: scatter series requires numeric list {key!r}")
+        else:
+            vals = s.get("values")
+            if not isinstance(vals, list) or not vals or not all(isinstance(v, (int, float)) for v in vals):
+                errors.append(f"{swhere}: 'values' must be a non-empty numeric list")
+        color = s.get("color")
+        if color and color not in VALID_FILL_COLORS:
+            errors.append(f"{swhere}: color {color!r} is not an allowed accent {sorted(VALID_FILL_COLORS)}")
+    if chart_type not in ("scatter",) and not fill.get("categories"):
+        errors.append(f"{where}: chart-native requires 'categories' for chart_type {chart_type!r}")
+    for color in fill.get("slice_colors", []) or []:
+        if color not in VALID_FILL_COLORS:
+            errors.append(f"{where}: slice_colors entry {color!r} is not an allowed accent {sorted(VALID_FILL_COLORS)}")
+
+
+def validate_spec(spec: dict) -> list[str]:
+    errors: list[str] = []
+    comps = load_components()
+
+    meta = spec.get("meta") or {}
+    if not meta.get("title"):
+        errors.append("meta.title is required")
+    if meta.get("lang") not in VALID_LANGS:
+        errors.append(f"meta.lang must be one of {sorted(VALID_LANGS)}")
+    if meta.get("accent") and meta["accent"] not in VALID_ACCENTS:
+        errors.append(f"meta.accent {meta.get('accent')!r} is not an allowed accent {sorted(VALID_ACCENTS)}")
+    accent_map = meta.get("accent_map")
+    if accent_map is not None:
+        if not isinstance(accent_map, dict) or not accent_map:
+            errors.append("meta.accent_map must be a non-empty object mapping category -> accent")
+        else:
+            for category, accent in accent_map.items():
+                if accent not in VALID_ACCENTS:
+                    errors.append(
+                        f"meta.accent_map[{category!r}] = {accent!r} is not an allowed accent {sorted(VALID_ACCENTS)}"
+                    )
+
+    slides = spec.get("slides")
+    if not slides:
+        errors.append("spec must contain at least one slide")
+        return errors
+
+    seen_ids = set()
+    for i, slide in enumerate(slides):
+        where = f"slide[{i}] (id={slide.get('id')!r})"
+        sid = slide.get("id")
+        if not sid:
+            errors.append(f"{where}: id is required")
+        elif sid in seen_ids:
+            errors.append(f"{where}: duplicate id")
+        else:
+            seen_ids.add(sid)
+        if not slide.get("action_title"):
+            errors.append(f"{where}: action_title is required (consultant rule)")
+        category = slide.get("category")
+        if category is not None and not isinstance(category, str):
+            errors.append(f"{where}: category must be a string")
+        cid = slide.get("component_id")
+        if cid not in comps:
+            errors.append(f"{where}: unknown component_id {cid!r}")
+            continue
+        # required slots: top-level string keys of content_schema must be present
+        fill = slide.get("content_schema_fill") or {}
+        for key, shape in comps[cid]["content_schema"].items():
+            if isinstance(shape, str) and not fill.get(key):
+                errors.append(f"{where}: missing required content slot {key!r} for component {cid!r}")
+        if cid == "custom-freeform":
+            _validate_freeform_primitives(fill, where, errors)
+        if cid == "chart-native":
+            _validate_chart_native(fill, where, errors)
+    return errors
+
+
+def load_spec(path) -> dict:
+    spec = json.loads(Path(path).read_text(encoding="utf-8"))
+    errors = validate_spec(spec)
+    if errors:
+        raise SpecError("invalid deck-spec:\n  - " + "\n  - ".join(errors))
+    return spec

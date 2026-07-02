@@ -705,4 +705,253 @@ def _freeform_table(shapes_host, prim, accent):
     table.first_row = bool(header)
     table.horz_banding = False
     col_widths = prim.get("col_widths")
-    if isin
+    if isinstance(col_widths, list) and len(col_widths) == n_cols:
+        total = sum(float(c) for c in col_widths) or 1.0
+        for c, colw in enumerate(col_widths):
+            table.columns[c].width = _emu(w * float(colw) / total)
+    accent_color = prim.get("color") or accent
+    for r, row in enumerate(rows):
+        is_header = header and r == 0
+        for c, value in enumerate(row):
+            cell = table.cell(r, c)
+            set_fillformat_scheme(cell.fill, "navy" if is_header else "white")
+            cell.margin_left = Inches(0.08)
+            cell.margin_right = Inches(0.08)
+            cell.margin_top = Inches(0.04)
+            cell.margin_bottom = Inches(0.04)
+            tf = cell.text_frame
+            tf.clear()
+            tf.word_wrap = True
+            p = tf.paragraphs[0]
+            run = p.add_run()
+            run.text = str(value)
+            if is_header:
+                set_run_font(run, "Gotham Bold", size_pt=float(prim.get("header_size", 10.5)), bold=True)
+                set_run_scheme_color(run, "white")
+            else:
+                first_col_bold = bool(prim.get("first_col_bold", False)) and c == 0
+                set_run_font(run, "Gotham Bold" if first_col_bold else "Lato Light",
+                             size_pt=float(prim.get("size", 10)), bold=first_col_bold)
+                set_run_scheme_color(run, accent_color if first_col_bold else "navy")
+    return frame
+
+
+def _render_primitives(shapes_host, primitives, accent, depth=0):
+    for prim in primitives:
+        ptype = prim.get("type")
+        color = prim.get("fill") or prim.get("color") or accent
+        if ptype == "arrow":
+            shape_type = _ARROW_SHAPES.get(prim.get("direction", "right"), MSO_SHAPE.RIGHT_ARROW)
+            shp = _shape(shapes_host, shape_type, prim["x"], prim["y"], prim["w"], prim["h"], fill=color,
+                         line=prim.get("line"))
+            if prim.get("rotation"):
+                shp.rotation = float(prim["rotation"])
+        elif ptype in _FREEFORM_SHAPES:
+            shp = _shape(shapes_host, _FREEFORM_SHAPES[ptype], prim["x"], prim["y"], prim["w"], prim["h"],
+                         fill=color, line=prim.get("line"))
+            if prim.get("rotation"):
+                shp.rotation = float(prim["rotation"])
+            if prim.get("text"):
+                tf = shp.text_frame
+                tf.clear()
+                tf.word_wrap = True
+                tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+                p = tf.paragraphs[0]
+                p.alignment = PP_ALIGN.CENTER
+                run = p.add_run()
+                run.text = str(prim["text"])
+                set_run_font(run, prim.get("font", "Gotham Bold"),
+                             size_pt=float(prim.get("size", 12)), bold=bool(prim.get("bold", True)))
+                set_run_scheme_color(run, prim.get("text_color", "white"))
+        elif ptype == "line":
+            connector = shapes_host.shapes.add_connector(
+                MSO_CONNECTOR.STRAIGHT, _emu(prim["x1"]), _emu(prim["y1"]), _emu(prim["x2"]), _emu(prim["y2"]))
+            set_scheme_line(connector, color, width_pt=float(prim.get("width_pt", 1.2)))
+        elif ptype == "connector":
+            _freeform_connector(shapes_host, prim, accent)
+        elif ptype == "textbox":
+            _freeform_textbox(shapes_host, prim, accent)
+        elif ptype == "icon":
+            icons.draw_icon(shapes_host, prim.get("icon"), prim["x"], prim["y"], prim["w"],
+                             color=prim.get("color", accent), bg=prim.get("bg", "white"))
+        elif ptype == "table":
+            _freeform_table(shapes_host, prim, accent)
+        elif ptype == "image":
+            path = Path(prim.get("path", ""))
+            if path.exists():
+                h = prim.get("h")
+                shapes_host.shapes.add_picture(str(path), _emu(prim["x"]), _emu(prim["y"]),
+                                               width=_emu(prim["w"]), height=_emu(h) if h else None)
+        elif ptype == "group" and depth < 2:
+            group = shapes_host.shapes.add_group_shape()
+            _render_primitives(group, prim.get("primitives", []), accent, depth + 1)
+
+
+def _render_custom_freeform(slide, comp, slide_spec, accent):
+    fill = slide_spec.get("content_schema_fill", {})
+    _render_primitives(slide, fill.get("primitives", []), accent)
+
+
+_CHART_TYPE_MAP_NAMES = {
+    "column": "COLUMN_CLUSTERED",
+    "stacked-column": "COLUMN_STACKED",
+    "bar": "BAR_CLUSTERED",
+    "stacked-bar": "BAR_STACKED",
+    "line": "LINE_MARKERS",
+    "area": "AREA",
+    "pie": "PIE",
+    "donut": "DOUGHNUT",
+    "scatter": "XY_SCATTER_LINES",
+}
+_DEFAULT_SERIES_ACCENTS = ["orange", "royal", "emerald", "grapefruit", "sky", "navy"]
+
+
+def _render_chart_native(slide, comp, slide_spec, accent):
+    from pptx.chart.data import CategoryChartData, XyChartData
+    from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
+
+    fill = slide_spec.get("content_schema_fill", {})
+    visual = _visual(comp, slide_spec, {})
+    chart_kind = fill.get("chart_type", "column")
+    xl_type = getattr(XL_CHART_TYPE, _CHART_TYPE_MAP_NAMES[chart_kind])
+    series_specs = fill.get("series", [])
+
+    if chart_kind == "scatter":
+        data = XyChartData()
+        for s in series_specs:
+            xy = data.add_series(s.get("name", ""))
+            for xv, yv in zip(s.get("x_values", []), s.get("y_values", [])):
+                xy.add_data_point(xv, yv)
+    else:
+        data = CategoryChartData()
+        data.categories = [str(c) for c in fill.get("categories", [])]
+        for s in series_specs:
+            data.add_series(s.get("name", ""), tuple(float(v) for v in s.get("values", [])))
+
+    x = float(visual.get("x", 0.95)); y = float(visual.get("y", 1.95))
+    w = float(visual.get("width", 11.4)); h = float(visual.get("height", 4.6))
+    frame = slide.shapes.add_chart(xl_type, _emu(x), _emu(y), _emu(w), _emu(h), data)
+    chart = frame.chart
+    chart.has_title = False
+
+    show_legend = bool(visual.get("legend", len(series_specs) > 1 or chart_kind in ("pie", "donut")))
+    chart.has_legend = show_legend
+    if show_legend:
+        chart.legend.position = XL_LEGEND_POSITION.BOTTOM
+        chart.legend.include_in_layout = False
+        chart.legend.font.name = "Lato Light"
+        chart.legend.font.size = Pt(11)
+
+    if chart_kind in ("pie", "donut"):
+        slice_colors = fill.get("slice_colors") or _DEFAULT_SERIES_ACCENTS
+        plot_series = chart.plots[0].series[0]
+        n_points = len(fill.get("categories", []))
+        for i in range(n_points):
+            set_fillformat_scheme(plot_series.points[i].format.fill, slice_colors[i % len(slice_colors)])
+    else:
+        for i, plot_series in enumerate(chart.series):
+            color = _color(series_specs[i].get("color") if i < len(series_specs) else None,
+                           None) or (accent if i == 0 else _DEFAULT_SERIES_ACCENTS[i % len(_DEFAULT_SERIES_ACCENTS)])
+            if chart_kind in ("line", "scatter"):
+                set_scheme_line(plot_series.format, color, width_pt=2.25)
+            else:
+                set_fillformat_scheme(plot_series.format.fill, color)
+
+    if chart_kind not in ("pie", "donut", "scatter"):
+        cat_axis = chart.category_axis
+        cat_axis.tick_labels.font.name = "Lato Light"
+        cat_axis.tick_labels.font.size = Pt(10.5)
+        val_axis = chart.value_axis
+        val_axis.tick_labels.font.name = "Lato Light"
+        val_axis.tick_labels.font.size = Pt(10.5)
+        val_axis.has_major_gridlines = True
+        if visual.get("number_format"):
+            val_axis.tick_labels.number_format = str(visual["number_format"])
+            val_axis.tick_labels.number_format_is_linked = False
+
+    if visual.get("data_labels") and chart_kind not in ("scatter",):
+        plot = chart.plots[0]
+        plot.has_data_labels = True
+        plot.data_labels.font.name = "Gotham Bold"
+        plot.data_labels.font.size = Pt(10)
+        if visual.get("number_format"):
+            plot.data_labels.number_format = str(visual["number_format"])
+            plot.data_labels.number_format_is_linked = False
+    return frame
+
+
+def _build_custom_slide(prs, comp, slide_spec, accent):
+    fill = slide_spec.get("content_schema_fill", {})
+    if comp["id"] in FULL_BLEED_COMPONENTS:
+        slide = prs.slides.add_slide(find_layout(prs, "Leeg"))
+    else:
+        slide = prs.slides.add_slide(find_layout(prs, CONTENT_LAYOUT))
+        _fill_content_frame(slide, fill)
+
+    if comp["id"] == "kpi-trio":
+        _render_kpi_trio(slide, comp, slide_spec, accent)
+
+    elif comp["id"] == "content-cards":
+        _render_content_cards(slide, comp, slide_spec, accent)
+
+    elif comp["id"] == "chart-static":
+        _render_chart_static(slide, comp, slide_spec, accent)
+    elif comp["id"] == "process-timeline":
+        _render_process_timeline(slide, comp, slide_spec, accent)
+    elif comp["id"] == "schema-grid":
+        _render_schema_grid(slide, comp, slide_spec, accent)
+    elif comp["id"] == "image-icon-trio":
+        _render_image_icon_trio(slide, comp, slide_spec, accent)
+    elif comp["id"] == "matrix-2x2":
+        _render_matrix_2x2(slide, comp, slide_spec, accent)
+    elif comp["id"] == "layer-stack":
+        _render_layer_stack(slide, comp, slide_spec, accent)
+    elif comp["id"] == "cycle-diagram":
+        _render_cycle_diagram(slide, comp, slide_spec, accent)
+    elif comp["id"] == "scenario-cards":
+        _render_scenario_cards(slide, comp, slide_spec, accent)
+    elif comp["id"] == "assessment-table":
+        _render_assessment_table(slide, comp, slide_spec, accent)
+    elif comp["id"] == "mechanism-diagram":
+        _render_mechanism_diagram(slide, comp, slide_spec, accent)
+    elif comp["id"] == "divider-block":
+        _render_divider_block(slide, comp, slide_spec, accent)
+    elif comp["id"] == "stat-banner":
+        _render_stat_banner(slide, comp, slide_spec, accent)
+    elif comp["id"] == "swimlane-columns":
+        _render_swimlane_columns(slide, comp, slide_spec, accent)
+    elif comp["id"] == "closing-geometric":
+        _render_closing_geometric(slide, comp, slide_spec, accent)
+    elif comp["id"] == "custom-freeform":
+        _render_custom_freeform(slide, comp, slide_spec, accent)
+    elif comp["id"] == "chart-native":
+        _render_chart_native(slide, comp, slide_spec, accent)
+    return slide
+
+
+def build_deck(spec: dict, out_path) -> Path:
+    errors = validate_spec(spec)
+    if errors:
+        raise SpecError("invalid deck-spec:\n  - " + "\n  - ".join(errors))
+    comps = load_components()
+    meta = spec.get("meta") or {}
+    deck_accent = meta.get("accent", "orange")
+    prs = load_template_presentation()
+    for slide_spec in spec["slides"]:
+        comp = comps[slide_spec["component_id"]]
+        accent = resolve_accent(meta, slide_spec.get("category"), deck_accent)
+        if comp["renderer"] == "template":
+            _build_template_slide(prs, comp, slide_spec)
+        else:
+            _build_custom_slide(prs, comp, slide_spec, accent)
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    prs.save(str(out))
+    return out
+
+
+if __name__ == "__main__":
+    import sys, json
+    spec = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    dest = sys.argv[2] if len(sys.argv) > 2 else (spec.get("meta", {}).get("output") or "output/deck.pptx")
+    print("built", build_deck(spec, dest))

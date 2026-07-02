@@ -1,7 +1,11 @@
 {
   "name": "sfnl-pptx",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Idea-to-proof pipeline for Social Finance NL branded PowerPoint decks: research (bronnendossier), storyboard, spec-first build with templates, bespoke freeform exhibits and native editable charts, adaptive review, and a full render proof.",
   "author": {
     "name": "Social Finance NL",
-    "email": "info@s
+    "email": "info@socialfinancenl.nl"
+  },
+  "license": "UNLICENSED",
+  "keywords": ["powerpoint", "pptx", "social-finance-nl", "branding", "presentation", "huisstijl", "research", "charts", "proof"]
+}
