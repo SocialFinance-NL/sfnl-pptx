@@ -41,3 +41,49 @@
   --sfnl-grey-70: #AEC0D7;
 }
 /* @tokens:end */
+
+/* ============ SFNL design system — do edit below this line ============
+   Canvas: 720pt × 405pt (pptxgenjs LAYOUT_16x9).
+   Rules digest: all text in <p>/<h1>-<h6>/<ul>/<ol>; backgrounds/borders only on <div>;
+   no CSS gradients (pre-render PNG via Sharp); text >12pt ends >=0.5in above bottom. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: #ffffff; }
+body {
+  width: 720pt; height: 405pt;
+  background: var(--sfnl-white);
+  font-family: "Lato Light", "Lato", Arial, sans-serif;
+  font-size: 10pt; color: var(--sfnl-dark-slate);
+  display: flex; flex-direction: column;
+}
+h1, h2, h3 { font-family: "Gotham Bold", Arial, sans-serif; color: var(--sfnl-navy); }
+.quiet { font-family: "Montserrat Light", "Montserrat", Arial, sans-serif; }
+
+/* ---- Fixed chrome (content slides): title block + orange dash. Logo and page
+   number are injected natively by build_deck.js — never author them in HTML. ---- */
+.chrome-header { margin: 32pt 26pt 0 26pt; }
+.slide-title { font-size: 18pt; line-height: 1.15; letter-spacing: 0.02em; }
+.slide-subtitle {
+  font-family: "Montserrat Light", "Montserrat", Arial, sans-serif;
+  font-size: 10.5pt; color: var(--sfnl-dark-slate); margin-top: 5pt;
+}
+.dash { width: 15pt; height: 3.2pt; background: var(--sfnl-orange); margin-top: 8pt; }
+
+/* ---- Free content region: fill the canvas, no half-empty slides ---- */
+.content { flex: 1; display: flex; gap: 14pt; margin: 14pt 26pt 40pt 26pt; min-height: 0; }
+.col { display: flex; flex-direction: column; gap: 10pt; flex: 1; min-height: 0; }
+
+/* ---- Helpers ---- */
+.card { background: var(--sfnl-grey-95); border-radius: 6pt; padding: 12pt 14pt; flex: 1; }
+.card-accent { background: var(--sfnl-orange-tint80); }
+.big-number { font-family: "Gotham Bold", Arial, sans-serif; font-size: 30pt; color: var(--sfnl-orange); line-height: 1; }
+.label {
+  font-family: "Montserrat Light", "Montserrat", Arial, sans-serif;
+  font-size: 8.5pt; color: var(--sfnl-dark-slate); letter-spacing: 0.06em;
+}
+.kicker { font-family: "Gotham Bold", Arial, sans-serif; font-size: 9pt; color: var(--sfnl-orange); letter-spacing: 0.1em; }
+
+/* ---- Full-bleed archetypes (cover, divider, closing) ---- */
+.bleed-navy { background: var(--sfnl-navy); }
+.bleed-navy h1, .bleed-navy h2, .bleed-navy p { color: #FFFFFF; }
+.bleed-center { flex: 1; display: flex; flex-direction: column; justify-content: center; margin: 0 60pt; }
