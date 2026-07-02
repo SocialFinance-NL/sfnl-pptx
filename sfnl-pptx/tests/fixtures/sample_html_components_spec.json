@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "title": "HTML-derived SFNL components",
+    "lang": "nl",
+    "accent": "orange",
+    "output": "output/html-components-demo.pptx"
+  },
+  "narrative": "HTML-templatepatronen worden vertaald naar aanpasbare PowerPoint-componenten in SFNL-stijl.",
+  "slides": [
+    {
+      "id": "s1",
+      "type": "matrix",
+      "component_id": "matrix-2x2",
+      "action_title": "Een 2x2 matrix maakt keuzes direct scanbaar",
+      "visual": {"x": 0.95, "y": 1.95, "width": 6.8, "height": 4.2},
+      "content_schema_fill": {
+        "title": "Impact versus risico",
+        "x_axis": "Risico",
+        "y_axis": "Effect",
+        "quadrants": [
+          {"heading": "Strategisch", "body": "Bouwen en versnellen", "color": "emerald"},
+          {"heading": "Kans", "body": "Pilot en valideren", "color": "sky"},
+          {"heading": "Basis", "body": "Behouden", "color": "royal"},
+          {"heading": "Vermijden", "body": "Stoppen of herontwerpen", "color": "grapefruit"}
+        ]
+      }
+    },
+    {
+      "id": "s2",
+      "type": "layer-stack",
+      "component_id": "layer-stack",
+      "action_title": "Een layer stack laat analytische bewijslast oplopen",
+      "visual": {"x": 1.0, "y": 2.0, "width": 8.8, "layer_height": 0.55, "indent": 0.38},
+      "content_schema_fill": {
+        "title": "Vijf evidence-lagen",
+        "layers": [
+          {"label": "Niveau 5", "detail": "Strategische beslissing", "color": "navy"},
+          {"label": "Niveau 4", "detail": "Synthese over programma's", "color": "royal"},
+          {"label": "Niveau 3", "detail": "Evidence per thema", "color": "sky"},
+          {"label": "Niveau 2", "detail": "Data en metingen", "color": "emerald"},
+          {"label": "Niveau 1", "detail": "Operationele registratie", "color": "orange"}
+        ]
+      }
+    },
+    {
+      "id": "s3",
+      "type": "cycle",
+      "component_id": "cycle-diagram",
+      "action_title": "Een cyclusdiagram toont continu leren zonder eindpunt",
+      "visual": {"center_x": 6.6, "center_y": 3.9, "radius": 1.65, "node_size": 0.92},
+      "content_schema_fill": {
+        "title": "Continu verbeteren",
+        "center": "Continu",
+        "steps": [
+          {"label": "Plannen", "color": "orange", "icon": "1"},
+          {"label": "Uitvoeren", "color": "grapefruit", "icon": "2"},
+          {"label": "Meten", "color": "sky", "icon": "3"},
+          {"label": "Bijsturen", "color": "royal", "icon": "4"}
+        ]
+      }
+    },
+    {
+      "id": "s4",
+      "type": "scenario",
+      "component_id": "scenario-cards",
+      "action_title": "Scenario's krijgen elk een eigen kaart met afwegingen",
+      "visual": {"x": 0.75, "y": 1.85, "card_width": 3.55, "card_height": 4.25, "gap": 0.35},
+      "content_schema_fill": {
+        "title": "Drie scenario's",
+        "scenarios": [
+          {"heading": "Scenario A", "subtitle": "Status quo", "color": "sky", "pros": ["Bekende werkwijze", "Beperkte investering"], "cons": ["Risico op stilstand"]},
+          {"heading": "Scenario B", "subtitle": "Regionaal model", "color": "emerald", "pros": ["Meer schaal", "Gedeeld risico"], "cons": ["Governance-uitdaging"]},
+          {"heading": "Scenario C", "subtitle": "Privaat kapitaal", "color": "grapefruit", "pros": ["Maximale hefboom", "Snelle uitrol"], "cons": ["Hogere kosten"]}
+        ]
+      }
+    },
+    {
+      "id": "s5",
+      "type": "assessment",
+      "component_id": "assessment-table",
+      "action_title": "Een afwegingskader combineert criteria en scores",
+      "visual": {"x": 0.75, "y": 1.8, "width": 10.9, "row_height": 0.62},
+      "content_schema_fill": {
+        "title": "Afwegingskader",
+        "columns": ["Criterium", "Toelichting", "Score"],
+        "rows": [
+          {"criterion": "Realiseerbaarheid", "description": "Haalbaar binnen scope en tijd", "score": "Middel", "color": "sky"},
+          {"criterion": "Financieel", "description": "Kosten versus beschikbaar budget", "score": "Hoog", "color": "emerald"},
+          {"criterion": "Draagvlak", "description": "Steun bij partners en doelgroep", "score": "Middel", "color": "orange"},
+          {"criterion": "Toegevoegde waarde", "description": "Meetbaar effect op doelen", "score": "Hoog", "color": "emerald"}
+        ]
+      }
+    },
+    {
+      "id": "s6",
+      "type": "mechanism",
+      "component_id": "mechanism-diagram",
+      "action_title": "Een mechaniekdiagram maakt rollen en geldstromen zichtbaar",
+      "visual": {"center_x": 6.4, "center_y": 3.75, "node_width": 2.0, "node_height": 0.82, "radius_x": 3.6, "radius_y": 1.75},
+      "content_schema_fill": {
+        "title": "Mechaniek",
+        "center": {"heading": "Maatwerkbudget", "body": "beheerd door uitvoerende partij", "color": "orange"},
+        "nodes": [
+          {"heading": "Opdrachtgever", "body": "beleid en toezicht", "color": "navy", "icon": "target"},
+          {"heading": "Financier", "body": "fonds of gemeente", "color": "royal", "icon": "money"},
+          {"heading": "Deelnemers", "body": "burgers of doelgroep", "color": "sky", "icon": "people"},
+          {"heading": "Learning partner", "body": "meting en evaluatie", "color": "emerald", "icon": "chart"}
+        ],
+        "flows": [
+          {"from": "center", "to": 0, "label": "Budget"},
+          {"from": 0, "to": "center", "label": "Opdracht"},
+          {"from": "center", "to": 2, "label": "Uitvoering"},
+          {"from": 3, "to": "center", "label": "Evidence"}
+        ]
+      }
+    }
+  ]
+}

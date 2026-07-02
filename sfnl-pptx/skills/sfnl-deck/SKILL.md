@@ -10,18 +10,44 @@ into a compact deck-spec JSON, then build deterministically.
 
 ## Pipeline
 
+Idea → research → narrative → storyboard → spec → build → review → proof. Zeven stappen:
+
 1. **Intake.** Accept a one-line brief, an outline, or source docs. Detect language: NL or EN.
-2. **Narrative and titles.** Read `engine/reference/voice.md`. Write the SCQA `narrative`, then
+2. **Research.** Hand off to the `sfnl-deck-research` skill: turn the idea into a
+   **bronnendossier** (feiten, cijfers, bronnen, viz-kandidaten) before any slide is written.
+   Skip only when the user supplies complete, already-sourced material — record that as the
+   source. Every number that later lands on a slide must trace to a dossier row.
+3. **Narrative and titles.** Read `engine/reference/voice.md`. Write the SCQA `narrative`, then
    draft an **action title** for every slide. Run the **ghost-deck test** before building.
-3. **Layout selection.** For each slide pick a component via `engine/scripts/components.py`.
-   Use `find_components(type=..., tags=...)`. Use `Leeg`-based custom components only when a
-   standard layout cannot carry the message.
-4. **Emit deck-spec.** Write the JSON using the schema and component catalogue in
-   `engine/reference/deck-spec.md`. Validate it with `scripts.spec.validate_spec`; fix every
-   error before building.
-5. **Build.** Run `python -m scripts.build_from_spec <spec.json> [out.pptx]`. Default output is
-   `output/<YYYY-MM-DD>-<slug>.pptx`. Colors are `schemeClr`; never hardcode hex.
-6. **QA.** Hand off to the `sfnl-deck-review` skill. Do not declare done until QA passes.
+4. **Design the layout, slide by slide.** Hand off to the `sfnl-deck-design` skill to decide the
+   deck's color model (single- vs multi-accent) and build a per-slide storyboard — component,
+   category, icon, variant, rationale — before any JSON is written. The catalogue includes icon
+   cards, KPI panels, native editable charts, process arrows/chevrons, schema/organogram,
+   image+icon trio, matrix, evidence stack, cycle, scenario cards, assessment table, mechanism
+   diagram, full-bleed color dividers, dark stat banners, color-coded swimlane canvases, and an
+   abstract geometric closer. Query `engine/scripts/components.py`
+   (`find_components(type=..., tags=...)`) while building the storyboard. `content-text` is an
+   exception, not the default: use it only when the user explicitly asks for plain text or
+   legal/contract wording requires it, and record the reason. When no named component carries
+   the slide's message, design a **bespoke exhibit** with `custom-freeform` — a full member of
+   the toolkit, not a last resort. Its primitive set (shapes, arrows, chevrons, connectors with
+   arrowheads, tables, icons, bullet textboxes, groups) is rich enough to compose consultancy-
+   grade one-off diagrams; record in the rationale why a bespoke exhibit beats the nearest
+   named component. For data that deserves a real graph, use `chart-native` (editable
+   PowerPoint charts: column, stacked, bar, line, area, pie, donut, scatter) fed by the
+   dossier's viz-kandidaten.
+5. **Emit deck-spec.** Translate the confirmed storyboard into JSON using the schema and
+   component catalogue in `engine/reference/deck-spec.md`. Validate it with
+   `scripts.spec.validate_spec`; fix every error before building. Put source references
+   (dossier row ids) in speaker notes.
+6. **Build + review.** Run `python -m scripts.build_from_spec <spec.json> [out.pptx]`. Default
+   output is `output/<YYYY-MM-DD>-<slug>.pptx`. Colors are `schemeClr`; never hardcode hex.
+   Then hand off to `sfnl-deck-review` for adaptive QA; fix and rebuild until no critical
+   findings remain.
+7. **Proof.** Before anything goes to a client, hand off to `sfnl-deck-proof`: full render of
+   every slide, whole-deck visual review, fact-check against the bronnendossier, language pass,
+   and a written proefrapport. Do not declare the deck deliverable until the proof verdict is
+   "klaar voor oplevering".
 
 ## Rules
 
@@ -32,4 +58,8 @@ into a compact deck-spec JSON, then build deterministically.
 - Deck-spec JSON schema and the full component catalogue live in `engine/reference/deck-spec.md`.
 - Brand palette and typography live in `engine/reference/brand.md`.
 - Voice and content discipline live in `engine/reference/voice.md`.
-- One accent per deck (`meta.accent`); it carries the narrative through-line.
+- One accent per deck (`meta.accent`) by default; it carries the narrative through-line. Decks
+  with 3+ recurring categories across many slides may opt into `meta.accent_map` (multi-accent
+  mode, one accent per category) — decided in step 3, documented in `deck-spec.md`.
+- Every normal content slide must have a visual exhibit: cards with icon bubbles, KPI/status
+  panels, native editable charts, proces

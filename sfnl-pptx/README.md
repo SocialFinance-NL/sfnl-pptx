@@ -2,7 +2,7 @@
 
 Generate and QA **Social Finance NL** branded PowerPoint decks from the official sjabloon.
 
-The plugin works **spec-first**: Claude thinks once into a compact deck-spec JSON, then the engine
+The plugin works **spec-first**: the agent thinks once into a compact deck-spec JSON, then the engine
 builds the `.pptx` deterministically on a clone of the bundled SFNL template. Colors are always
 `schemeClr` (never hardcoded hex) and only the three brand fonts are used.
 
@@ -10,20 +10,31 @@ builds the `.pptx` deterministically on a clone of the bundled SFNL template. Co
 > `engine/assets/sfnl-template.pptx` (theme, both masters, all 30 layouts) and loaded directly by
 > the build. You never need to supply, upload, or point at a `.potx` file.
 
+## Plugin manifests
+
+- Claude: `.claude-plugin/plugin.json`
+- Codex: `.codex-plugin/plugin.json`, with `skills` pointing to `./skills/` and Codex interface
+  metadata for plugin ingestion.
+
 ## Skills
 
 | Skill | Use it to |
 |-------|-----------|
-| `sfnl-deck` | Build a new SFNL deck from a brief, outline, or source docs. |
-| `sfnl-deck-review` | QA an SFNL deck against the Content / Design / Coherence rubric before delivery. |
+| `sfnl-deck` | Build a new SFNL deck from a brief, outline, or source docs (orchestrates the full pipeline). |
+| `sfnl-deck-research` | Turn an idea into a bronnendossier (feiten, cijfers, bronnen) before any slide is written. |
+| `sfnl-deck-design` | Storyboard every slide (component, accent, icon, rationale) before authoring JSON. |
+| `sfnl-deck-review` | Adaptive QA against the Content / Design / Coherence rubric while building. |
+| `sfnl-deck-proof` | Full pre-delivery proof: render every slide, whole-deck visual review, fact-check against the dossier, proefrapport. |
 
 Triggers are described in each skill's frontmatter — e.g. "maak een presentatie", "nieuwe slides
-in huisstijl", "SFNL deck", or "review/check this SFNL .pptx".
+in huisstijl", "SFNL deck", "review/check this SFNL .pptx", or "final proof / klaar voor de klant".
 
 ## How it works
 
 ```
-brief ─▶ deck-spec.json ─▶ validate ─▶ build_from_spec ─▶ deck.pptx ─▶ qa_text (+ render)
+idee ─▶ research (bronnendossier) ─▶ narrative + action titles ─▶ storyboard
+     ─▶ deck-spec.json ─▶ validate ─▶ build_from_spec ─▶ deck.pptx
+     ─▶ review (qa_text + render sensitive) ─▶ proof (full render + feitenproef + rapport)
 ```
 
 1. **Author** a deck-spec following [`engine/reference/deck-spec.md`](engine/reference/deck-spec.md).
@@ -47,25 +58,4 @@ Run all scripts from `sfnl-pptx/engine`, or set `PYTHONPATH` so `import scripts.
 
 | File | Contents |
 |------|----------|
-| [`engine/reference/deck-spec.md`](engine/reference/deck-spec.md) | Deck-spec JSON schema + full component catalogue. |
-| [`engine/reference/brand.md`](engine/reference/brand.md) | Palette (theme slots), typography, spacing rules. |
-| [`engine/reference/voice.md`](engine/reference/voice.md) | SCQA narrative, action titles, big numbers, register. |
-
-## Testing
-
-```bash
-cd sfnl-pptx/engine
-python -m pytest ../tests -q
-```
-
-## Layout
-
-```
-sfnl-pptx/
-├── skills/                 sfnl-deck, sfnl-deck-review (SKILL.md each)
-├── engine/
-│   ├── assets/             bundled template + generated palette/layouts/components
-│   ├── reference/          deck-spec.md, brand.md, voice.md
-│   └── scripts/            build_from_spec, spec, components, qa_text, render, colors, ...
-└── tests/                  pytest suite
-```
+| [`engine/reference/deck-spec.md`](engine/reference/deck-spec.md) | Deck-

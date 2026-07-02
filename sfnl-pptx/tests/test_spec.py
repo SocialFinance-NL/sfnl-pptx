@@ -46,3 +46,87 @@ def test_load_spec_raises_on_invalid(tmp_path):
     p.write_text(json.dumps(bad), encoding="utf-8")
     with pytest.raises(SpecError):
         load_spec(p)
+
+
+def test_valid_accent_map_has_no_errors():
+    spec = _valid()
+    spec["meta"]["accent_map"] = {"vraagstuk": "grapefruit", "impact": "orange"}
+    spec["slides"][0]["category"] = "vraagstuk"
+    assert validate_spec(spec) == []
+
+
+def test_accent_map_with_unknown_accent_flagged():
+    spec = _valid()
+    spec["meta"]["accent_map"] = {"vraagstuk": "chartreuse"}
+    errs = validate_spec(spec)
+    assert any("accent_map" in e for e in errs)
+
+
+def test_empty_accent_map_flagged():
+    spec = _valid()
+    spec["meta"]["accent_map"] = {}
+    errs = validate_spec(spec)
+    assert any("accent_map" in e for e in errs)
+
+
+def test_non_string_category_flagged():
+    spec = _valid()
+    spec["slides"][0]["category"] = 42
+    errs = validate_spec(spec)
+    assert any("category" in e for e in errs)
+
+
+def _freeform_slide(primitives):
+    return {
+        "id": "ff1", "component_id": "custom-freeform",
+        "action_title": "Een vrije compositie voor een uitzonderlijke slide",
+        "content_schema_fill": {"title": "Freeform", "primitives": primitives},
+    }
+
+
+def test_valid_freeform_primitives_have_no_errors():
+    spec = _valid()
+    spec["slides"].append(_freeform_slide([
+        {"type": "rect", "x": 1.0, "y": 1.0, "w": 2.0, "h": 1.0, "fill": "sky"},
+        {"type": "textbox", "x": 1.0, "y": 2.0, "w": 2.0, "h": 1.0, "text": "Hi", "font": "Lato Light"},
+    ]))
+    assert validate_spec(spec) == []
+
+
+def test_freeform_requires_nonempty_primitives():
+    spec = _valid()
+    spec["slides"].append(_freeform_slide([]))
+    errs = validate_spec(spec)
+    assert any("primitives" in e for e in errs)
+
+
+def test_freeform_rejects_unknown_primitive_type():
+    spec = _valid()
+    spec["slides"].append(_freeform_slide([{"type": "blob", "x": 0, "y": 0, "w": 1, "h": 1}]))
+    errs = validate_spec(spec)
+    assert any("type" in e for e in errs)
+
+
+def test_freeform_rejects_off_brand_color():
+    spec = _valid()
+    spec["slides"].append(_freeform_slide([{"type": "rect", "x": 0, "y": 0, "w": 1, "h": 1, "fill": "chartreuse"}]))
+    errs = validate_spec(spec)
+    assert any("color" in e.lower() for e in errs)
+
+
+def test_freeform_rejects_off_brand_font():
+    spec = _valid()
+    spec["slides"].append(_freeform_slide([
+        {"type": "textbox", "x": 0, "y": 0, "w": 1, "h": 1, "text": "Hi", "font": "Comic Sans MS"}
+    ]))
+    errs = validate_spec(spec)
+    assert any("font" in e.lower() for e in errs)
+
+
+def test_freeform_rejects_unknown_icon():
+    spec = _valid()
+    spec["slides"].append(_freeform_slide([
+        {"type": "icon", "x": 0, "y": 0, "w": 1, "h": 1, "icon": "not-a-real-icon"}
+    ]))
+    errs = validate_spec(spec)
+    assert any("icon" in e.lower() for e in errs)

@@ -18,7 +18,17 @@ def test_title_text_lands_in_placeholder(tmp_path):
     out = build_deck(spec, tmp_path / "demo.pptx")
     prs = Presentation(str(out))
     text = "\n".join(sh.text for sh in prs.slides[0].shapes if sh.has_text_frame)
-    assert "meetbaar gemaakt" in text
+    assert "MAATSCHAPPELIJKE WAARDE, MEETBAAR GEMAAKT" in text  # titels altijd ALL CAPS
+
+def test_custom_slide_uses_template_content_layout(tmp_path):
+    """Custom slides bouwen op de sjabloonlayout (wit vlak, oranje streepje, titelplaceholder)."""
+    spec = json.loads(FIX.read_text(encoding="utf-8"))
+    out = build_deck(spec, tmp_path / "demo.pptx")
+    prs = Presentation(str(out))
+    kpi_slide = prs.slides[1]
+    assert kpi_slide.slide_layout.name == "Titel, subtitel"
+    titles = [ph for ph in kpi_slide.placeholders if ph.placeholder_format.idx == 0]
+    assert titles and titles[0].text_frame.text == "IMPACT IN CIJFERS"
 
 def test_custom_kpi_slide_has_no_hardcoded_hex(tmp_path):
     spec = json.loads(FIX.read_text(encoding="utf-8"))

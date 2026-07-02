@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import yaml
 
 SKILLS = Path(__file__).resolve().parents[1] / "skills"
 
@@ -19,3 +20,8 @@ def test_deck_skill_has_name_and_description():
 def test_review_skill_has_name_and_description():
     fm = _frontmatter(SKILLS / "sfnl-deck-review" / "SKILL.md")
     assert "name:" in fm and "description:" in fm
+
+
+def test_design_skill_has_name_and_description():
+    fm = _frontmatter(SKILLS / "sfnl-deck-design" / "SKILL.md")
+    assert "name:" in fm and "description:" i

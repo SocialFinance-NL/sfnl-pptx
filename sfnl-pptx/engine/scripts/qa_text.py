@@ -30,6 +30,11 @@ def qa_deck(pptx_path) -> dict:
                 continue
             t = shape.text_frame.text
             texts.append(t)
+            if (shape.is_placeholder and slide.slide_layout.name != "Quote"
+                    and shape.placeholder_format.idx in (0, 1, 13, 14)
+                    and t.strip() and t != t.upper()):
+                findings.append({"slide": si, "axis": "Design", "severity": "critical",
+                                 "message": f"titel/subtitel niet in ALL CAPS: {t!r}"})
             low = t.lower()
             for marker in LEFTOVER_MARKERS:
                 if marker in low:
@@ -47,12 +52,4 @@ def qa_deck(pptx_path) -> dict:
         xml = slide._element.xml
         for hexv in set(re.findall(r'srgbClr val="([0-9A-Fa-f]{6})"', xml)):
             if hexv.upper() not in brand:
-                findings.append({"slide": si, "axis": "Design", "severity": "warn",
-                                 "message": f"off-brand hardcoded color #{hexv.upper()}"})
-    critical = sum(1 for f in findings if f["severity"] == "critical")
-    return {"findings": findings, "critical": critical}
-
-
-if __name__ == "__main__":
-    import sys
-    print(json.dumps(qa_deck(sys.argv[1]), indent=2, ensure_ascii=False))
+                findings.append({"slide": si, 

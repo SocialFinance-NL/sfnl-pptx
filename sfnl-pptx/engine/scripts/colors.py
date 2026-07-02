@@ -12,6 +12,8 @@ ACCENT_TO_SLOT = {
     "sky": "accent4",
     "emerald": "accent5",
     "navy": "dk2",
+    "dark_slate": "dk1",
+    "white": "lt1",
 }
 
 # Only these three may be set on a run by the build; QA accepts only these.
@@ -28,18 +30,40 @@ def _scheme_slot(accent: str) -> str:
         raise KeyError(f"unknown accent {accent!r}; choose from {sorted(ACCENT_TO_SLOT)}")
 
 
-def set_scheme_fill(shape, accent: str) -> None:
-    """Solid-fill a shape with a theme schemeClr (no hardcoded hex)."""
-    slot = _scheme_slot(accent)
-    spPr = shape.fill._xPr  # the <p:spPr> (or equivalent) element
-    # remove any existing fill children
+def _apply_scheme_fill(xPr, slot: str) -> None:
     for tag in ("a:noFill", "a:solidFill", "a:gradFill", "a:blipFill", "a:pattFill", "a:grpFill"):
-        for el in spPr.findall(qn(tag)):
-            spPr.remove(el)
-    solid = spPr.makeelement(qn("a:solidFill"), {})
+        for el in xPr.findall(qn(tag)):
+            xPr.remove(el)
+    solid = xPr.makeelement(qn("a:solidFill"), {})
     scheme = solid.makeelement(qn("a:schemeClr"), {"val": slot})
     solid.append(scheme)
-    spPr.append(solid)
+    xPr.append(solid)
+
+
+def set_scheme_fill(shape, accent: str) -> None:
+    """Solid-fill a shape with a theme schemeClr (no hardcoded hex)."""
+    _apply_scheme_fill(shape.fill._xPr, _scheme_slot(accent))
+
+
+def set_fillformat_scheme(fill_format, accent: str) -> None:
+    """Solid-fill any FillFormat (table cell, chart series, ...) with a theme schemeClr."""
+    fill_format.solid()
+    _apply_scheme_fill(fill_format._xPr, _scheme_slot(accent))
+
+
+def set_scheme_line(shape, accent: str, width_pt: float | None = None) -> None:
+    """Color a shape or connector line with a theme schemeClr."""
+    slot = _scheme_slot(accent)
+    if width_pt is not None:
+        shape.line.width = Pt(width_pt)
+    ln = shape.line._get_or_add_ln()
+    for tag in ("a:noFill", "a:solidFill", "a:gradFill", "a:pattFill"):
+        for el in ln.findall(qn(tag)):
+            ln.remove(el)
+    solid = ln.makeelement(qn("a:solidFill"), {})
+    scheme = solid.makeelement(qn("a:schemeClr"), {"val": slot})
+    solid.append(scheme)
+    ln.append(solid)
 
 
 def set_run_scheme_color(run, accent: str) -> None:
@@ -62,3 +86,49 @@ def set_run_font(run, font_name: str, size_pt: float | None = None, bold: bool |
         run.font.size = Pt(size_pt)
     if bold is not None:
         run.font.bold = bold
+
+
+def _clear_fill(spPr) -> None:
+    for tag in ("a:noFill", "a:solidFill", "a:gradFill", "a:blipFill", "a:pattFill", "a:grpFill"):
+        for el in spPr.findall(qn(tag)):
+            spPr.remove(el)
+
+
+def set_scheme_fill_tint(shape, accent: str, tint_pct: float) -> None:
+    """Solid-fill with a pastel tint of a theme accent, via lumMod/lumOff (no hardcoded hex).
+
+    ``tint_pct`` is 0-100: higher = lighter/more washed out (PowerPoint's "Lighter 80%"
+    swatch is ``tint_pct=80``). Use for pastel card backgrounds in the reference-deck style.
+    """
+    slot = _scheme_slot(accent)
+    spPr = shape.fill._xPr
+    _clear_fill(spPr)
+    solid = spPr.makeelement(qn("a:solidFill"), {})
+    scheme = solid.makeelement(qn("a:schemeClr"), {"val": slot})
+    scheme.append(scheme.makeelement(qn("a:lumMod"), {"val": str(round((100 - tint_pct) * 1000))}))
+    scheme.append(scheme.makeelement(qn("a:lumOff"), {"val": str(round(tint_pct * 1000))}))
+    solid.append(scheme)
+    spPr.append(solid)
+
+
+def set_scheme_fill_shade(shape, accent: str, shade_pct: float) -> None:
+    """Solid-fill with a darker shade of a theme accent, via lumMod (no hardcoded hex).
+
+    ``shade_pct`` is 0-100: higher = darker (PowerPoint's "Darker 25%" swatch is
+    ``shade_pct=25``). Use for dark stat-banner bars and swimlane header bands.
+    """
+    slot = _scheme_slot(accent)
+    spPr = shape.fill._xPr
+    _clear_fill(spPr)
+    solid = spPr.makeelement(qn("a:solidFill"), {})
+    scheme = solid.makeelement(qn("a:schemeClr"), {"val": slot})
+    scheme.append(scheme.makeelement(qn("a:lumMod"), {"val": str(round((100 - shade_pct) * 1000))}))
+    solid.append(scheme)
+    spPr.append(solid)
+
+
+def resolve_accent(meta: dict | None, category: str | None, default: str) -> str:
+    """Resolve a slide's accent, honoring an opt-in ``meta.accent_map`` (category -> accent).
+
+    Decks that never set ``accent_map`` are unaffected: every slide keeps using ``default``
+    (the deck's single ``meta.accent``), preserving the one-accent-per-deck mod

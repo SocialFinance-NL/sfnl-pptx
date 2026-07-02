@@ -1,0 +1,40 @@
+{
+  "name": "sfnl-pptx",
+  "version": "0.2.0",
+  "description": "Idea-to-proof pipeline for Social Finance NL branded PowerPoint decks: research (bronnendossier), storyboard, spec-first build with templates, bespoke freeform exhibits and native editable charts, adaptive review, and a full render proof.",
+  "author": {
+    "name": "Social Finance NL",
+    "email": "info@socialfinancenl.nl"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "powerpoint",
+    "pptx",
+    "social-finance-nl",
+    "branding",
+    "presentation",
+    "huisstijl",
+    "research",
+    "charts",
+    "proof"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SFNL PPTX",
+    "shortDescription": "Generate and proof Social Finance NL branded PowerPoint decks.",
+    "longDescription": "Spec-first deck generation and QA for Social Finance NL presentations. The plugin includes skills for research, storyboard design, branded PowerPoint builds, adaptive review, and final proofing against the bundled SFNL template.",
+    "developerName": "Social Finance NL",
+    "category": "Productivity",
+    "capabilities": [
+      "Generate",
+      "Review",
+      "Write"
+    ],
+    "brandColor": "#009AA6",
+    "defaultPrompt": [
+      "Maak een SFNL deck op basis van deze briefing.",
+      "Review this SFNL .pptx against the delivery rubric.",
+      "Run a final proof on this SFNL deck."
+    ]
+  }
+}

@@ -1,122 +1,801 @@
 [
-  {
-    "id": "title-standard",
-    "name": "Title slide",
-    "type": "title",
-    "tags": ["opening", "cover"],
-    "renderer": "template",
-    "source_layout": "1_Titelslide",
-    "slots": {
-      "title": {"placeholder_idx": 13},
-      "subtitle": {"placeholder_idx": 14}
-    },
-    "content_schema": {"title": "", "subtitle": ""},
-    "density": "low"
+ {
+  "id": "title-standard",
+  "name": "Title slide",
+  "type": "title",
+  "tags": [
+   "opening",
+   "cover"
+  ],
+  "renderer": "template",
+  "source_layout": "1_Titelslide",
+  "slots": {
+   "title": {
+    "placeholder_idx": 13
+   },
+   "subtitle": {
+    "placeholder_idx": 14
+   }
   },
-  {
-    "id": "section-divider",
-    "name": "Section divider",
-    "type": "section",
-    "tags": ["divider", "transition"],
-    "renderer": "template",
-    "source_layout": "1_sectieslide_stijl1",
-    "slots": {
-      "title": {"placeholder_idx": 13},
-      "subtitle": {"placeholder_idx": 14}
-    },
-    "content_schema": {"title": "", "subtitle": ""},
-    "density": "low"
+  "content_schema": {
+   "title": "",
+   "subtitle": ""
   },
-  {
-    "id": "content-text",
-    "name": "Title + subtitle + body text",
-    "type": "content",
-    "tags": ["text", "agenda", "inhoud"],
-    "renderer": "template",
-    "source_layout": "1_Titel, subtitel, tekst",
-    "slots": {
-      "title": {"placeholder_idx": 0},
-      "subtitle": {"placeholder_idx": 1},
-      "body": {"placeholder_idx": 10}
-    },
-    "content_schema": {"title": "", "subtitle": "", "body": ["bullet"]},
-    "density": "medium"
+  "density": "low"
+ },
+ {
+  "id": "section-divider",
+  "name": "Section divider",
+  "type": "section",
+  "tags": [
+   "divider",
+   "transition"
+  ],
+  "renderer": "template",
+  "source_layout": "1_sectieslide_stijl1",
+  "slots": {
+   "title": {
+    "placeholder_idx": 13
+   },
+   "subtitle": {
+    "placeholder_idx": 14
+   }
   },
-  {
-    "id": "comparison-two-col",
-    "name": "Two-column comparison",
-    "type": "comparison",
-    "tags": ["compare", "2-up", "columns"],
-    "renderer": "template",
-    "source_layout": "Titel, subtitel, twee tekstvakken",
-    "slots": {
-      "title": {"placeholder_idx": 0},
-      "subtitle": {"placeholder_idx": 1},
-      "left": {"placeholder_idx": 12},
-      "right": {"placeholder_idx": 13}
-    },
-    "content_schema": {"title": "", "subtitle": "", "left": ["bullet"], "right": ["bullet"]},
-    "density": "medium"
+  "content_schema": {
+   "title": "",
+   "subtitle": ""
   },
-  {
-    "id": "quote",
-    "name": "Quote",
-    "type": "quote",
-    "tags": ["quote", "testimonial"],
-    "renderer": "template",
-    "source_layout": "Quote",
-    "slots": {
-      "title": {"placeholder_idx": 0},
-      "attribution": {"placeholder_idx": 1}
-    },
-    "content_schema": {"title": "", "attribution": ""},
-    "density": "low"
+  "density": "low"
+ },
+ {
+  "id": "content-text",
+  "name": "Title + subtitle + body text",
+  "type": "content",
+  "tags": [
+   "text",
+   "agenda",
+   "inhoud"
+  ],
+  "renderer": "template",
+  "source_layout": "1_Titel, subtitel, tekst",
+  "slots": {
+   "title": {
+    "placeholder_idx": 0
+   },
+   "subtitle": {
+    "placeholder_idx": 1
+   },
+   "body": {
+    "placeholder_idx": 10
+   }
   },
-  {
-    "id": "content-cards",
-    "name": "Content with cards",
-    "type": "content-cards",
-    "tags": ["cards", "3-up", "custom"],
-    "renderer": "python-pptx",
-    "source_layout": "Leeg",
-    "slots": {},
-    "content_schema": {"title": "", "cards": [{"heading": "", "body": ""}]},
-    "density": "medium"
+  "content_schema": {
+   "title": "",
+   "subtitle": "",
+   "body": [
+    "bullet"
+   ]
   },
-  {
-    "id": "kpi-trio",
-    "name": "Three big-number KPIs",
-    "type": "kpi",
-    "tags": ["data", "metrics", "3-up", "no-chart"],
-    "renderer": "python-pptx",
-    "source_layout": "Leeg",
-    "slots": {},
-    "content_schema": {"title": "", "kpis": [{"value": "", "label": ""}]},
-    "density": "low"
+  "density": "medium"
+ },
+ {
+  "id": "comparison-two-col",
+  "name": "Two-column comparison",
+  "type": "comparison",
+  "tags": [
+   "compare",
+   "2-up",
+   "columns"
+  ],
+  "renderer": "template",
+  "source_layout": "Titel, subtitel, twee tekstvakken",
+  "slots": {
+   "title": {
+    "placeholder_idx": 0
+   },
+   "subtitle": {
+    "placeholder_idx": 1
+   },
+   "left": {
+    "placeholder_idx": 12
+   },
+   "right": {
+    "placeholder_idx": 13
+   }
   },
-  {
-    "id": "chart-static",
-    "name": "Simple static bar chart",
-    "type": "chart",
-    "tags": ["data", "chart", "bars", "custom"],
-    "renderer": "python-pptx",
-    "source_layout": "Leeg",
-    "slots": {},
-    "content_schema": {"title": "", "series": [{"label": "", "value": 0}]},
-    "density": "medium"
+  "content_schema": {
+   "title": "",
+   "subtitle": "",
+   "left": [
+    "bullet"
+   ],
+   "right": [
+    "bullet"
+   ]
   },
-  {
-    "id": "closing",
-    "name": "Closing / contact",
-    "type": "closing",
-    "tags": ["closing", "contact", "thanks"],
-    "renderer": "template",
-    "source_layout": "1_Titelslide",
-    "slots": {
-      "title": {"placeholder_idx": 13},
-      "subtitle": {"placeholder_idx": 14}
-    },
-    "content_schema": {"title": "", "subtitle": ""},
-    "density": "low"
-  }
+  "density": "medium"
+ },
+ {
+  "id": "quote",
+  "name": "Quote",
+  "type": "quote",
+  "tags": [
+   "quote",
+   "testimonial"
+  ],
+  "renderer": "template",
+  "source_layout": "Quote",
+  "slots": {
+   "title": {
+    "placeholder_idx": 0
+   },
+   "attribution": {
+    "placeholder_idx": 1
+   }
+  },
+  "content_schema": {
+   "title": "",
+   "attribution": ""
+  },
+  "density": "low"
+ },
+ {
+  "id": "content-cards",
+  "name": "Visual card trio",
+  "type": "content-cards",
+  "tags": [
+   "cards",
+   "3-up",
+   "custom",
+   "visual",
+   "icons",
+   "default-content"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "cards": [
+    {
+     "heading": "",
+     "body": "",
+     "icon": "",
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.85,
+   "y": 2.15,
+   "card_width": 3.35,
+   "card_height": 2.55,
+   "gap": 0.38,
+   "icon_size": 0.5,
+   "variant": "icon-top"
+  },
+  "density": "medium"
+ },
+ {
+  "id": "kpi-trio",
+  "name": "KPI panels with optional status bar",
+  "type": "kpi",
+  "tags": [
+   "data",
+   "metrics",
+   "3-up",
+   "visual",
+   "status"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "kpis": [
+    {
+     "value": "",
+     "label": "",
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.65,
+   "y": 2.25,
+   "card_width": 3.0,
+   "card_height": 1.65,
+   "gap": 0.3,
+   "progress": null,
+   "progress_label": ""
+  },
+  "density": "low"
+ },
+ {
+  "id": "chart-static",
+  "name": "Static chart with grid and labels",
+  "type": "chart",
+  "tags": [
+   "data",
+   "chart",
+   "bars",
+   "custom",
+   "visual"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "series": [
+    {
+     "label": "",
+     "value": 0,
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 1.0,
+   "y": 2.0,
+   "width": 10.9,
+   "height": 3.55,
+   "show_grid": true
+  },
+  "density": "medium"
+ },
+ {
+  "id": "process-timeline",
+  "name": "Process timeline with colored arrows",
+  "type": "process",
+  "tags": [
+   "process",
+   "timeline",
+   "arrows",
+   "visual",
+   "steps"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "steps": [
+    {
+     "label": "",
+     "detail": "",
+     "color": "",
+     "icon": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.9,
+   "y": 2.15,
+   "step_width": 2.45,
+   "step_height": 1.05,
+   "gap": 0.22,
+   "icon_size": 0.42
+  },
+  "density": "medium"
+ },
+ {
+  "id": "schema-grid",
+  "name": "Schema grid with boxes and connectors",
+  "type": "schema",
+  "tags": [
+   "schema",
+   "organogram",
+   "boxes",
+   "connectors",
+   "visual"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "nodes": [
+    {
+     "heading": "",
+     "body": "",
+     "color": "",
+     "icon": ""
+    }
+   ],
+   "connections": [
+    {
+     "from": 0,
+     "to": 1,
+     "label": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.8,
+   "y": 2.0,
+   "box_width": 2.35,
+   "box_height": 1.2,
+   "columns": 4,
+   "gap": 0.32,
+   "row_gap": 0.38,
+   "icon_size": 0.34
+  },
+  "density": "medium"
+ },
+ {
+  "id": "image-icon-trio",
+  "name": "Three visual columns with icons and optional images",
+  "type": "image-icon-trio",
+  "tags": [
+   "images",
+   "icons",
+   "3-up",
+   "visual",
+   "workshop"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "items": [
+    {
+     "heading": "",
+     "body": "",
+     "icon": "",
+     "image": "",
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.75,
+   "y": 1.95,
+   "column_width": 3.45,
+   "image_height": 1.6,
+   "gap": 0.42,
+   "icon_size": 0.52
+  },
+  "density": "medium"
+ },
+ {
+  "id": "matrix-2x2",
+  "name": "Two-axis 2x2 matrix",
+  "type": "matrix",
+  "tags": [
+   "matrix",
+   "2x2",
+   "decision",
+   "visual",
+   "axes"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "x_axis": "",
+   "y_axis": "",
+   "quadrants": [
+    {
+     "heading": "",
+     "body": "",
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.95,
+   "y": 1.95,
+   "width": 6.8,
+   "height": 4.2,
+   "label_width": 1.0
+  },
+  "density": "medium"
+ },
+ {
+  "id": "layer-stack",
+  "name": "Indented evidence layer stack",
+  "type": "layer-stack",
+  "tags": [
+   "layers",
+   "evidence",
+   "stack",
+   "visual"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "layers": [
+    {
+     "label": "",
+     "detail": "",
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 1.0,
+   "y": 2.0,
+   "width": 8.8,
+   "layer_height": 0.58,
+   "gap": 0.08,
+   "indent": 0.36
+  },
+  "density": "medium"
+ },
+ {
+  "id": "cycle-diagram",
+  "name": "Circular process cycle",
+  "type": "cycle",
+  "tags": [
+   "cycle",
+   "loop",
+   "process",
+   "visual"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "center": "",
+   "steps": [
+    {
+     "label": "",
+     "color": "",
+     "icon": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "center_x": 6.65,
+   "center_y": 3.9,
+   "radius": 1.65,
+   "node_size": 0.92
+  },
+  "density": "medium"
+ },
+ {
+  "id": "scenario-cards",
+  "name": "Scenario cards with pros and watchouts",
+  "type": "scenario",
+  "tags": [
+   "scenario",
+   "cards",
+   "options",
+   "visual"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "scenarios": [
+    {
+     "heading": "",
+     "subtitle": "",
+     "color": "",
+     "pros": [
+      ""
+     ],
+     "cons": [
+      ""
+     ]
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.75,
+   "y": 1.85,
+   "card_width": 3.55,
+   "card_height": 4.25,
+   "gap": 0.35
+  },
+  "density": "medium"
+ },
+ {
+  "id": "assessment-table",
+  "name": "Assessment table with colored score cells",
+  "type": "assessment",
+  "tags": [
+   "table",
+   "assessment",
+   "score",
+   "visual"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "columns": [
+    ""
+   ],
+   "rows": [
+    {
+     "criterion": "",
+     "description": "",
+     "score": "",
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.75,
+   "y": 1.8,
+   "width": 10.9,
+   "row_height": 0.62
+  },
+  "density": "high"
+ },
+ {
+  "id": "mechanism-diagram",
+  "name": "Mechanism diagram with central node and flows",
+  "type": "mechanism",
+  "tags": [
+   "mechanism",
+   "diagram",
+   "flows",
+   "roles",
+   "visual"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "center": {
+    "heading": "",
+    "body": "",
+    "color": ""
+   },
+   "nodes": [
+    {
+     "heading": "",
+     "body": "",
+     "color": "",
+     "icon": ""
+    }
+   ],
+   "flows": [
+    {
+     "from": "center",
+     "to": 0,
+     "label": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "center_x": 6.4,
+   "center_y": 3.75,
+   "node_width": 2.0,
+   "node_height": 0.82,
+   "radius_x": 3.6,
+   "radius_y": 1.75
+  },
+  "density": "medium"
+ },
+ {
+  "id": "closing",
+  "name": "Closing / contact",
+  "type": "closing",
+  "tags": [
+   "closing",
+   "contact",
+   "thanks"
+  ],
+  "renderer": "template",
+  "source_layout": "1_Titelslide",
+  "slots": {
+   "title": {
+    "placeholder_idx": 13
+   },
+   "subtitle": {
+    "placeholder_idx": 14
+   }
+  },
+  "content_schema": {
+   "title": "",
+   "subtitle": ""
+  },
+  "density": "low"
+ },
+ {
+  "id": "divider-block",
+  "name": "Full-bleed color-block divider with large icon",
+  "type": "divider",
+  "tags": [
+   "divider",
+   "transition",
+   "custom",
+   "visual",
+   "full-bleed",
+   "icon"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "subtitle": "",
+   "icon": ""
+  },
+  "visual_defaults": {
+   "panel_width": 5.3,
+   "icon_size": 2.3,
+   "panel_side": "left"
+  },
+  "density": "low"
+ },
+ {
+  "id": "stat-banner",
+  "name": "Dark stat banners with bold accent result numbers",
+  "type": "stat",
+  "tags": [
+   "stat",
+   "kpi",
+   "calculation",
+   "custom",
+   "visual",
+   "banner"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "banners": [
+    {
+     "context": "",
+     "value": "",
+     "label": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.85,
+   "y": 2.1,
+   "width": 11.6,
+   "banner_height": 1.15,
+   "gap": 0.22
+  },
+  "density": "medium"
+ },
+ {
+  "id": "swimlane-columns",
+  "name": "Color-coded swimlane theory-of-change columns",
+  "type": "swimlane",
+  "tags": [
+   "swimlane",
+   "theory-of-change",
+   "canvas",
+   "custom",
+   "visual",
+   "columns"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "columns": [
+    {
+     "heading": "",
+     "color": "",
+     "items": [
+      ""
+     ]
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.7,
+   "y": 1.95,
+   "width": 11.9,
+   "height": 4.85,
+   "header_height": 0.52,
+   "gap": 0.14
+  },
+  "density": "high"
+ },
+ {
+  "id": "closing-geometric",
+  "name": "Abstract geometric full-bleed closer",
+  "type": "closing",
+  "tags": [
+   "closing",
+   "contact",
+   "thanks",
+   "custom",
+   "visual",
+   "full-bleed"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "subtitle": ""
+  },
+  "density": "low"
+ },
+ {
+  "id": "custom-freeform",
+  "name": "Freeform primitive composition (bespoke exhibit builder)",
+  "type": "freeform",
+  "tags": [
+   "freeform",
+   "custom",
+   "visual",
+   "generative",
+   "bespoke",
+   "diagram"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "primitives": [
+    {
+     "type": "rect|rounded-rect|oval|triangle|diamond|pentagon|hexagon|chevron|arrow|donut|pie|line|connector|textbox|icon|table|image|group",
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0,
+     "fill": "",
+     "text": "",
+     "icon": ""
+    }
+   ]
+  },
+  "density": "medium"
+ },
+ {
+  "id": "chart-native",
+  "name": "Native editable PowerPoint chart (theme-colored)",
+  "type": "chart",
+  "tags": [
+   "data",
+   "chart",
+   "native",
+   "editable",
+   "visual",
+   "line",
+   "pie",
+   "donut",
+   "scatter",
+   "stacked"
+  ],
+  "renderer": "python-pptx",
+  "source_layout": "Leeg",
+  "slots": {},
+  "content_schema": {
+   "title": "",
+   "chart_type": "column|stacked-column|bar|stacked-bar|line|area|pie|donut|scatter",
+   "categories": [
+    ""
+   ],
+   "series": [
+    {
+     "name": "",
+     "values": [
+      0
+     ],
+     "color": ""
+    }
+   ]
+  },
+  "visual_defaults": {
+   "x": 0.95,
+   "y": 1.95,
+   "width": 11.4,
+   "height": 4.6
+  },
+  "density": "medium"
+ }
 ]

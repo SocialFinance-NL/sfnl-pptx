@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "title": "Visual-first SFNL demo",
+    "lang": "nl",
+    "accent": "emerald",
+    "output": "output/visual-demo.pptx"
+  },
+  "narrative": "De deckgenerator gebruikt visuele exhibits als standaard en laat per slide locatie, grootte, kleur en iconen sturen.",
+  "slides": [
+    {
+      "id": "s1",
+      "type": "content-cards",
+      "component_id": "content-cards",
+      "action_title": "Elke inhoudsslide krijgt een visueel exhibit in plaats van kale tekst",
+      "visual": {
+        "x": 1.1,
+        "y": 2.0,
+        "card_width": 2.8,
+        "card_height": 2.35,
+        "gap": 0.35,
+        "icon_size": 0.48,
+        "variant": "icon-top"
+      },
+      "content_schema_fill": {
+        "title": "Visuele bouwblokken als standaard",
+        "cards": [
+          {"heading": "Adviseren", "body": "Korte duiding met een duidelijk kader", "icon": "check", "color": "sky"},
+          {"heading": "Doen", "body": "Vorm en tekst dragen samen de boodschap", "icon": "gear", "color": "emerald"},
+          {"heading": "Inspireren", "body": "Iconen en accenten maken de slide scanbaar", "icon": "heart", "color": "grapefruit"}
+        ]
+      }
+    },
+    {
+      "id": "s2",
+      "type": "kpi",
+      "component_id": "kpi-trio",
+      "sensitive": true,
+      "action_title": "KPI's staan in panelen met statusinformatie",
+      "visual": {
+        "x": 0.65,
+        "y": 2.15,
+        "card_width": 2.7,
+        "card_height": 1.7,
+        "gap": 0.25,
+        "progress": 0.36,
+        "progress_label": "36% van aflossingen terugontvangen"
+      },
+      "content_schema_fill": {
+        "title": "Portefeuillestatus",
+        "kpis": [
+          {"value": "EUR 2,26 mln", "label": "uitgeleend", "color": "navy"},
+          {"value": "EUR 0,81 mln", "label": "terugontvangen", "color": "emerald"},
+          {"value": "EUR 1,45 mln", "label": "openstaand", "color": "royal"}
+        ]
+      }
+    },
+    {
+      "id": "s3",
+      "type": "process",
+      "component_id": "process-timeline",
+      "sensitive": true,
+      "action_title": "Een aanpak wordt als proces zichtbaar",
+      "visual": {
+        "x": 0.85,
+        "y": 2.05,
+        "step_width": 2.45,
+        "step_height": 1.08,
+        "gap": 0.22
+      },
+      "content_schema_fill": {
+        "title": "Onze aanpak",
+        "steps": [
+          {"label": "1. Ontwikkelen", "detail": "Verandertheorie", "color": "orange", "icon": "1"},
+          {"label": "2. Meten", "detail": "Businesscase", "color": "grapefruit", "icon": "2"},
+          {"label": "3. Schetsen", "detail": "Financieringslandschap", "color": "sky", "icon": "3"},
+          {"label": "4. Voorbereiden", "detail": "Implementatie", "color": "royal", "icon": "4"}
+        ]
+      }
+    },
+    {
+      "id": "s4",
+      "type": "schema",
+      "component_id": "schema-grid",
+      "sensitive": true,
+      "action_title": "Schema's gebruiken kaders, headers en verbindingen",
+      "visual": {
+        "x": 0.8,
+        "y": 1.95,
+        "box_width": 2.25,
+        "box_height": 1.2,
+        "columns": 4,
+        "gap": 0.32
+      },
+      "content_schema_fill": {
+        "title": "Organisatie in vier teams",
+        "nodes": [
+          {"heading": "Team HR", "body": "People en ontwikkeling", "color": "sky", "icon": "people"},
+          {"heading": "Business Dev.", "body": "BD strategie en acquisitie", "color": "royal", "icon": "target"},
+          {"heading": "Operations", "body": "Kantoor en administratie", "color": "emerald", "icon": "gear"},
+          {"heading": "Communicatie", "body": "Strategie en middelen", "color": "grapefruit", "icon": "heart"}
+        ],
+        "connections": [
+          {"from": 0, "to": 1},
+          {"from": 1, "to": 2},
+          {"from": 2, "to": 3}
+        ]
+      }
+    }
+  ]
+}

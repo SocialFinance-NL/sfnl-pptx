@@ -26,4 +26,5 @@ These rules are enforced while drafting the deck-spec: content discipline, not s
 - Concrete, specific, declarative. No generic AI filler, hedging, or inflated wording.
 - NL and EN are equal first-class languages; match the brief's language.
 - Consultant tone: confident, plain, and anchored in the actual evidence.
-- Color encodes meaning: one accent per deck for the through-line; do not decorate at random.
+- Color encodes meaning: one accent per deck for the through-line by default, or one accent per
+  category in multi-accent decks (`meta.accent_map`) — never decorate at random either way.
