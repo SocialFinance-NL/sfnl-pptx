@@ -1,0 +1,16 @@
+{
+  "title": "DECK TITLE",
+  "slug": "webdeck",
+  "language": "nl",
+  "author": "Social Finance NL",
+  "accent": "orange",
+  "hooks": null,
+  "slides": [
+    { "file": "slides/01-cover.html", "chrome": "none", "notes": "Bron: R1" },
+    { "file": "slides/02-kpi.html", "notes": "Bron: R1, R4" },
+    { "file": "slides/03-chart.html", "notes": "Bron: R2",
+      "charts": [{ "placeholder": "chart-main", "type": "column",
+        "series": [{ "name": "Deelnemers", "labels": ["2024", "2025", "2026"], "values": [120, 180, 260] }],
+        "axis": { "catTitle": "Jaar", "valTitle": "Aantal" } }] }
+  ]
+}
