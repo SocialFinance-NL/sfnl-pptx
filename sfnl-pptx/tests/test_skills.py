@@ -1,35 +1,51 @@
-from pathlib import Path
+"""Skills/docs must reference the html2pptx pipeline and nothing retired."""
 import re
-import yaml
+from pathlib import Path
 
-SKILLS = Path(__file__).resolve().parents[1] / "skills"
+PLUGIN = Path(__file__).resolve().parents[1]
+SKILLS = PLUGIN / "skills"
 
-
-def _frontmatter(p):
-    text = p.read_text(encoding="utf-8")
-    m = re.match(r"^---\n(.*?)\n---", text, re.S)
-    assert m, f"missing frontmatter in {p}"
-    return m.group(1)
+RETIRED = ("build_from_spec", "deck-spec.md", "scripts.spec", "components.py",
+           "find_components", "custom-freeform", "chart-native", "scripts/icons.py")
 
 
-def test_deck_skill_has_name_and_description():
-    fm = _frontmatter(SKILLS / "sfnl-deck" / "SKILL.md")
-    assert "name:" in fm and "description:" in fm
+def _all_docs():
+    return list(SKILLS.rglob("SKILL.md")) + [PLUGIN / "agents" / "deck-visual-reviewer.md",
+                                             PLUGIN / "README.md"]
 
 
-def test_review_skill_has_name_and_description():
-    fm = _frontmatter(SKILLS / "sfnl-deck-review" / "SKILL.md")
-    assert "name:" in fm and "description:" in fm
+def test_all_skills_exist_with_frontmatter():
+    for name in ("sfnl-deck", "sfnl-deck-research", "sfnl-deck-design",
+                 "sfnl-deck-review", "sfnl-deck-proof"):
+        p = SKILLS / name / "SKILL.md"
+        assert p.exists(), name
+        text = p.read_text(encoding="utf-8")
+        m = re.match(r"^---\n(.*?)\n---", text, re.S)
+        assert m, f"missing frontmatter in {p}"
+        assert f"name: {name}" in m.group(1)
+        assert "description:" in m.group(1)
 
 
-def test_design_skill_has_name_and_description():
-    fm = _frontmatter(SKILLS / "sfnl-deck-design" / "SKILL.md")
-    assert "name:" in fm and "description:" in fm
+def test_no_doc_references_retired_engine():
+    for doc in _all_docs():
+        text = doc.read_text(encoding="utf-8")
+        for marker in RETIRED:
+            assert marker not in text, f"{doc} still references {marker}"
 
 
-def test_all_skill_frontmatter_is_valid_yaml():
-    for skill_md in sorted(SKILLS.glob("*/SKILL.md")):
-        frontmatter = yaml.safe_load(_frontmatter(skill_md))
-        assert isinstance(frontmatter, dict), skill_md
-        assert frontmatter["name"]
-        assert frontmatter["description"]
+def test_deck_skill_mandates_new_pipeline():
+    text = (SKILLS / "sfnl-deck" / "SKILL.md").read_text(encoding="utf-8")
+    for needle in ("authoring-guide.md", "patterns.md", "build_deck.js", "visuele loop"):
+        assert needle in text
+
+
+def test_review_skill_mandates_full_render_loop():
+    text = (SKILLS / "sfnl-deck-review" / "SKILL.md").read_text(encoding="utf-8")
+    assert "scripts.render" in text and "alle slides" in text.lower()
+
+
+def test_reference_docs():
+    ref = PLUGIN / "engine" / "reference"
+    assert (ref / "authoring-guide.md").exists()
+    assert not (ref / "deck-spec.md").exists()
+    assert "schemeClr" not in (ref / "brand.md").read_text(encoding="utf-8")

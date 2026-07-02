@@ -58,7 +58,7 @@ Schrijf het dossier naar `output/research/<slug>-dossier.md` met deze structuur 
 - **Betrouwbaarheid**: hoog (primaire bron/CBS/peer-reviewed), middel (sectorrapport,
   onderzoeksbureau), laag (nieuwsbericht, enkele casus), aanname (geen bron).
 - **Viz?**: markeer welke regels zich lenen voor visualisatie en met welk component:
-  `kpi` (kpi-trio/stat-banner), `chart` (chart-native/chart-static), `proces`, `schema`, of `-`.
+  `kpi` (big numbers/stat-banner), `chart` (native chart via chartspec), `proces`, `schema`, of `-`.
   Dit voedt de storyboard-stap van `sfnl-deck-design` direct.
 - Sluit af met een sectie **Gaten en aannames**: wat is niet gevonden, welke aannames zijn
   gedaan, en wat de gebruiker eventueel zelf moet aanleveren.

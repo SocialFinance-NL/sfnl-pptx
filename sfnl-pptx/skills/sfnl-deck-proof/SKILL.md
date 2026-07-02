@@ -14,7 +14,8 @@ sensitive slides" — alles wordt gerenderd en bekeken.
 1. **Voorwaarden.** De deck is gebouwd en heeft `sfnl-deck-review` doorlopen zonder critical
    findings. Zo niet: eerst terug naar review.
 2. **Volledige render.** Run `python -m scripts.render --check`; bij beschikbare PowerPoint COM
-   render álle slides: `python -m scripts.render <deck.pptx> <out_dir>`. Is COM niet beschikbaar
+   render álle slides: `python -m scripts.render <deck.pptx> <workspace>/renders` (workspace =
+   `output/<datum>-<slug>/`). Is COM niet beschikbaar
    (geen Windows/PowerPoint), meld dan expliciet dat de visuele eindproef niet kon draaien en
    dat de deck is opgeleverd op basis van tekst-QA en spec-review alleen — lever nooit stil op
    zonder deze melding.
@@ -29,7 +30,8 @@ sensitive slides" — alles wordt gerenderd en bekeken.
 5. **Taalproef.** Loop alle slide-teksten na op taalfouten, inconsistente spelling (NL/EN mix),
    dubbele spaties en afgebroken zinnen. Controleer of alle action titles nog kloppen met wat de
    slide daadwerkelijk toont.
-6. **Herstellen en herhalen.** Elke critical finding: fix de deck-spec, rebuild, re-render de
+6. **Herstellen en herhalen.** Elke critical finding: fix de HTML/deck.json, rebuild met
+   `node engine/web/build/build_deck.js <workspace>`, re-render de
    betrokken slides en laat ze opnieuw beoordelen. Herhaal tot nul critical findings.
 7. **Proefrapport.** Schrijf `output/<slug>-proefrapport.md`:
 
@@ -57,6 +59,6 @@ Datum: <datum> · Deck: <pad> · Slides: <N> · Rondes: <n>
 
 - Nooit "klaar voor oplevering" rapporteren met openstaande critical findings of een
   overgeslagen proef die niet in het rapport staat.
-- De proef beoordeelt de gebouwde .pptx, niet de spec: wat de klant ziet is leidend.
+- De proef beoordeelt de gebouwde .pptx, niet de HTML-bron: wat de klant ziet is leidend.
 - Maximaal drie herstelrondes; daarna de resterende bevindingen expliciet aan de gebruiker
   voorleggen in plaats van eindeloos itereren.

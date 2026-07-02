@@ -5,76 +5,49 @@ description: Generate a Social Finance NL branded PowerPoint deck from a brief, 
 
 # sfnl-deck: generate an SFNL deck
 
-Build consultant-quality, on-brand decks on the bundled sjabloon. Work spec-first: think once
-into a compact deck-spec JSON, then build deterministically.
+Bouw consultant-kwaliteit decks door **vrije HTML-compositie per slide**, geconverteerd naar
+een bewerkbare .pptx via html2pptx + PptxGenJS. Lees vóór het bouwen altijd
+`engine/reference/authoring-guide.md` en `engine/web/patterns.md`.
 
 ## Pipeline
 
-Idea → research → narrative → storyboard → spec → build → review → proof. Zeven stappen:
+Idee → research → narrative → storyboard → HTML+deck.json → build → visuele loop → review → proof:
 
-1. **Intake.** Accept a one-line brief, an outline, or source docs. Detect language: NL or EN.
-2. **Research.** Hand off to the `sfnl-deck-research` skill: turn the idea into a
-   **bronnendossier** (feiten, cijfers, bronnen, viz-kandidaten) before any slide is written.
-   Skip only when the user supplies complete, already-sourced material — record that as the
-   source. Every number that later lands on a slide must trace to a dossier row.
-3. **Narrative and titles.** Read `engine/reference/voice.md`. Write the SCQA `narrative`, then
-   draft an **action title** for every slide. Run the **ghost-deck test** before building.
-4. **Design the layout, slide by slide.** Hand off to the `sfnl-deck-design` skill to decide the
-   deck's color model (single- vs multi-accent) and build a per-slide storyboard — component,
-   category, icon, variant, rationale — before any JSON is written. The catalogue includes icon
-   cards, KPI panels, native editable charts, process arrows/chevrons, schema/organogram,
-   image+icon trio, matrix, evidence stack, cycle, scenario cards, assessment table, mechanism
-   diagram, full-bleed color dividers, dark stat banners, color-coded swimlane canvases, and an
-   abstract geometric closer. Query `engine/scripts/components.py`
-   (`find_components(type=..., tags=...)`) while building the storyboard. `content-text` is an
-   exception, not the default: use it only when the user explicitly asks for plain text or
-   legal/contract wording requires it, and record the reason. When no named component carries
-   the slide's message, design a **bespoke exhibit** with `custom-freeform` — a full member of
-   the toolkit, not a last resort. Its primitive set (shapes, arrows, chevrons, connectors with
-   arrowheads, tables, icons, bullet textboxes, groups) is rich enough to compose consultancy-
-   grade one-off diagrams; record in the rationale why a bespoke exhibit beats the nearest
-   named component. For data that deserves a real graph, use `chart-native` (editable
-   PowerPoint charts: column, stacked, bar, line, area, pie, donut, scatter) fed by the
-   dossier's viz-kandidaten.
-5. **Emit deck-spec.** Translate the confirmed storyboard into JSON using the schema and
-   component catalogue in `engine/reference/deck-spec.md`. Validate it with
-   `scripts.spec.validate_spec`; fix every error before building. Put source references
-   (dossier row ids) in speaker notes.
-6. **Build + review.** Run `python -m scripts.build_from_spec <spec.json> [out.pptx]`. Default
-   output is `output/<YYYY-MM-DD>-<slug>.pptx`. Colors are `schemeClr`; never hardcode hex.
-   Then hand off to `sfnl-deck-review` for adaptive QA; fix and rebuild until no critical
-   findings remain.
-7. **Proof.** Before anything goes to a client, hand off to `sfnl-deck-proof`: full render of
-   every slide, whole-deck visual review, fact-check against the bronnendossier, language pass,
-   and a written proefrapport. Do not declare the deck deliverable until the proof verdict is
-   "klaar voor oplevering".
+1. **Intake.** Brief, outline of brondocumenten. Detecteer taal (NL/EN).
+2. **Research.** Hand off naar `sfnl-deck-research`: bronnendossier (feiten, cijfers, bronnen,
+   viz-kandidaten) vóór er een slide bestaat. Skip alleen wanneer de gebruiker compleet,
+   gebronmerkt materiaal aanlevert — noteer dat als bron. Elk cijfer op een slide traceert naar
+   een dossierregel.
+3. **Narrative en titels.** Lees `engine/reference/voice.md`. SCQA-narrative, action title per
+   slide, ghost-deck-test vóór het bouwen.
+4. **Storyboard.** Hand off naar `sfnl-deck-design`: per slide de layoutcompositie (regio's,
+   hiërarchie, patroon uit `patterns.md` of archetype, accentgebruik, chart-kandidaten) als
+   tekst-storyboard, goedgekeurd vóór er HTML wordt geschreven.
+5. **Auteur HTML + deck.json.** Maak de workspace `output/<YYYY-MM-DD>-<slug>/` (kopieer
+   `engine/web/sfnl.css` naar `slides/`). Eén HTML-bestand per slide vanaf `engine/web/scaffold.html`
+   of een archetype (`engine/web/archetypes/`); charts als `class="placeholder"` + chartspec in
+   `deck.json`; speaker notes met dossier-verwijzingen in `deck.json`. Volg de harde HTML-regels
+   uit de authoring guide (alle tekst in tekst-tags, geen gradients, ALL CAPS-titels getypt,
+   geen logo/paginanummer in HTML).
+6. **Build + visuele loop (verplicht, elke build).** `node engine/web/build/build_deck.js
+   output/<datum>-<slug>`. Faalt de validatie: alle fouten in één keer fixen. Daarna renderen
+   (`python -m scripts.render … renders/` vanuit `engine/`), elke PNG inspecteren of de
+   `deck-visual-reviewer` dispatchen, HTML fixen, rebuilden — tot schoon. Draai ook
+   `python -m scripts.qa_text` en los criticals op.
+7. **Review + proof.** Hand off naar `sfnl-deck-review` (adaptieve QA) en vóór klantoplevering
+   naar `sfnl-deck-proof` (volledige eindproef). Pas opleveren bij "klaar voor oplevering".
 
-## Rules
+## Regels
 
-- The SFNL template is bundled at `engine/assets/sfnl-template.pptx` and loaded automatically by
-  the build. Never ask the user to upload, supply, or point at a `.potx` — the deck is always built
-  on the bundled sjabloon.
-- Run scripts from `sfnl-pptx/engine`, or set `PYTHONPATH` so `import scripts.*` resolves.
-- Deck-spec JSON schema and the full component catalogue live in `engine/reference/deck-spec.md`.
-- Brand palette and typography live in `engine/reference/brand.md`.
-- Voice and content discipline live in `engine/reference/voice.md`.
-- One accent per deck (`meta.accent`) by default; it carries the narrative through-line. Decks
-  with 3+ recurring categories across many slides may opt into `meta.accent_map` (multi-accent
-  mode, one accent per category) — decided in step 3, documented in `deck-spec.md`.
-- Every normal content slide must have a visual exhibit: cards with icon bubbles, KPI/status
-  panels, native editable charts, process arrows or chevrons, schema boxes/connectors, image/icon
-  columns, 2x2 matrices, layer stacks, cycles, scenario cards, assessment tables, mechanism
-  diagrams, full-bleed color dividers, dark stat banners, color-coded swimlane columns, an
-  abstract geometric closer, or a bespoke `custom-freeform` composition.
-- Tune `visual` per slide when needed. Available controls include `x`, `y`, `card_width`,
-  `card_height`, `box_width`, `box_height`, `step_width`, `step_height`, `width`, `height`, `gap`,
-  `row_gap`, `columns`, `icon_size`, `progress`, `progress_label`, and `variant`.
-- Icons are content, not decoration. For small icon bubbles inside cards/nodes/steps, choose from
-  the text-glyph set (`check`, `gear`, `heart`, `people`, `target`, `money`, `chart`, `idea`, or a
-  short custom label). For large-scale icons on `divider-block` and `custom-freeform`, use the
-  vector icon library in `engine/scripts/icons.py` (`target`, `people`, `growth`, `idea`, `house`,
-  `book`, `calendar`, `compass`, `partnership`, `check`, `flag`, `scale`, `money`, `clock`,
-  `gear`). Either way, adjust size/location through the slide's `visual` object.
-- The standalone HTML template in user references is a pattern source, not an exact template:
-  translate useful layouts into these components and update colors, spacing, typography, and
-  density so output still follows the bundled SFNL PowerPoint sjabloon.
+- Chrome is heilig: titelblok + oranje dash in de HTML (scaffold), logo + paginanummer komen
+  native uit de build. Full-bleed archetypes regelen hun eigen chrome (`chrome: "dark"|"none"`).
+- Eén accent per deck (`deck.json.accent`); kleur codeert betekenis (`engine/reference/brand.md`).
+- **Volledige hoogte**: elke contentslide vult het canvas met een echte exhibit; half-leeg of
+  tekst-zonder-exhibit is een defect. Gebruik `patterns.md` als kookboek, niet als keurslijf —
+  pas patronen vrij aan op de boodschap en componeer gerust bespoke exhibits.
+- Data die een grafiek verdient wordt een **native chart** (chartspec in deck.json), gevoed
+  door de viz-kandidaten uit het dossier.
+- Iconen zijn inhoud: rasterize react-icons in merkkleur naar `assets/`
+  (`node engine/web/build/raster.js icon …`).
+- Node-dependencies staan in `engine/web/build/` (`npm install` + `npx playwright install
+  chromium` eenmalig). Python-scripts draaien vanuit `sfnl-pptx/engine`.
