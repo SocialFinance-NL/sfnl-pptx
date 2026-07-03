@@ -39,6 +39,13 @@ only the three brand fonts are used.
 Triggers are described in each skill's frontmatter — e.g. "maak een presentatie", "nieuwe slides
 in huisstijl", "SFNL deck", "review/check this SFNL .pptx", or "final proof / klaar voor de klant".
 
+## Dev tooling (intern)
+
+| Skill / agent | Doel |
+|------|------|
+| `sfnl-deck-retro` | Interne dogfooding-run: draait een verzonnen deck door de volledige pipeline en levert een verbeterrapport over de plugin zelf. Nooit voor een echte klant-deck. |
+| `deck-process-reviewer` (agent) | Dispatched door `sfnl-deck-retro` na elke stage; beoordeelt het proces (frictie, doc-gaten, automatiseringskansen, laat-gevangen missers), niet de deck. |
+
 ## How it works
 
 ```

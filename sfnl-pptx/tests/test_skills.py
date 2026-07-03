@@ -11,6 +11,7 @@ RETIRED = ("build_from_spec", "deck-spec.md", "scripts.spec", "components.py",
 
 def _all_docs():
     return list(SKILLS.rglob("SKILL.md")) + [PLUGIN / "agents" / "deck-visual-reviewer.md",
+                                             PLUGIN / "agents" / "deck-process-reviewer.md",
                                              PLUGIN / "README.md"]
 
 
@@ -78,3 +79,9 @@ def test_reference_docs():
     assert (ref / "authoring-guide.md").exists()
     assert not (ref / "deck-spec.md").exists()
     assert "schemeClr" not in (ref / "brand.md").read_text(encoding="utf-8")
+
+
+def test_readme_documents_dev_tooling():
+    text = (PLUGIN / "README.md").read_text(encoding="utf-8")
+    assert "sfnl-deck-retro" in text
+    assert "deck-process-reviewer" in text
