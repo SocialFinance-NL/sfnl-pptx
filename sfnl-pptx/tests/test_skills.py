@@ -26,6 +26,17 @@ def test_all_skills_exist_with_frontmatter():
         assert "description:" in m.group(1)
 
 
+def test_deck_process_reviewer_agent_exists_with_frontmatter():
+    p = PLUGIN / "agents" / "deck-process-reviewer.md"
+    assert p.exists(), p
+    text = p.read_text(encoding="utf-8")
+    m = re.match(r"^---\n(.*?)\n---", text, re.S)
+    assert m, f"missing frontmatter in {p}"
+    assert "name: deck-process-reviewer" in m.group(1)
+    assert "tools:" in m.group(1)
+    assert "description:" in m.group(1)
+
+
 def test_no_doc_references_retired_engine():
     for doc in _all_docs():
         text = doc.read_text(encoding="utf-8")
