@@ -98,6 +98,9 @@ function validateTextBoxPosition(slideData, bodyDimensions) {
   const minBottomMargin = 0.5; // 0.5 inches from bottom
 
   for (const el of slideData.elements) {
+    // Chrome slots volgen de officiële sjabloon-geometrie (extract_chrome.py)
+    // en mogen dichter op de onderrand staan dan vrije contenttekst.
+    if (el.chromeSlot) continue;
     // Check text elements (p, h1-h6, list)
     if (['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'list'].includes(el.type)) {
       const fontSize = el.style?.fontSize || 0;
@@ -868,6 +871,7 @@ async function extractSlideData(page) {
         elements.push({
           type: el.tagName.toLowerCase(),
           text: runs,
+          chromeSlot: el.classList.contains('chrome-slot'),
           position: { x: pxToInch(x), y: pxToInch(y), w: pxToInch(w), h: pxToInch(h) },
           style: adjustedStyle
         });
@@ -881,6 +885,7 @@ async function extractSlideData(page) {
         elements.push({
           type: el.tagName.toLowerCase(),
           text: transformedText,
+          chromeSlot: el.classList.contains('chrome-slot'),
           position: { x: pxToInch(x), y: pxToInch(y), w: pxToInch(w), h: pxToInch(h) },
           style: {
             ...baseStyle,

@@ -30,9 +30,12 @@ You run in one of two modes:
    - **Overlap/misalignment:** elements off-grid, icons or text off-center in their container,
      uneven gaps between repeated elements (cards, KPI panels, swimlane columns).
    - **Chrome integrity:** title block + orange dash present and positioned top-left; SFNL logo
-     bottom-left and orange page number bottom-right on content slides. Full-bleed archetypes
-     (cover, divider, closing) follow their own chrome rules — no logo/orange number expected
-     there, but a divider should have a white page number if `chrome: "dark"` was set.
+     bottom-left and orange page number bottom-right on content slides. Covers, dividers and
+     quote slides must be the official template designs (archetypes generated from
+     `engine/assets/sfnl-slides.pptx`) — compare against `engine/web/assets/chrome/<key>.png`;
+     a hand-designed cover or divider is a **critical** defect. A divider should have a white
+     page number if `chrome: "dark"` was set; quote slides carry their own logo in the design
+     (`chrome: "number"`).
    - **Off-brand color/font:** anything that doesn't read as SFNL accents/navy/tints/white, or
      a font that isn't Gotham Bold / Lato Light / Montserrat Light.
    - **Sparse/half-empty slides:** content must fill the canvas; a slide that is mostly white

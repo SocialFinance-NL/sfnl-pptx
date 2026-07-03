@@ -13,6 +13,13 @@ only the three brand fonts are used.
 > dash, logo, page number) is built into `engine/web/sfnl.css` + `build_deck.js`. The original
 > sjabloon stays bundled at `engine/assets/sfnl-template.pptx` purely as visual reference.
 
+> **Covers and section dividers are never invented.** Title slides, section dividers and quote
+> slides always use the official designs from `engine/assets/sfnl-slides.pptx`, exposed as
+> ready-made archetypes (`engine/web/archetypes/cover-*`, `divider-*`, `quote-*`) with the
+> official slide render as background and text slots on the sjabloon placeholder positions.
+> Regenerate after a sjabloon update with `python -m scripts.extract_chrome` (from `engine/`);
+> the catalog lives in `engine/web/assets/chrome/manifest.json`.
+
 ## Plugin manifests
 
 - Claude: `.claude-plugin/plugin.json`
@@ -85,10 +92,12 @@ sfnl-pptx/
 │                           sfnl-deck-review, sfnl-deck-proof (SKILL.md each)
 ├── agents/                 deck-visual-reviewer (render + inspect subagent)
 ├── engine/
-│   ├── assets/             bundled sjabloon (visual reference) + generated palette.json
+│   ├── assets/             bundled sjabloon + sfnl-slides.pptx (officiële covers/dividers)
+│   │                       + generated palette.json
 │   ├── reference/          authoring-guide.md, brand.md, voice.md
-│   ├── scripts/            qa_text, render, extract_palette (python)
+│   ├── scripts/            qa_text, render, extract_palette, extract_chrome (python)
 │   └── web/                sfnl.css, tokens.json, scaffold.html, archetypes/, patterns.md,
-│                           assets/ (logo), build/ (html2pptx, build_deck, charts, raster, tests)
+│                           assets/ (logo, chrome/ officiële slide-PNG's + manifest),
+│                           build/ (html2pptx, build_deck, charts, raster, tests)
 └── tests/                  pytest suite
 ```

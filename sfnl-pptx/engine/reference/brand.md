@@ -39,9 +39,11 @@ Geen andere hex introduceren: `qa_text` markeert alles buiten `tokens.json` als 
 
 Titelblok linksboven (Gotham Bold 18pt navy, ALL CAPS) met oranje dash eronder; SFNL-logo
 linksonder en oranje paginanummer rechtsonder (native geïnjecteerd door `build_deck.js`).
-Full-bleed archetypes (cover, divider, closing) hebben eigen chrome-regels — zie
-`engine/web/archetypes/`. Het bewaarde `engine/assets/sfnl-template.pptx` dient alleen nog als
-visuele referentie voor chrome-getrouwheid.
+Titelslides, sectiedividers en quotes gebruiken de officiële sjabloonontwerpen — de archetypes
+`cover-*`/`divider-*`/`quote-*` in `engine/web/archetypes/` (gegenereerd uit
+`engine/assets/sfnl-slides.pptx`); nooit zelf ontwerpen. Het bewaarde
+`engine/assets/sfnl-template.pptx` dient alleen nog als visuele referentie voor
+chrome-getrouwheid.
 
 ## Compositie
 

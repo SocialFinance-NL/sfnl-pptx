@@ -1,6 +1,6 @@
 {
   "name": "sfnl-pptx",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Idea-to-proof pipeline for Social Finance NL branded PowerPoint decks: research (bronnendossier), storyboard, free-form HTML slide composition built via html2pptx + PptxGenJS with native editable charts, a mandatory visual render loop, adaptive review, and a full render proof.",
   "author": {
     "name": "Social Finance NL",

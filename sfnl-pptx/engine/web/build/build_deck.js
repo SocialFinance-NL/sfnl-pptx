@@ -16,7 +16,9 @@ const PAGE_POS = { x: 9.45, y: 5.34, w: 0.465, h: 0.18 };
 
 function addChrome(slide, pageNo, mode) {
   if (mode === 'none') return;
-  if (mode !== 'dark') slide.addImage({ path: LOGO, ...LOGO_POS });
+  // 'number': alleen oranje paginanummer — voor sjabloonslides die hun eigen
+  // logo al in het ontwerp dragen (zie assets/chrome/manifest.json).
+  if (mode !== 'dark' && mode !== 'number') slide.addImage({ path: LOGO, ...LOGO_POS });
   slide.addText(String(pageNo), {
     ...PAGE_POS, fontFace: 'Montserrat Light', fontSize: 9, align: 'right',
     color: mode === 'dark' ? 'FFFFFF' : 'F87F4F',

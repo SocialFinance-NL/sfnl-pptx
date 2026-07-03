@@ -10,14 +10,24 @@ output/<YYYY-MM-DD>-<slug>/
   deck.json
   slides/01-cover.html … NN-closing.html
   slides/sfnl.css        # kopie van engine/web/sfnl.css
+  slides/chrome/         # kopie van engine/web/assets/chrome/ (officiële cover/divider-PNG's)
   assets/                # gerasterde iconen/gradients (Sharp)
   renders/               # PNG-renders van de visuele loop
   <slug>.pptx
 ```
 
-Aanmaken: map maken, `engine/web/sfnl.css` naar `slides/` kopiëren, per slide starten vanaf
-`engine/web/scaffold.html` of een archetype uit `engine/web/archetypes/`
-(cover, divider, quote, closing, stat-banner). Layoutpatronen: `engine/web/patterns.md`.
+Aanmaken: map maken, `engine/web/sfnl.css` naar `slides/` kopiëren en `engine/web/assets/chrome/`
+naar `slides/chrome/`. Contentslides starten vanaf `engine/web/scaffold.html` (patronen:
+`engine/web/patterns.md`, plus `stat-banner`-archetype).
+
+**Titelslides, sectiedividers en quotes komen verplicht uit de officiële archetypes**
+(`engine/web/archetypes/cover-01…04.html`, `divider-01…10.html`, `quote-01.html`). Die zijn
+gegenereerd uit het officiële sjabloon (`engine/assets/sfnl-slides.pptx`, via
+`python -m scripts.extract_chrome`): de slide-achtergrond is de officiële PNG, de tekstslots
+(class `chrome-slot`) staan op de sjabloon-placeholderposities. Kopieer het archetype, vervang
+alleen de slotteksten, en verplaats of herstijl de slots niet. `cover-02`/`cover-03` hebben geen
+tekstslots (opening/afsluiter). De catalogus met beschrijvingen en het `chrome`-advies per
+variant staat in `engine/web/assets/chrome/manifest.json`.
 
 ## HTML-regels (hard — de build faalt of verliest tekst bij overtreding)
 
@@ -63,7 +73,9 @@ Aanmaken: map maken, `engine/web/sfnl.css` naar `slides/` kopiëren, per slide s
   kleurgebruik (categorieën), namen uit `palette.json` (`orange`, `grapefruit`, `royal`, `sky`,
   `emerald`, `navy`, `dark slate`).
 - `chrome`: `"light"` (default: logo + oranje paginanummer), `"dark"` (wit paginanummer, geen
-  logo — voor navy full-bleed), `"none"` (cover/closing).
+  logo — voor dividers), `"number"` (alleen oranje paginanummer — voor sjabloonslides die hun
+  logo al in het ontwerp dragen, zoals `quote-01`), `"none"` (cover/closing). Voor archetypes:
+  volg het advies in `chrome/manifest.json`.
 - `notes`: speaker notes; verwijs elke claim naar bronnendossier-regels (R-id's).
 - `type`: `column | stackedColumn | bar | line | area | pie | donut | scatter`. Scatter volgt de
   PptxGenJS-conventie: eerste serie = X-waarden, volgende series = Y-waarden.

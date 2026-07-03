@@ -1,0 +1,522 @@
+{
+  "source": "engine/assets/sfnl-slides.pptx",
+  "canvas_pt": [
+    720,
+    405
+  ],
+  "variants": [
+    {
+      "key": "cover-01",
+      "kind": "cover",
+      "source_slide": 1,
+      "layout": "1_Titelslide",
+      "chrome": "none",
+      "description": "Fotocollage-kwadranten (oranje/royal/grapefruit + foto), wit logoblok in het midden; titel en subtitel wit rechtsonder.",
+      "png": "chrome/cover-01.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "DEKTITEL",
+          "left_pt": 412.2,
+          "top_pt": 312.5,
+          "width_pt": 288.0,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 21.0,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "ONDERTITEL — KLANT — DATUM",
+          "left_pt": 412.2,
+          "top_pt": 351.3,
+          "width_pt": 263.7,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "cover-02",
+      "kind": "cover",
+      "source_slide": 2,
+      "layout": "5_Titelslide",
+      "chrome": "none",
+      "description": "Effen oranje vlak, wit logo rechtsonder. Geen tekstslots — opening of afsluiter.",
+      "png": "chrome/cover-02.png",
+      "slots": []
+    },
+    {
+      "key": "cover-03",
+      "kind": "cover",
+      "source_slide": 3,
+      "layout": "6_Titelslide",
+      "chrome": "none",
+      "description": "Oranje cirkelcompositie, wit logo gecentreerd. Geen tekstslots — opening of afsluiter.",
+      "png": "chrome/cover-03.png",
+      "slots": []
+    },
+    {
+      "key": "cover-04",
+      "kind": "cover",
+      "source_slide": 4,
+      "layout": "7_Titelslide",
+      "chrome": "none",
+      "description": "Oranje bogen-graphic bovenhelft, witte band onder; navy titel gecentreerd op de band.",
+      "png": "chrome/cover-04.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "DEKTITEL",
+          "left_pt": 0.0,
+          "top_pt": 227.8,
+          "width_pt": 719.5,
+          "height_pt": 34.0,
+          "font": "Gotham Bold",
+          "size_pt": 24.75,
+          "color": "#201B5C",
+          "align": "center",
+          "bold": true
+        }
+      ]
+    },
+    {
+      "key": "quote-01",
+      "kind": "quote",
+      "source_slide": 5,
+      "layout": "Quote",
+      "chrome": "number",
+      "description": "Witte slide met grote foto en oranje overlayvlak, logo linksonder (in het ontwerp); titel en subtitel bovenaan.",
+      "png": "chrome/quote-01.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "TITEL",
+          "left_pt": 25.9,
+          "top_pt": 32.4,
+          "width_pt": 676.1,
+          "height_pt": 19.8,
+          "font": "Gotham Bold",
+          "size_pt": 18.0,
+          "color": "#201B5C",
+          "align": null,
+          "bold": false
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 25.9,
+          "top_pt": 56.0,
+          "width_pt": 676.1,
+          "height_pt": 33.8,
+          "font": "Montserrat Light",
+          "size_pt": 10.5,
+          "color": "#233348",
+          "align": null,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "key": "divider-01",
+      "kind": "divider",
+      "source_slide": 6,
+      "layout": "2_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links, royal vlak rechts; sectietitel boven met bodytekst (sectie-intro) eronder.",
+      "png": "chrome/divider-01.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 318.6,
+          "top_pt": 84.8,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "body",
+          "tag": "p",
+          "sample": "Sectie-intro in twee tot vier regels.",
+          "left_pt": 318.6,
+          "top_pt": 129.0,
+          "width_pt": 321.6,
+          "height_pt": 237.6,
+          "font": "Lato Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-02",
+      "kind": "divider",
+      "source_slide": 7,
+      "layout": "3_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (BMX-fietser voor stadspark), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-02.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 322.1,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-03",
+      "kind": "divider",
+      "source_slide": 8,
+      "layout": "4_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (straatbeeld, mannen voor snackbar), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-03.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-04",
+      "kind": "divider",
+      "source_slide": 9,
+      "layout": "11_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (hand met euro's op markt), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-04.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-05",
+      "kind": "divider",
+      "source_slide": 10,
+      "layout": "6_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (handen op laptop), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-05.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-06",
+      "kind": "divider",
+      "source_slide": 11,
+      "layout": "7_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (koffieoogst/landbouw), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-06.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-07",
+      "kind": "divider",
+      "source_slide": 12,
+      "layout": "8_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (demonstratiebord 'You paid for this'), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-07.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-08",
+      "kind": "divider",
+      "source_slide": 13,
+      "layout": "9_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (hardlopers met reflectie in plas), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-08.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-09",
+      "kind": "divider",
+      "source_slide": 14,
+      "layout": "10_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (brug over het IJ, Amsterdam), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-09.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    },
+    {
+      "key": "divider-10",
+      "kind": "divider",
+      "source_slide": 15,
+      "layout": "12_sectieslide_stijl1",
+      "chrome": "dark",
+      "description": "Foto links (laptop met analytics-dashboard), royal vlak rechts; titel + subtitel rechtsonder.",
+      "png": "chrome/divider-10.png",
+      "slots": [
+        {
+          "role": "title",
+          "tag": "h1",
+          "sample": "SECTIETITEL",
+          "left_pt": 327.9,
+          "top_pt": 312.9,
+          "width_pt": 321.6,
+          "height_pt": 30.5,
+          "font": "Gotham Bold",
+          "size_pt": 24.38,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": true
+        },
+        {
+          "role": "subtitle",
+          "tag": "p",
+          "sample": "SUBTITEL",
+          "left_pt": 327.4,
+          "top_pt": 353.1,
+          "width_pt": 321.6,
+          "height_pt": 33.1,
+          "font": "Montserrat Light",
+          "size_pt": 13.5,
+          "color": "#FEFFFF",
+          "align": null,
+          "bold": false
+        }
+      ]
+    }
+  ]
+}

@@ -9,7 +9,10 @@ Kopieer, pas aan, componeer. Merkregels reizen mee:
 - Tekstregels: alle tekst in `<p>/<h1>-<h6>/<ul>/<ol>`; achtergrond/rand alleen op `<div>`;
   geen CSS-gradients (pre-render via Sharp); titels in ALL CAPS getypt.
 
-Fragmenten hieronder horen binnen het scaffold's `<main class="content">`.
+Fragmenten hieronder horen binnen het scaffold's `<main class="content">` en gelden alleen
+voor **contentslides**. Covers, sectiedividers en quotes zijn geen patroon maar een gegeven:
+gebruik de officiële archetypes (`archetypes/cover-*`, `divider-*`, `quote-*`; catalogus in
+`assets/chrome/manifest.json`) en vervang alleen de slotteksten.
 
 ## KPI-rij met grote cijfers
 

@@ -23,6 +23,7 @@ def _workspace(dst_dir, name):
     ws = dst_dir / name
     shutil.copytree(FIXTURES / name, ws)
     shutil.copy(ENGINE / "web" / "sfnl.css", ws / "slides" / "sfnl.css")
+    shutil.copytree(ENGINE / "web" / "assets" / "chrome", ws / "slides" / "chrome")
     return ws
 
 

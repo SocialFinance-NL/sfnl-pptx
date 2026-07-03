@@ -83,7 +83,8 @@ h1, h2, h3 { font-family: "Gotham Bold", Arial, sans-serif; color: var(--sfnl-na
 }
 .kicker { font-family: "Gotham Bold", Arial, sans-serif; font-size: 9pt; color: var(--sfnl-orange); letter-spacing: 0.1em; }
 
-/* ---- Full-bleed archetypes (cover, divider, closing) ---- */
-.bleed-navy { background: var(--sfnl-navy); }
-.bleed-navy h1, .bleed-navy h2, .bleed-navy p { color: #FFFFFF; }
-.bleed-center { flex: 1; display: flex; flex-direction: column; justify-content: center; margin: 0 60pt; }
+/* ---- Officiële chrome-archetypes (cover/divider/quote) ----
+   Gegenereerd door scripts/extract_chrome.py uit het sjabloon; de slide-achtergrond
+   is de officiële PNG, tekstslots staan op de sjabloon-placeholderposities.
+   `chrome-slot` is gereserveerd voor deze slots (soepelere ondermarge-validatie). */
+.chrome-slot { position: absolute; margin: 0; line-height: 1.15; }
