@@ -42,6 +42,52 @@ geldstroom-diagram, stakeholderkaart, parallelle tijdlijnen) zijn welkom: schets
 elementen in het storyboard zodat de HTML-stap mechanisch wordt. Complexe native elementen
 (tabellen e.d.) kunnen via de per-deck hook — noteer dat expliciet.
 
+## Stap 2.5: visuele review van sleutelslides
+
+Het tekst-storyboard uit stap 2 is genoeg voor rechttoe-rechtaan composities, maar niet altijd
+genoeg om te beoordelen of een bespoke of narratief cruciale slide werkt. Deze stap voegt daarom
+een klein, visueel reviewmoment toe vóórdat er HTML voor de hele deck wordt geschreven.
+
+**Moduskeuze.** Standaard: **Track B** — tekst-storyboard plus visuele review van sleutelslides.
+Val terug op **Track A** (alleen tekst-storyboard, direct door naar stap 3) wanneer de gebruiker
+dat expliciet aangeeft, of wanneer de deck triviaal klein/eenvoudig is (richtlijn: ≤ 6 slides én
+geen enkele bespoke compositie in het storyboard). Meld bij terugval kort waarom, bv. "korte deck
+zonder bespoke composities, ik sla de visuele review over".
+
+**Sleutelslides markeren.** Markeer in het storyboard een subset als "sleutelslide" op basis van
+twee criteria (één is genoeg):
+
+1. **Structureel nieuw/bespoke**: composities buiten de standaardpatronen uit `patterns.md`
+   (funnel, geldstroom-diagram, stakeholderkaart, parallelle tijdlijnen, etc.).
+2. **Narratief cruciaal**: slides die het kernargument dragen ongeacht layout-complexiteit (SCQA-
+   complicatie/antwoord, conclusie-slide, grote-getallen/verdict-slide).
+
+Cover-, divider- en quote-slides worden nooit gemarkeerd — die liggen al vast op officiële
+archetypes. Noteer bij elke gemarkeerde rij één regel rationale: waarom deze slide een visuele
+check verdient. Richtlijn: 2-5 gemarkeerde slides voor een deck van 15-25 slides — als vrijwel de
+hele deck bespoke is, is dat een signaal om de storyboard-fase zelf te herzien, niet om alles te
+markeren.
+
+**Mockup: snelle standalone HTML, geen build-pipeline.** Bouw voor elke gemarkeerde slide een
+snelle standalone HTML-mockup:
+
+- Gebruikt `sfnl.css`-tokens (kleuren, typografie) voor merkherkenbaarheid.
+- Benadert de compositie uit het storyboard: regio-indeling, hiërarchie, accentplek, ruwe
+  chart-vorm (een placeholder-vorm volstaat, geen echte data-driven chart nodig).
+- Gaat **niet** door `html2pptx`/`build_deck.js` — geen chrome-injectie, geen pixel-exacte
+  fontregels, geen paginanummer/logo. Dit is een layout-schets, geen preview van de uiteindelijke
+  slide. Benoem dat expliciet bij het presenteren.
+
+**Presentatie en iteratieloop.** Zet alle gemarkeerde mockups in **één Artifact** (stacked
+secties of een slide-picker binnen dezelfde pagina) en vraag in één beurt feedback op de hele
+batch. Bij gevraagde wijzigingen: pas de storyboard-rij(en) én de mockup(s) aan, redeploy dezelfde
+Artifact (zelfde `file_path`/URL), en vraag opnieuw — tot goedkeuring. Schrijf geen HTML voor de
+uiteindelijke slide vóór deze goedkeuring.
+
+Na goedkeuring zijn de goedgekeurde composities de autoritatieve referentie voor die slides in
+stap 4. Niet-gemarkeerde slides doorlopen de bestaande stap-3-zelfreview en tekst-goedkeuring
+ongewijzigd.
+
 ## Stap 3: self-review van het hele storyboard
 
 - Vult elke contentslide het canvas? Een slide die "een kaartje linksboven" is, is een defect.
