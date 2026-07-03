@@ -55,6 +55,24 @@ def test_review_skill_mandates_full_render_loop():
     assert "scripts.render" in text and "alle slides" in text.lower()
 
 
+def test_deck_retro_skill_exists_with_frontmatter():
+    p = SKILLS / "sfnl-deck-retro" / "SKILL.md"
+    assert p.exists(), p
+    text = p.read_text(encoding="utf-8")
+    m = re.match(r"^---\n(.*?)\n---", text, re.S)
+    assert m, f"missing frontmatter in {p}"
+    assert "name: sfnl-deck-retro" in m.group(1)
+    assert "description:" in m.group(1)
+
+
+def test_deck_retro_skill_content():
+    text = (SKILLS / "sfnl-deck-retro" / "SKILL.md").read_text(encoding="utf-8")
+    for needle in ("deck-process-reviewer", "pipeline-retro-log.md",
+                   "pipeline-retro-report.md", "zelf goed"):
+        assert needle in text, needle
+    assert "klant" in text.lower()
+
+
 def test_reference_docs():
     ref = PLUGIN / "engine" / "reference"
     assert (ref / "authoring-guide.md").exists()
