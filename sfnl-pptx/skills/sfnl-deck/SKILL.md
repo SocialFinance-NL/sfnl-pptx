@@ -11,18 +11,23 @@ een bewerkbare .pptx via html2pptx + PptxGenJS. Lees vóór het bouwen altijd
 
 ## Pipeline
 
-Idee → research → narrative → storyboard → HTML+deck.json → build → visuele loop → review → proof:
+Idee → research → outline → storyboard → HTML+deck.json → build → visuele loop → review → proof:
 
 1. **Intake.** Brief, outline of brondocumenten. Detecteer taal (NL/EN).
 2. **Research.** Hand off naar `sfnl-deck-research`: bronnendossier (feiten, cijfers, bronnen,
    viz-kandidaten) vóór er een slide bestaat. Skip alleen wanneer de gebruiker compleet,
    gebronmerkt materiaal aanlevert — noteer dat als bron. Elk cijfer op een slide traceert naar
    een dossierregel.
-3. **Narrative en titels.** Lees `engine/reference/voice.md`. SCQA-narrative, action title per
-   slide, ghost-deck-test vóór het bouwen.
-4. **Storyboard.** Hand off naar `sfnl-deck-design`: per slide de layoutcompositie (regio's,
-   hiërarchie, patroon uit `patterns.md` of archetype, accentgebruik, chart-kandidaten) als
-   tekst-storyboard, goedgekeurd vóór er HTML wordt geschreven.
+3. **Outline.** Hand off naar `sfnl-deck-outline`: een geschaalde vraagronde over inhoud en
+   structuur (0-20 vragen, met skip-optie), gevolgd door een per-slide content-outline
+   (`output/<YYYY-MM-DD>-<slug>/outline.md`) die de gebruiker becommentarieert en goedkeurt
+   vóór er storyboard- of HTML-werk begint. Lees `engine/reference/voice.md` voor de
+   SCQA-narrative- en action-title-regels die de outline moet volgen.
+4. **Storyboard.** Hand off naar `sfnl-deck-design`: leest de goedgekeurde outline en werkt 'm
+   uit tot per-slide layoutcompositie (regio's, hiërarchie, patroon uit `patterns.md` of
+   archetype, accentgebruik, chart-kandidaten) als tekst-storyboard, goedgekeurd vóór er HTML
+   wordt geschreven. Content- of structuurwijzigingen op dit moment gaan terug naar de outline,
+   niet naar het storyboard.
 5. **Auteur HTML + deck.json.** Maak de workspace `output/<YYYY-MM-DD>-<slug>/` (kopieer
    `engine/web/sfnl.css` naar `slides/`). Eén HTML-bestand per slide vanaf `engine/web/scaffold.html`
    of een archetype (`engine/web/archetypes/`); charts als `class="placeholder"` + chartspec in
@@ -40,7 +45,13 @@ Idee → research → narrative → storyboard → HTML+deck.json → build → 
 ## Regels
 
 - Chrome is heilig: titelblok + oranje dash in de HTML (scaffold), logo + paginanummer komen
-  native uit de build. Full-bleed archetypes regelen hun eigen chrome (`chrome: "dark"|"none"`).
+  native uit de build.
+- **Titelslides, sectiedividers en quote-slides komen altijd uit de officiële archetypes**
+  (`engine/web/archetypes/cover-*.html`, `divider-*.html`, `quote-*.html`, gegenereerd uit het
+  sjabloon `engine/assets/sfnl-slides.pptx`). Nooit zelf een cover of divider ontwerpen — kies
+  een variant uit `engine/web/assets/chrome/manifest.json`, kopieer de chrome-assets mee naar
+  `slides/chrome/`, en vervang alleen de teksten in de slots. Gebruik het `chrome`-advies uit
+  het manifest (`none`/`dark`/`number`) in deck.json.
 - Eén accent per deck (`deck.json.accent`); kleur codeert betekenis (`engine/reference/brand.md`).
 - **Volledige hoogte**: elke contentslide vult het canvas met een echte exhibit; half-leeg of
   tekst-zonder-exhibit is een defect. Gebruik `patterns.md` als kookboek, niet als keurslijf —

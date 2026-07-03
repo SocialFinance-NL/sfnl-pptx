@@ -1,6 +1,6 @@
 ---
 name: sfnl-deck-design
-description: Work out the visual layout of every slide in an SFNL deck before writing any HTML. Use after the narrative and action titles are drafted and before authoring slides/*.html — produces a per-slide storyboard (composition, regions, pattern/archetype, accent use, chart candidates, rationale) that gets reviewed and adjusted cheaply as text before any building happens. Triggers on "werk de layout per slide uit", "storyboard", "design plan", or as step 4 of the sfnl-deck pipeline.
+description: Work out the visual layout of every slide in an SFNL deck before writing any HTML. Use after the outline (sfnl-deck-outline) is approved and before authoring slides/*.html — produces a per-slide storyboard (composition, regions, pattern/archetype, accent use, chart candidates, rationale) that gets reviewed and adjusted cheaply as text before any building happens. Triggers on "werk de layout per slide uit", "storyboard", "design plan", or as step 4 of the sfnl-deck pipeline.
 ---
 
 # sfnl-deck-design: componeer de slide vóór je haar bouwt
@@ -11,8 +11,9 @@ skill front-loadt de compositiebeslissing in een tekst-storyboard. Denk in **lay
 
 ## Wanneer
 
-Tussen narrative/titels en het schrijven van `slides/*.html`. Nooit rechtstreeks van titels
-naar HTML. Lees eerst `engine/web/patterns.md` en bekijk `engine/web/archetypes/`.
+Tussen de goedgekeurde outline (`sfnl-deck-outline`, `output/<YYYY-MM-DD>-<slug>/outline.md`)
+en het schrijven van `slides/*.html`. Nooit rechtstreeks van outline naar HTML. Lees eerst
+`engine/web/patterns.md` en bekijk `engine/web/archetypes/`.
 
 ## Stap 1: kleurmodel
 
@@ -28,7 +29,7 @@ naar HTML. Lees eerst `engine/web/patterns.md` en bekijk `engine/web/archetypes/
 |---|---|
 | `file` | wordt de bestandsnaam `slides/NN-….html` |
 | `action_title` | verbatim uit de narrative-stap |
-| `archetype/patroon` | archetype (cover/divider/quote/closing/stat-banner) of patroon uit `patterns.md`, of "bespoke" |
+| `archetype/patroon` | voor cover/divider/quote: **verplicht** een officiële variant (`cover-01`…`cover-04`, `divider-01`…`divider-10`, `quote-01` — catalogus in `engine/web/assets/chrome/manifest.json`); voor contentslides: patroon uit `patterns.md`, `stat-banner` of "bespoke" |
 | `compositie` | regio-indeling in woorden: kolommen/rijen, wat waar, verhouding (bv. "links 2/5 tekst, rechts 3/5 chart-placeholder") |
 | `accent` | waar het accent valt (één plek per slide die de boodschap draagt) |
 | `chart` | dossier-viz-kandidaat → charttype (column/stackedColumn/bar/line/area/pie/donut/scatter): wordt een chartspec in deck.json |
@@ -48,6 +49,9 @@ elementen in het storyboard zodat de HTML-stap mechanisch wordt. Complexe native
 - Elke dossier-viz-kandidaat (`chart`/`kpi`) landt als native chart, big-number of stat-banner —
   cijfers die in bodytekst blijven hangen zijn een gemiste exhibit.
 - Multi-accent: elke categorie overal dezelfde kleur; dividers onderling verschillend.
+- Cover/divider/quote: alleen officiële archetype-varianten — een zelf ontworpen cover of
+  divider is een defect, hoe mooi ook. Kies divider-foto's die bij het sectiethema passen
+  (beschrijvingen in het manifest).
 - Ritme over de hele deck: wissel kaarten, banners, charts, dividers — monotonie is een defect.
 
 Fix het storyboard, niet de HTML, als hier iets mis is — een tabelrij aanpassen is veel
