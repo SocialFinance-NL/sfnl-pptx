@@ -13,9 +13,12 @@ That loop only works when the HTML source exists. It doesn't for:
 - An older SFNL deck that predates `sfnl-deck`.
 
 For those files, the only tool today is opening PowerPoint by hand. `pptx-official`
-(`~/.claude/skills/pptx-official`) has scripts for exactly this — `inventory.py`, `replace.py`,
-`rearrange.py`, and an OOXML unpack/edit/validate/pack escape hatch — but they were never ported
-into `sfnl-pptx`, and they know nothing about SFNL brand rules.
+(`~/.claude/skills/pptx-official`) offers exactly this kind of tooling — text inventory/replace,
+slide rearrange, and an OOXML unpack/edit/validate/pack escape hatch — but it is an
+Anthropic-licensed skill whose terms prohibit extracting its materials from the Services,
+retaining copies outside them, or creating derivative works. So none of its code is ported here;
+`sfnl-deck-edit` implements equivalent *capabilities* from scratch, independently, using
+python-pptx and stdlib, SFNL-scoped from the start.
 
 ## Scope
 
@@ -51,33 +54,44 @@ existing .pptx ─▶ inventory.py ─▶ text-inventory.json ─▶ (agent + us
 
 ## Components
 
-All new/ported scripts live in `sfnl-pptx/engine/scripts/`, alongside the existing
-`qa_text.py`/`render.py`/`extract_chrome.py`/`extract_palette.py`.
+All new scripts live in `sfnl-pptx/engine/scripts/`, alongside the existing
+`qa_text.py`/`render.py`/`extract_chrome.py`/`extract_palette.py`. None of them are ported from
+pptx-official (see Motivation) — each is a fresh implementation of the equivalent capability.
 
-### `inventory.py` (ported from pptx-official, near-verbatim)
-Extracts every text shape's position, size, paragraph formatting, and overflow/overlap status
-into JSON, keyed `slide-N`/`shape-N`. No SFNL-specific changes needed — it already reports
-`font_name`/`color`/`theme_color` per paragraph, which is enough for the agent to spot off-brand
-values by eye against `engine/reference/brand.md` before writing replacements. Porting notes:
-drop the `platform`/font-file-lookup code path for Windows-only use (font metrics for overflow
-estimation should prefer the three installed SFNL fonts — Gotham Bold, Lato Light, Montserrat
-Light — over the macOS/Linux font-dir search pptx-official ships, since this plugin only runs on
-Windows with those fonts installed locally per `README.md` prerequisites).
+### `inventory.py` (new)
+Extracts every text shape's position, size, and paragraph formatting into JSON, keyed
+`slide-N`/`shape-N`, including `font_name`/`color`/`theme_color` per paragraph — enough for the
+agent to spot off-brand values by eye against `engine/reference/brand.md` before writing
+replacements. Also reports **slide-boundary overflow** (shape extends past the slide edge — plain
+geometry against `prs.slide_width`/`slide_height`) and **shape overlap** (rectangle intersection
+between shapes on the same slide). Deliberately does **not** attempt to estimate in-shape text
+overflow from font metrics — that needs real text-layout rendering to be trustworthy, which this
+plugin already has via `render.py` (actual PowerPoint COM rendering) plus the mandatory visual
+inspection step; a font-metric heuristic here would be redundant and less accurate than the real
+thing.
 
-### `replace.py` (ported from pptx-official, near-verbatim)
+### `replace.py` (new)
 Applies a replacement JSON (same shape as `inventory.py`'s output, with a `paragraphs` array for
 shapes that should get new text) to the deck, clearing any shape not explicitly given new
-paragraphs, and failing loudly if text overflow gets worse than the original. **No automatic
-brand-correction** — if the replacement JSON doesn't specify `font_name`/`color`, whatever the
-shape already had is kept as-is. This matches the plugin's existing philosophy (`qa_text.py`
-flags off-brand values, it never silently rewrites them) and avoids the edit skill making
-unrequested changes. Off-brand fonts/colors already present, or introduced by a replacement JSON
-that the agent wrote carelessly, surface in the mandatory `qa_text.py` pass afterward.
+paragraphs. Fails loudly if a referenced slide/shape doesn't exist in the inventory. **No
+automatic brand-correction** — if the replacement JSON doesn't specify `font_name`/`color`,
+whatever the shape already had is kept as-is. This matches the plugin's existing philosophy
+(`qa_text.py` flags off-brand values, it never silently rewrites them) and avoids the edit skill
+making unrequested changes. Off-brand fonts/colors already present, or introduced by a
+replacement JSON that the agent wrote carelessly, surface in the mandatory `qa_text.py` pass
+afterward; text-overflow introduced by a replacement surfaces in the mandatory render/inspect pass
+(not a font-metric check inside `replace.py` itself, for the same reason as `inventory.py` above).
 
-### `rearrange.py` (ported from pptx-official, verbatim)
+### `rearrange.py` (new)
 Duplicate/reorder/delete slides within one file by index sequence
-(`python -m scripts.rearrange input.pptx output.pptx 0,3,3,5`). No SFNL-specific changes —
-this is pure python-pptx slide-list surgery, format-agnostic.
+(`python -m scripts.rearrange input.pptx output.pptx 0,3,3,5`). Pure python-pptx slide-list
+surgery, format-agnostic: resolve the sequence to concrete slide instances (original vs. a fresh
+duplicate for repeats), drop any original slide no instance references, then rebuild the
+presentation's slide-ID list in one pass to match the resolved order exactly. Slide duplication
+itself (deep-copying a slide's shape tree and remapping its image/media relationship IDs into the
+new slide) follows the standard published python-pptx community technique for this — python-pptx
+has no native slide-copy API, so this pattern is widely documented independently of any single
+implementation.
 
 ### `insert_chrome_slide.py` (new — not a port)
 Inserts one official cover/divider/quote slide into the target deck at a given position, sourced
@@ -103,15 +117,29 @@ result (it's what `build_deck.js` does for chrome slides today) with none of tha
 means both insertion paths (HTML archetype, direct edit) draw from one manifest — if the sjabloon
 changes and `extract_chrome.py` regenerates the manifest/PNGs, both paths pick it up.
 
-### OOXML escape hatch: `unpack.py` / `pack.py` / `validate.py` (ported from pptx-official)
+### OOXML escape hatch: `unpack.py` / `pack.py` / `validate.py` (new, no XSD schema bundling)
 For edits none of the above reach — tables, charts, grouped shapes, image swaps, arbitrary XML.
-Ported near-verbatim from `~/.claude/skills/pptx-official/ooxml/` (`scripts/unpack.py`,
-`scripts/pack.py`, `scripts/validate.py`, `scripts/validation/{base,pptx}.py`, and the `schemas/`
-tree). Only the PPTX validator path is needed — trim `DOCXSchemaValidator`/`RedliningValidator` wiring
-out of the ported `validate.py`'s CLI so the ported surface only claims what this plugin actually
-uses.
-Lives at `engine/ooxml/` (scripts + schemas), mirroring the upstream skill's internal layout,
-invoked as `python -m ooxml.scripts.unpack` etc. from `engine/`.
+Written fresh — no code or schema files copied from pptx-official's `ooxml/` (same licensing
+reason as above; that also rules out reusing its bundled ECMA/ISO/Microsoft XSD schema copies,
+so this escape hatch does not do full XSD-conformance validation):
+- `unpack.py` — extract the `.pptx` zip to a directory, pretty-print each `.xml`/`.rels` file
+  (`defusedxml.minidom`) so it's readable/editable. A few lines of stdlib `zipfile` plus
+  `defusedxml`; there's essentially one reasonable way to write this.
+- `pack.py` — condense the pretty-printed XML back down (strip whitespace-only text nodes and
+  comments) and re-zip into a `.pptx`.
+- `validate.py` — lighter structural checks, written independently rather than reusing
+  pptx-official's XSD-diff approach: XML well-formedness (`lxml.etree.parse`), `.rels` reference
+  integrity (every relationship target resolves to a file that exists), unique-ID checks for
+  `sldId` (per-file) and `sldMasterId`/`sldLayoutId` (global) — the OOXML tag/scope rules here are
+  domain knowledge about the file format, not Anthropic's expression — and, as the strongest
+  practical check, reopening the packed result with `python-pptx` (`Presentation(path)` +
+  enumerate slides) to catch anything structurally broken enough to matter. No XSD schema
+  conformance checking. This is a smaller safety net than full schema validation, but it covers
+  the failure modes that actually occur from hand-editing slide XML (broken references, duplicate
+  IDs, malformed XML, a file PowerPoint's own object model can't open).
+
+Lives at `engine/ooxml/` (a small `scripts/` package, no `schemas/` directory), invoked as
+`python -m ooxml.scripts.unpack` etc. from `engine/`.
 
 ### Reused unchanged: `qa_text.py`, `render.py`
 Both already operate on any `.pptx` via python-pptx/COM regardless of how it was built. No
@@ -150,13 +178,13 @@ changes needed. These are the mandatory QA/visual-loop tools for this skill, sam
 
 ## Error handling
 
-- `replace.py` already fails loudly (raises, non-zero exit) on: shapes referenced that don't
-  exist in the inventory, and replacements that make text overflow worse than the original. Both
-  ported as-is — these are exactly the failure modes that matter here.
+- `replace.py` fails loudly (raises, non-zero exit) on shapes/slides referenced in the
+  replacement JSON that don't exist in the inventory.
 - `insert_chrome_slide.py` fails loudly on: unknown manifest key, position out of range, a
   caller-supplied slot role that doesn't exist on the chosen key (e.g. passing `--body` to
-  `cover-02`, which has no slots).
-- OOXML `validate.py` fails loudly on schema violations — never pack an unvalidated edit.
+  `cover-02`, which has no slots), and target/manifest slide-dimension mismatch (see Open risks).
+- OOXML `validate.py` fails loudly on well-formedness errors, broken `.rels` references, duplicate
+  IDs, or a packed result `python-pptx` can't reopen — never pack an unvalidated edit.
 - No step silently mutates the user's original file; every operation reads one file and writes
   another inside the dated edit workspace.
 
@@ -167,14 +195,15 @@ fixture style):
 - `tests/test_inventory.py` — build a small in-memory deck, assert extracted positions/overflow/
   paragraph properties match expectations.
 - `tests/test_replace.py` — round-trip: inventory → replacement JSON → apply → re-inventory,
-  assert text/formatting landed correctly; assert overflow-worsened and unknown-shape cases raise.
+  assert text/formatting landed correctly; assert the unknown-shape case raises.
 - `tests/test_rearrange.py` — assert duplicate/delete/reorder produce the expected final slide
-  count and order (port pptx-official's own test intent if it has one, otherwise write fresh).
+  count and order.
 - `tests/test_insert_chrome_slide.py` — assert the inserted slide has a full-bleed picture and
   text boxes matching the chosen manifest key's slots, for at least one key with slots
   (`divider-01`) and one without (`cover-02`); assert unknown key/position raise.
-- `tests/test_ooxml.py` — unpack → pack round-trip on a small fixture produces a byte-identical
-  or at least openable `.pptx`; `validate.py` catches a deliberately broken XML fixture.
+- `tests/test_ooxml.py` — unpack → pack round-trip on a small fixture produces an openable
+  `.pptx` with unchanged content; `validate.py` catches a deliberately broken `.rels` reference
+  and a deliberately malformed XML fixture.
 - Extend `tests/test_skills.py`: add `sfnl-deck-edit` to the `test_all_skills_exist_with_frontmatter`
   tuple; add a `test_edit_skill_mandates_qa_and_backup` asserting the new `SKILL.md` mentions
   `scripts.qa_text`, `scripts.render`, and "original.pptx" (backup-first discipline); add the new
@@ -188,17 +217,15 @@ sfnl-pptx/
 │   └── sfnl-deck-edit/          SKILL.md (new)
 ├── engine/
 │   ├── scripts/
-│   │   ├── inventory.py         (new, ported)
-│   │   ├── replace.py           (new, ported)
-│   │   ├── rearrange.py         (new, ported)
+│   │   ├── inventory.py         (new)
+│   │   ├── replace.py           (new)
+│   │   ├── rearrange.py         (new)
 │   │   └── insert_chrome_slide.py  (new)
-│   ├── ooxml/                   (new, ported)
-│   │   ├── scripts/{unpack,pack,validate}.py
-│   │   ├── scripts/validation/{base,pptx}.py
-│   │   └── schemas/...
+│   ├── ooxml/                   (new, written fresh — no bundled schemas)
+│   │   └── scripts/{unpack,pack,validate}.py
 │   └── reference/
-│       └── editing-guide.md     (new — OOXML editing conventions, ported/trimmed from
-│                                  pptx-official's ooxml.md, SFNL-scoped)
+│       └── editing-guide.md     (new — OOXML editing conventions for this plugin's
+│                                  from-scratch unpack/edit/validate/pack escape hatch)
 └── tests/
     ├── test_inventory.py        (new)
     ├── test_replace.py          (new)
@@ -216,9 +243,6 @@ No `plugin.json` change needed — skills are auto-discovered from `skills/`.
   dimensions to match `sfnl-slides.pptx`'s (720×405pt / 16:9) for the PNG to fill edge-to-edge
   without distortion — worth a guard that compares `prs.slide_width`/`slide_height` and fails
   loudly (not silently stretches) on mismatch.
-- `inventory.py`'s font-file lookup (used only for overflow-width estimation) should be trimmed
-  to Windows font paths, since that's the only supported platform for this plugin per the
-  existing prerequisites.
 - The `deck-visual-reviewer` agent's description currently says "Decks are built by the sfnl-pptx
   html2pptx engine" — its actual job (render + inspect PNGs for defects) doesn't depend on that,
   but the wording could read as pipeline-specific. Small optional fix in the plan: broaden that
