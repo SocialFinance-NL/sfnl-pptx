@@ -9,7 +9,7 @@
     {
       "name": "sfnl-pptx",
       "description": "Generate and QA Social Finance NL branded PowerPoint decks (free-form HTML composition via html2pptx + PptxGenJS).",
-      "version": "0.4.0",
+      "version": "0.5.1",
       "source": "./sfnl-pptx",
       "author": {
         "name": "Social Finance NL"

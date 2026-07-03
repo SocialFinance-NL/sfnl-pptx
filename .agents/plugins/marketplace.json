@@ -1,0 +1,21 @@
+{
+  "name": "sfnl-pptx-dev",
+  "interface": {
+    "displayName": "SFNL PPTX Dev"
+  },
+  "plugins": [
+    {
+      "name": "sfnl-pptx",
+      "version": "0.5.1",
+      "source": {
+        "source": "local",
+        "path": "./sfnl-pptx"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
