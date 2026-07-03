@@ -27,7 +27,10 @@ Idee → research → outline → storyboard → HTML+deck.json → build → vi
    uit tot per-slide layoutcompositie (regio's, hiërarchie, patroon uit `patterns.md` of
    archetype, accentgebruik, chart-kandidaten) als tekst-storyboard, goedgekeurd vóór er HTML
    wordt geschreven. Content- of structuurwijzigingen op dit moment gaan terug naar de outline,
-   niet naar het storyboard.
+   niet naar het storyboard. Voor een klein aantal sleutelslides (bespoke composities of
+   narratief cruciale slides) volgt daarna een visuele review met snelle HTML-mockups in één
+   Artifact (stap 2.5 van `sfnl-deck-design`), tenzij de deck triviaal klein is of de gebruiker
+   dat overslaat.
 5. **Auteur HTML + deck.json.** Maak de workspace `output/<YYYY-MM-DD>-<slug>/` (kopieer
    `engine/web/sfnl.css` naar `slides/`). Eén HTML-bestand per slide vanaf `engine/web/scaffold.html`
    of een archetype (`engine/web/archetypes/`); charts als `class="placeholder"` + chartspec in
