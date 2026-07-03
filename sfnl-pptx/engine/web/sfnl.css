@@ -53,35 +53,63 @@ body {
   width: 720pt; height: 405pt;
   background: var(--sfnl-white);
   font-family: "Lato Light", "Lato", Arial, sans-serif;
-  font-size: 10pt; color: var(--sfnl-dark-slate);
+  font-size: 16pt; color: var(--sfnl-dark-slate);
+  line-height: 1.22;
   display: flex; flex-direction: column;
 }
-h1, h2, h3 { font-family: "Gotham Bold", Arial, sans-serif; color: var(--sfnl-navy); }
+h1, h2, h3 { font-family: "Lato Light", "Lato", Arial, sans-serif; color: var(--sfnl-navy); }
+.display, .big-number { font-family: "Gotham Bold", Arial, sans-serif; }
 .quiet { font-family: "Montserrat Light", "Montserrat", Arial, sans-serif; }
 
-/* ---- Fixed chrome (content slides): title block + orange dash. Logo and page
+/* ---- Frame-friendly chrome (content slides): title block + orange dash. Logo and page
    number are injected natively by build_deck.js — never author them in HTML. ---- */
-.chrome-header { margin: 32pt 26pt 0 26pt; }
-.slide-title { font-size: 18pt; line-height: 1.15; letter-spacing: 0.02em; }
+.chrome-header { margin: 26pt 26pt 0 26pt; display: flex; flex-direction: column; gap: 6pt; }
+.slide-title {
+  font-family: "Lato Light", "Lato", Arial, sans-serif;
+  font-size: 22pt;
+  line-height: 1.08;
+  letter-spacing: 0;
+  color: var(--sfnl-navy);
+}
 .slide-subtitle {
   font-family: "Montserrat Light", "Montserrat", Arial, sans-serif;
-  font-size: 10.5pt; color: var(--sfnl-dark-slate); margin-top: 5pt;
+  font-size: 12pt;
+  color: var(--sfnl-dark-slate);
 }
-.dash { width: 15pt; height: 3.2pt; background: var(--sfnl-orange); margin-top: 8pt; }
+.dash { width: 18pt; height: 2pt; background: var(--sfnl-orange); margin-top: 2pt; }
+.frame-accent { height: 5pt; background: var(--sfnl-orange); }
 
 /* ---- Free content region: fill the canvas, no half-empty slides ---- */
-.content { flex: 1; display: flex; gap: 14pt; margin: 14pt 26pt 40pt 26pt; min-height: 0; }
+.content { flex: 1; display: flex; gap: 14pt; margin: 14pt 26pt 38pt 26pt; min-height: 0; }
 .col { display: flex; flex-direction: column; gap: 10pt; flex: 1; min-height: 0; }
 
 /* ---- Helpers ---- */
-.card { background: var(--sfnl-grey-95); border-radius: 6pt; padding: 12pt 14pt; flex: 1; }
-.card-accent { background: var(--sfnl-orange-tint80); }
-.big-number { font-family: "Gotham Bold", Arial, sans-serif; font-size: 30pt; color: var(--sfnl-orange); line-height: 1; }
+.frame-panel { border: 2pt solid var(--sfnl-navy); border-radius: 2pt; padding: 12pt 14pt; background: var(--sfnl-white); }
+.frame-panel.orange { border-color: var(--sfnl-orange); }
+.frame-panel.royal { border-color: var(--sfnl-royal); }
+.frame-panel.emerald { border-color: var(--sfnl-emerald); }
+.frame-panel.grapefruit { border-color: var(--sfnl-grapefruit); }
+.frame-band { padding: 8pt 12pt; background: var(--sfnl-navy); color: var(--sfnl-white); }
+.frame-band p, .frame-band h1, .frame-band h2, .frame-band h3 { color: var(--sfnl-white); }
+.frame-sidebar { width: 112pt; padding: 12pt; background: var(--sfnl-orange); color: var(--sfnl-white); }
+.frame-sidebar p, .frame-sidebar h1, .frame-sidebar h2, .frame-sidebar h3 { color: var(--sfnl-white); }
+.evidence-box { border-left: 6pt solid var(--sfnl-royal); background: var(--sfnl-white); padding: 10pt 12pt; color: var(--sfnl-dark-slate); }
+.evidence-box p, .evidence-box h1, .evidence-box h2, .evidence-box h3 { color: var(--sfnl-dark-slate); }
+.verdict-box { background: var(--sfnl-orange); border-radius: 2pt; padding: 14pt; color: var(--sfnl-white); }
+.verdict-box p, .verdict-box h1, .verdict-box h2, .verdict-box h3 { color: var(--sfnl-white); }
+.card { background: var(--sfnl-grey-95); border-radius: 2pt; padding: 12pt 14pt; flex: 1; }
+.card-accent { background: var(--sfnl-orange-tint80); border-top: 4pt solid var(--sfnl-orange); }
+.big-number { font-size: 34pt; color: var(--sfnl-orange); line-height: 1; }
 .label {
   font-family: "Montserrat Light", "Montserrat", Arial, sans-serif;
-  font-size: 8.5pt; color: var(--sfnl-dark-slate); letter-spacing: 0.06em;
+  font-size: 10pt; color: var(--sfnl-dark-slate); letter-spacing: 0;
 }
-.kicker { font-family: "Gotham Bold", Arial, sans-serif; font-size: 9pt; color: var(--sfnl-orange); letter-spacing: 0.1em; }
+.kicker {
+  font-family: "Montserrat Light", "Montserrat", Arial, sans-serif;
+  font-size: 10pt; color: var(--sfnl-dark-slate); letter-spacing: 0;
+}
+.body-dense { font-size: 14pt; line-height: 1.16; }
+.body-large { font-size: 18pt; line-height: 1.18; }
 
 /* ---- Officiële chrome-archetypes (cover/divider/quote) ----
    Gegenereerd door scripts/extract_chrome.py uit het sjabloon; de slide-achtergrond

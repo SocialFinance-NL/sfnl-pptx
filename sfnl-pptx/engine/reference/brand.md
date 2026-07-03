@@ -28,17 +28,23 @@ Geen andere hex introduceren: `qa_text` markeert alles buiten `tokens.json` als 
 
 ## Typografie
 
-- **Alleen drie fonts:** Gotham Bold (display/koppen), Lato Light (body/labels), Montserrat
-  Light (secundair/rustig). QA wijst andere fonts af.
-- **Titels en subtitels altijd in ALL CAPS — in de HTML getypt** (CSS `text-transform` overleeft
-  de conversie niet). Uitzondering: quote-slides, waar de kop lopende citaattekst draagt.
-- Fonts zijn lokaal geïnstalleerd, nooit embedded. Fallback-stacks in `sfnl.css` zijn alleen
-  vangnet voor rendering.
+- **Lato Light is the default slide voice** for content slides. Body copy normally uses 16pt;
+  use 18pt for sparse explanatory slides and 14pt only for dense matrices or labels.
+- **Gotham Bold is display-only**: official archetype slots, big numbers, and short emphasis.
+  Do not use Gotham Bold as the default content-slide title/body style.
+- **Montserrat Light is secondary**: labels, metadata, small section markers.
+- Titles and subtitles remain ALL CAPS across content slides and official archetypes because
+  this is a company requirement. Content-slide action titles may use Lato Light or Montserrat
+  Light; they still need hierarchy, whitespace, and readable line lengths.
+
+Fonts zijn lokaal geïnstalleerd, nooit embedded. Fallback-stacks in `sfnl.css` zijn alleen
+vangnet voor rendering. QA wijst andere fonts af.
 
 ## Chrome (vast op elke contentslide)
 
-Titelblok linksboven (Gotham Bold 18pt navy, ALL CAPS) met oranje dash eronder; SFNL-logo
-linksonder en oranje paginanummer rechtsonder (native geïnjecteerd door `build_deck.js`).
+Titelblok linksboven (Lato Light of Montserrat Light, navy, ALL CAPS, met duidelijke hiërarchie)
+met een kleine oranje dash als brand marker; SFNL-logo linksonder en oranje paginanummer
+rechtsonder (native geïnjecteerd door `build_deck.js`).
 Titelslides, sectiedividers en quotes gebruiken de officiële sjabloonontwerpen — de archetypes
 `cover-*`/`divider-*`/`quote-*` in `engine/web/archetypes/` (gegenereerd uit
 `engine/assets/sfnl-slides.pptx`); nooit zelf ontwerpen. Het bewaarde
@@ -51,3 +57,8 @@ chrome-getrouwheid.
 - **Volledige hoogte**: content vult het canvas; half-lege slides zijn een defect.
 - Royale, gelijke marges (26pt zijkanten). Big-numbers-patroon voor KPI's.
 - Iconen zijn inhoud, geen decoratie: gerasterde react-icons in merkkleur (`build/raster.js`).
+
+**Editorial kadergrid:** content slides should be framed by visible structure: colored sidebars,
+top/bottom bands, evidence boxes, full-width matrices, or verdict panels. The orange dash is a
+minor brand marker, not the main composition. Avoid pale floating card rows unless the cards form
+a full exhibit.

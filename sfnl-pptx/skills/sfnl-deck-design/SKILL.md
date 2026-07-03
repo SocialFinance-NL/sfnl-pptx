@@ -15,6 +15,12 @@ Tussen de goedgekeurde outline (`sfnl-deck-outline`, `output/<YYYY-MM-DD>-<slug>
 en het schrijven van `slides/*.html`. Nooit rechtstreeks van outline naar HTML. Lees eerst
 `engine/web/patterns.md` en bekijk `engine/web/archetypes/`.
 
+Als de outline een **reference file / referentiebestand** bevat, inspecteer het bestand of de
+samenvatting voordat je het storyboard schrijft. Extraheer alleen herbruikbare structuur- en
+stijlcue's (bijv. sectieritme, type exhibit, dichtheid, navigatie, volgorde). Benoem in het
+storyboard hoe elke relevante cue wordt toegepast of bewust verworpen omdat SFNL brandregels,
+het editorial kadergrid of officiële archetype-slots voorgaan.
+
 ## Stap 1: kleurmodel
 
 - **Single-accent** (default): één `deck.json.accent` draagt de rode draad van de hele deck.
@@ -30,6 +36,12 @@ en het schrijven van `slides/*.html`. Nooit rechtstreeks van outline naar HTML. 
 | `file` | wordt de bestandsnaam `slides/NN-….html` |
 | `action_title` | verbatim uit de narrative-stap |
 | `archetype/patroon` | voor cover/divider/quote: **verplicht** een officiële variant (`cover-01`…`cover-04`, `divider-01`…`divider-10`, `quote-01` — catalogus in `engine/web/assets/chrome/manifest.json`); voor contentslides: patroon uit `patterns.md`, `stat-banner` of "bespoke" |
+| `frame model` | editorial kadergrid choice: sidebar, banded exhibit, full matrix, verdict box, evidence stack, chart + conclusion band, or official archetype |
+| `type scale` | body density: 18pt sparse / 16pt default / 14pt dense; justify any 14pt use |
+| `font emphasis` | where Gotham Bold is allowed: big number, official archetype slot, or none |
+| `slot fit` | for cover/divider/quote: required text fields vs. manifest slots; choose another archetype if fields do not fit |
+| `reference cue` | reference file / referentiebestand cue applied, or rejected because SFNL brand rules, SFNL-merkregels, editorial kadergrid, or archetype slots take precedence |
+| `anti-slop check` | domain-specific artifact, primary/secondary/tertiary hierarchy, no generic decoration, no color-only meaning, squint test / squint-test result |
 | `compositie` | regio-indeling in woorden: kolommen/rijen, wat waar, verhouding (bv. "links 2/5 tekst, rechts 3/5 chart-placeholder") |
 | `accent` | waar het accent valt (één plek per slide die de boodschap draagt) |
 | `chart` | dossier-viz-kandidaat → charttype (column/stackedColumn/bar/line/area/pie/donut/scatter): wordt een chartspec in deck.json |
@@ -41,6 +53,15 @@ Schrijf dit als markdown-tabel vóór er HTML bestaat. Bespoke composities (funn
 geldstroom-diagram, stakeholderkaart, parallelle tijdlijnen) zijn welkom: schets regio's en
 elementen in het storyboard zodat de HTML-stap mechanisch wordt. Complexe native elementen
 (tabellen e.d.) kunnen via de per-deck hook — noteer dat expliciet.
+
+Default content-slide approach is editorial kadergrid, not loose cards. Every content slide must
+name its frame model. Prefer colored frames, bands, sidebars, evidence boxes, and verdict blocks.
+The dash is not a composition. Body copy should be 16pt Lato by default; use 18pt for sparse
+slides and 14pt only for dense matrices. Titles/subtitles remain ALL CAPS as a company
+requirement, but should use Lato/Montserrat where possible and stay short. Gotham Bold is
+display-only. Every content slide must pass the anti-slop check: domain-specific artifact, clear
+primary/secondary/tertiary hierarchy, no generic decoration, no color-only meaning, and squint
+test pass.
 
 ## Stap 2.5: visuele review van sleutelslides
 
@@ -97,7 +118,13 @@ ongewijzigd.
 - Multi-accent: elke categorie overal dezelfde kleur; dividers onderling verschillend.
 - Cover/divider/quote: alleen officiële archetype-varianten — een zelf ontworpen cover of
   divider is een defect, hoe mooi ook. Kies divider-foto's die bij het sectiethema passen
-  (beschrijvingen in het manifest).
+  (beschrijvingen in het manifest). Doe vóór keuze een archetype-slot preflight tegen
+  `engine/web/assets/chrome/manifest.json`: match verplichte titel/subtitel/metadata-velden met
+  beschikbare slots, kies een andere variant als de velden niet passen, en voeg geen losse
+  tekstboxen toe buiten de manifest slots.
+- Reference file / referentiebestand: elke overgenomen cue heeft een reden; elke verworpen cue
+  noemt de botsing met SFNL brand rules, SFNL-merkregels, editorial kadergrid of officiële
+  archetype-slots.
 - Ritme over de hele deck: wissel kaarten, banners, charts, dividers — monotonie is een defect.
 
 Fix het storyboard, niet de HTML, als hier iets mis is — een tabelrij aanpassen is veel

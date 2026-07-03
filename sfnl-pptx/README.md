@@ -10,8 +10,10 @@ inspect, fix the HTML, rebuild — until clean. Colors come from the generated b
 only the three brand fonts are used.
 
 > **Self-contained — no template upload required.** The SFNL chrome (title treatment, orange
-> dash, logo, page number) is built into `engine/web/sfnl.css` + `build_deck.js`. The original
-> sjabloon stays bundled at `engine/assets/sfnl-template.pptx` purely as visual reference.
+> dash, logo, page number) is built into `engine/web/sfnl.css` + `build_deck.js`. The official
+> source sjabloon is bundled at `engine/assets/sfnl-sjabloon.potx`; every build embeds its
+> masters/layouts into the generated `.pptx` so PowerPoint's New Slide / Layout gallery contains
+> the official SFNL layouts.
 
 > **Covers and section dividers are never invented.** Title slides, section dividers and quote
 > slides always use the official designs from `engine/assets/sfnl-slides.pptx`, exposed as
@@ -35,6 +37,7 @@ only the three brand fonts are used.
 | `sfnl-deck-design` | Storyboard every slide (composition, regions, accent, chart candidates, rationale) before authoring HTML. |
 | `sfnl-deck-review` | QA against the Content / Design / Coherence rubric; core is the full render-inspect-fix loop. |
 | `sfnl-deck-proof` | Full pre-delivery proof: render every slide, whole-deck visual review, fact-check against the dossier, proefrapport. |
+| `sfnl-deck-edit` | Edit an existing SFNL `.pptx` with no HTML source: backup, inventory, text/slide/chrome/OOXML edits, QA and render. |
 
 Triggers are described in each skill's frontmatter — e.g. "maak een presentatie", "nieuwe slides
 in huisstijl", "SFNL deck", "review/check this SFNL .pptx", or "final proof / klaar voor de klant".
@@ -50,7 +53,8 @@ in huisstijl", "SFNL deck", "review/check this SFNL .pptx", or "final proof / kl
 
 ```
 idee ─▶ research (bronnendossier) ─▶ narrative + action titles ─▶ storyboard
-     ─▶ slides/*.html + deck.json ─▶ build_deck.js (html2pptx + PptxGenJS) ─▶ deck.pptx
+     ─▶ slides/*.html + deck.json ─▶ build_deck.js (html2pptx + PptxGenJS + sjabloon merge)
+     ─▶ deck.pptx
      ─▶ visuele loop (render.py ─▶ inspect PNGs ─▶ fix HTML ─▶ rebuild, tot schoon)
      ─▶ review ─▶ proof (full render + feitenproef + rapport)
 ```
@@ -59,10 +63,15 @@ idee ─▶ research (bronnendossier) ─▶ narrative + action titles ─▶ st
    starting from `engine/web/scaffold.html` / `engine/web/archetypes/`, with layout patterns from
    [`engine/web/patterns.md`](engine/web/patterns.md).
 2. **Build** with `node engine/web/build/build_deck.js output/<datum>-<slug>` (built-in
-   validation fails loudly on overflow, gradients, text outside text tags, dimension mismatch).
+   validation fails loudly on overflow, gradients, text outside text tags, dimension mismatch,
+   and missing/corrupt bundled sjabloon layouts).
 3. **Render + inspect** with `python -m scripts.render <deck.pptx> <out_dir>` (from
    `sfnl-pptx/engine`) — mandatory for every build, all slides.
 4. **Text-QA** with `python -m scripts.qa_text <deck.pptx>`.
+5. **Layout-gallery QA** when PowerPoint COM is available:
+   `python -m scripts.render --assert-layouts <deck.pptx> 31`.
+6. **Existing deck edits** use `sfnl-deck-edit`: copy the deck to `original.pptx`, inventory it,
+   apply targeted edits, then run the same text-QA and render loop.
 
 ## Prerequisites
 
@@ -81,6 +90,7 @@ idee ─▶ research (bronnendossier) ─▶ narrative + action titles ─▶ st
 | [`engine/web/patterns.md`](engine/web/patterns.md) | Layout pattern cookbook (KPI rows, swimlanes, matrices, …). |
 | [`engine/reference/brand.md`](engine/reference/brand.md) | Palette (hex tokens), typography, chrome, composition rules. |
 | [`engine/reference/voice.md`](engine/reference/voice.md) | SCQA narrative, action titles, big numbers, register. |
+| [`engine/reference/editing-guide.md`](engine/reference/editing-guide.md) | Editing existing `.pptx` files without HTML source: inventory, replacements, chrome insertion, OOXML. |
 
 ## Testing
 
@@ -96,13 +106,16 @@ sfnl-pptx/
 ├── .codex-plugin/          Codex plugin manifest
 ├── .claude-plugin/         Claude plugin manifest
 ├── skills/                 sfnl-deck, sfnl-deck-research, sfnl-deck-design,
-│                           sfnl-deck-review, sfnl-deck-proof (SKILL.md each)
+│                           sfnl-deck-review, sfnl-deck-proof, sfnl-deck-edit
+│                           (SKILL.md each)
 ├── agents/                 deck-visual-reviewer (render + inspect subagent)
 ├── engine/
-│   ├── assets/             bundled sjabloon + sfnl-slides.pptx (officiële covers/dividers)
-│   │                       + generated palette.json
-│   ├── reference/          authoring-guide.md, brand.md, voice.md
-│   ├── scripts/            qa_text, render, extract_palette, extract_chrome (python)
+│   ├── assets/             bundled sjabloon assets (`sfnl-sjabloon.potx`,
+│   │                       `sfnl-template.pptx`, `sfnl-slides.pptx`) + palette.json
+│   ├── ooxml/              unpack/validate/pack escape hatch for existing-deck edits
+│   ├── reference/          authoring-guide.md, editing-guide.md, brand.md, voice.md
+│   ├── scripts/            qa_text, render, inventory, replace, rearrange,
+│   │                       insert_chrome_slide, extract_palette, extract_chrome (python)
 │   └── web/                sfnl.css, tokens.json, scaffold.html, archetypes/, patterns.md,
 │                           assets/ (logo, chrome/ officiële slide-PNG's + manifest),
 │                           build/ (html2pptx, build_deck, charts, raster, tests)

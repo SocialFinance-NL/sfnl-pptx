@@ -101,7 +101,50 @@ def render_deck(pptx_path, out_dir, slide_indices=None) -> list[Path]:
     return images
 
 
+def assert_layout_gallery(pptx_path, expected_total_layouts: int) -> None:
+    """Open ``pptx_path`` in real PowerPoint and confirm the New Slide / Layout
+    gallery offers exactly ``expected_total_layouts`` layouts across all designs.
+
+    This is the authoritative check for scripts.merge_template: python-pptx can
+    parse OOXML that PowerPoint itself would flag with a "repair?" prompt, so only
+    an actual PowerPoint open proves the merged masters/layouts are structurally
+    sound and visible to the end user.
+
+    Raises AssertionError on any mismatch or if PowerPoint reports the file needed
+    repair.
+    """
+    import pythoncom
+    import win32com.client
+
+    pptx_path = Path(pptx_path).resolve()
+    pythoncom.CoInitialize()
+    try:
+        app = win32com.client.Dispatch("PowerPoint.Application")
+        try:
+            pres = app.Presentations.Open(str(pptx_path), WithWindow=False)
+            try:
+                total = sum(d.SlideMaster.CustomLayouts.Count for d in pres.Designs)
+                if total != expected_total_layouts:
+                    raise AssertionError(
+                        f"expected {expected_total_layouts} layouts across "
+                        f"{pres.Designs.Count} design(s), PowerPoint reports {total}"
+                    )
+            finally:
+                pres.Close()
+        finally:
+            app.Quit()
+    finally:
+        pythoncom.CoUninitialize()
+
+
 if __name__ == "__main__":
+    if len(sys.argv) >= 2 and sys.argv[1] == "--assert-layouts":
+        if len(sys.argv) < 4:
+            print("Usage: python -m scripts.render --assert-layouts <deck.pptx> <expected_total>", file=sys.stderr)
+            sys.exit(2)
+        assert_layout_gallery(sys.argv[2], int(sys.argv[3]))
+        print("layout gallery OK:", sys.argv[3], "layouts")
+        sys.exit(0)
     if len(sys.argv) >= 2 and sys.argv[1] == "--check":
         ok = com_available()
         print("PowerPoint COM:", "available" if ok else "NOT available")

@@ -1,129 +1,191 @@
-# SFNL layout patterns — cookbook, geen catalogus
+# SFNL layout patterns — editorial kadergrid
 
-Kopieer, pas aan, componeer. Merkregels reizen mee:
+Default style: every content slide has a deliberate frame structure. Avoid loose pale cards floating in whitespace. Use one full-canvas exhibit with colored kaders, bands, sidebars, evidence boxes, and clear hierarchy.
 
-- **Eén accent per deck** (default `deck.json.accent`); kleur codeert betekenis, nooit decoratie.
-- **Big numbers**: groot cijfer (Gotham Bold, accentkleur), klein label eronder (Montserrat Light caps).
-- **Volledige hoogte**: de content vult het canvas; een half-lege slide is een defect.
-- **Ruime, gelijke marges**; chrome (titel + dash) altijd aanwezig op contentslides.
-- Tekstregels: alle tekst in `<p>/<h1>-<h6>/<ul>/<ol>`; achtergrond/rand alleen op `<div>`;
-  geen CSS-gradients (pre-render via Sharp); titels in ALL CAPS getypt.
+- Body text is normally 16pt Lato Light; use 18pt for sparse explanatory slides and 14pt only for dense matrices.
+- Titles and subtitles remain ALL CAPS because this is a company requirement; keep them short and spacious so the caps read as brand voice.
+- Gotham Bold is reserved for big numbers, official archetype slots, and short display emphasis. Do not use it as the default body/title voice.
+- The orange dash is a brand marker, not the composition. The slide should still work if the dash is removed.
+- Use 2pt square-ish frames and colored bands more often than soft cards.
+- Semantic color mapping: orange = result/recommendation, royal/sky = process/system, emerald = managed/positive, grapefruit = risk/leak.
+- Run the squint test: blurred or viewed small, the primary takeaway should still be the strongest element, followed by support and metadata.
+- Every frame has a role: evidence, mechanism, risk, decision, result, or ask. Decoration-only frames fail review.
 
-Fragmenten hieronder horen binnen het scaffold's `<main class="content">` en gelden alleen
-voor **contentslides**. Covers, sectiedividers en quotes zijn geen patroon maar een gegeven:
-gebruik de officiële archetypes (`archetypes/cover-*`, `divider-*`, `quote-*`; catalogus in
-`assets/chrome/manifest.json`) en vervang alleen de slotteksten.
+Fragmenten hieronder horen binnen het scaffold's `<main class="content">` en gelden alleen voor contentslides. Covers, sectiedividers en quotes zijn geen patroon maar een gegeven: gebruik de officiële archetypes (`archetypes/cover-*`, `divider-*`, `quote-*`; catalogus in `assets/chrome/manifest.json`) en vervang alleen de slotteksten.
 
-## KPI-rij met grote cijfers
+Gebruik geen HTML `<table>`; bouw matrices als flex-rijen of gebruik de native per-deck hook (`slide.addTable`, zie authoring guide). Registreer chart-placeholders altijd in `deck.json` → `slides[].charts[]`. Iconen zijn inhoud, geen decoratie: rasterize betekenisvolle react-icons naar merkkleur-PNGs in de workspace `assets/` en plaats ze met `<img>`.
+
+`.card` is alleen een lower-emphasis fallback voor kleine metadata of restinformatie. De default voor herhaalde of dragende elementen is een kader, band, sidebar, evidence box, matrixrij of verdict box.
+
+## Framed KPI band
 
 ```html
-<div class="col" style="flex-direction: row; gap: 14pt;">
-  <div class="card"><p class="big-number">31%</p><p class="label" style="margin-top: 6pt;">MINDER UITVAL</p><p style="margin-top: 8pt;">Eén regel duiding bij het cijfer.</p></div>
-  <div class="card"><p class="big-number">124</p><p class="label" style="margin-top: 6pt;">TRAJECTEN</p><p style="margin-top: 8pt;">Eén regel duiding.</p></div>
-  <div class="card"><p class="big-number">€ 0,9M</p><p class="label" style="margin-top: 6pt;">BESPARING</p><p style="margin-top: 8pt;">Eén regel duiding.</p></div>
+<div class="col" style="gap: 10pt;">
+  <div class="frame-band"><p class="body-large">De businesscase draait op één hard criterium: vermeden escalatie.</p></div>
+  <div class="col" style="flex-direction: row; gap: 10pt;">
+    <div class="frame-panel royal" style="flex: 1;"><p class="big-number">8.400</p><p class="label">JONGEREN</p><p>Beginnende betalingsachterstand.</p></div>
+    <div class="frame-panel" style="flex: 1;"><p class="big-number" style="color: var(--sfnl-navy);">€ 4.700</p><p class="label">SCHULD</p><p>Gemiddeld bij 21 jaar.</p></div>
+    <div class="verdict-box" style="flex: 1;"><p class="big-number" style="color: #FEFFFF;">€ 12.000</p><p class="label" style="color: #FEFFFF;">VERMEDEN KOSTEN</p><p>Per voorkomen wettelijk traject.</p></div>
+  </div>
 </div>
 ```
 
-## Twee-koloms exhibit (tekst + chart)
+## Sidebar + exhibit
+
+Gebruik de sidebar als lens, vraag of conclusie; het hoofdvlak draagt de exhibit. De slide moet ook zonder dash leesbaar en gebalanceerd blijven.
 
 ```html
-<div class="col" style="flex: 2;">
-  <p class="kicker">WAT WE ZIEN</p>
-  <ul style="margin-top: 6pt;"><li>Eerste observatie.</li><li>Tweede observatie.</li></ul>
+<div class="frame-sidebar">
+  <p class="label" style="color: #FEFFFF;">BESLISLENS</p>
+  <p class="body-large">Waar lekt waarde uit de keten?</p>
 </div>
-<div class="col" style="flex: 3;">
+<div class="col" style="gap: 10pt;">
+  <div class="frame-band"><p>Drie momenten bepalen of preventie omzet in vermeden escalatie.</p></div>
+  <div class="col" style="flex-direction: row; gap: 10pt; flex: 1;">
+    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">1. SIGNALEREN</p><p>Vroege betalingsachterstand wordt zichtbaar voordat formele schuld ontstaat.</p></div>
+    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">2. ACTIVEREN</p><p>Jongere accepteert hulp binnen het eerste contactvenster.</p></div>
+    <div class="frame-panel orange" style="flex: 1;"><p class="kicker">3. VOORKOMEN</p><p>Wettelijk traject blijft uit; besparing is meetbaar per cohort.</p></div>
+  </div>
+</div>
+```
+
+## Evidence stack met gekleurde kaders
+
+Gebruik de stack om bewijsgewicht te ordenen: brondata, mechanisme, resultaat. Kleur ondersteunt de rol; tekst en positie blijven leidend.
+
+```html
+<div class="col" style="gap: 8pt;">
+  <div class="evidence-box" style="border-left-color: var(--sfnl-royal);">
+    <p class="label" style="color: var(--sfnl-dark-slate);">EVIDENCE</p>
+    <p style="color: var(--sfnl-dark-slate);">Gemeentedata tonen dat eerste achterstanden geconcentreerd zijn in de overgang 18-21 jaar.</p>
+  </div>
+  <div class="evidence-box" style="border-left-color: var(--sfnl-sky);">
+    <p class="label" style="color: var(--sfnl-dark-slate);">MECHANISME</p>
+    <p style="color: var(--sfnl-dark-slate);">Snelle begeleiding voorkomt stapeling van incasso, afsluitkosten en formele schuldhulp.</p>
+  </div>
+  <div class="evidence-box" style="border-left-color: var(--sfnl-orange);">
+    <p class="label" style="color: var(--sfnl-dark-slate);">RESULTAAT</p>
+    <p style="color: var(--sfnl-dark-slate);">De businesscase telt alleen vermeden escalatie mee, niet generieke contactmomenten.</p>
+  </div>
+</div>
+<div class="frame-panel orange" style="width: 170pt;">
+  <p class="big-number">72%</p>
+  <p class="label">VROEG BEREIKT</p>
+  <p>Bereikt voor formele aanmelding schuldhulp.</p>
+</div>
+```
+
+## Verdict met ask-blok
+
+Gebruik een verdict-box voor de uitkomst en een apart ask-kader voor het besluit dat nodig is. Vermijd een gecentreerde losse conclusiekaart.
+
+```html
+<div class="col" style="flex: 2; gap: 10pt;">
+  <div class="verdict-box" style="flex: 1;">
+    <p class="label" style="color: #FEFFFF;">VERDICT</p>
+    <p class="body-large">Opschalen is verdedigbaar als instroomkwaliteit en escalatiemeting maandelijks worden bewaakt.</p>
+  </div>
+  <div class="frame-panel emerald">
+    <p class="kicker">BEHEERSING</p>
+    <p>Stop/go per kwartaal op bereik, conversie en vermeden wettelijke trajecten.</p>
+  </div>
+</div>
+<div class="frame-panel orange" style="flex: 1;">
+  <p class="label">ASK</p>
+  <p class="body-large">Besluit vandaag over fase 2: drie gemeenten, één meetprotocol, vaste escalatie-definitie.</p>
+</div>
+```
+
+## Risicomatrix met functionele kleur
+
+Gebruik grapefruit voor risico/lekkage en emerald voor beheersing/positieve status. Bouw de matrix met flex-rijen; gebruik geen HTML table.
+
+```html
+<div class="col" style="gap: 5pt;">
+  <div style="display: flex; gap: 5pt;">
+    <div class="frame-band" style="flex: 2;"><p class="label" style="color: #FEFFFF;">RISICO</p></div>
+    <div class="frame-band" style="flex: 1;"><p class="label" style="color: #FEFFFF;">STATUS</p></div>
+    <div class="frame-band" style="flex: 2;"><p class="label" style="color: #FEFFFF;">MAATREGEL</p></div>
+  </div>
+  <div style="display: flex; gap: 5pt;">
+    <div class="frame-panel grapefruit" style="flex: 2;"><p class="body-dense">Bereik blijft onder kritieke massa.</p></div>
+    <div class="frame-panel grapefruit" style="flex: 1;"><p class="body-dense"><b>LEK</b></p></div>
+    <div class="frame-panel emerald" style="flex: 2;"><p class="body-dense">Referral-afspraak met vaste terugkoppeling per wijkteam.</p></div>
+  </div>
+  <div style="display: flex; gap: 5pt;">
+    <div class="frame-panel royal" style="flex: 2;"><p class="body-dense">Kosten per traject verschuiven door casemix.</p></div>
+    <div class="frame-panel emerald" style="flex: 1;"><p class="body-dense"><b>BEHEERST</b></p></div>
+    <div class="frame-panel emerald" style="flex: 2;"><p class="body-dense">Maandelijkse cohortcontrole op zwaarte en doorlooptijd.</p></div>
+  </div>
+</div>
+```
+
+## Chart + conclusieband
+
+Plaats de chart als exhibit, niet als decoratie. Registreer `chart-main` in `deck.json` → `slides[].charts[]`; de conclusieband maakt de interpretatie expliciet.
+
+```html
+<div class="col" style="flex: 3; gap: 10pt;">
   <div id="chart-main" class="placeholder" style="flex: 1;"></div>
+  <div class="frame-band"><p>Conclusie: uitstroom stijgt pas wanneer signalering en activatie in dezelfde maand plaatsvinden.</p></div>
+</div>
+<div class="col" style="flex: 1; gap: 10pt;">
+  <div class="evidence-box"><p class="label" style="color: var(--sfnl-dark-slate);">BRON</p><p class="body-dense" style="color: var(--sfnl-dark-slate);">Cohortmonitor M1-M6, n=312.</p></div>
+  <div class="frame-panel orange"><p class="label">BESLUIT</p><p class="body-dense">Stuur op maandelijkse activatie, niet op jaargemiddelde instroom.</p></div>
 </div>
 ```
 
-Registreer `chart-main` in `deck.json` → `slides[].charts[]` (zie authoring guide).
+## Procesband met mechanismen
 
-## Swimlane-kolommen (categorie per kleur — multi-accent decks)
-
-```html
-<div class="col">
-  <div style="background: var(--sfnl-grapefruit); border-radius: 4pt; padding: 6pt 10pt;"><p class="label" style="color: #FFFFFF;">VRAAGSTUK</p></div>
-  <div class="card" style="background: var(--sfnl-grapefruit-tint80);"><p>Inhoud…</p></div>
-</div>
-<div class="col">
-  <div style="background: var(--sfnl-emerald); border-radius: 4pt; padding: 6pt 10pt;"><p class="label" style="color: #FFFFFF;">ACTIVITEITEN</p></div>
-  <div class="card" style="background: var(--sfnl-emerald-tint80);"><p>Inhoud…</p></div>
-</div>
-<div class="col">
-  <div style="background: var(--sfnl-orange); border-radius: 4pt; padding: 6pt 10pt;"><p class="label" style="color: #FFFFFF;">IMPACT</p></div>
-  <div class="card" style="background: var(--sfnl-orange-tint80);"><p>Inhoud…</p></div>
-</div>
-```
-
-## Proces-stappen
+Voor proces en systeemlogica zijn royal/sky de dragende kleuren. Gebruik frames per mechanisme, niet een rij pale kaarten.
 
 ```html
-<div class="col" style="flex-direction: row; gap: 8pt; align-items: stretch;">
-  <div class="card card-accent" style="flex: 1;"><p class="kicker">STAP 1</p><p style="margin-top: 6pt;"><b>Verkennen</b></p><p>Korte omschrijving.</p></div>
-  <div class="card" style="flex: 1;"><p class="kicker">STAP 2</p><p style="margin-top: 6pt;"><b>Ontwerpen</b></p><p>Korte omschrijving.</p></div>
-  <div class="card" style="flex: 1;"><p class="kicker">STAP 3</p><p style="margin-top: 6pt;"><b>Uitvoeren</b></p><p>Korte omschrijving.</p></div>
-</div>
-```
-
-(Voor echte pijlpunten/chevrons: rasterize een PNG via Sharp in `assets/` en gebruik `<img>`.)
-
-## 2×2-matrix
-
-```html
-<div class="col" style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10pt;">
-  <div class="card card-accent"><p class="kicker">HOOG / LAAG</p><p>Kwadrant.</p></div>
-  <div class="card"><p class="kicker">HOOG / HOOG</p><p>Kwadrant.</p></div>
-  <div class="card"><p class="kicker">LAAG / LAAG</p><p>Kwadrant.</p></div>
-  <div class="card"><p class="kicker">LAAG / HOOG</p><p>Kwadrant.</p></div>
-</div>
-```
-
-## Scenario-kaarten
-
-```html
-<div class="col" style="flex-direction: row;">
-  <div class="card" style="border-top: 3pt solid var(--sfnl-orange);"><p class="kicker">SCENARIO A</p><p class="big-number" style="font-size: 20pt; margin-top: 6pt;">€ 1,2M</p><p style="margin-top: 6pt;">Aannames in één regel.</p></div>
-  <div class="card" style="border-top: 3pt solid var(--sfnl-orange);"><p class="kicker">SCENARIO B</p><p class="big-number" style="font-size: 20pt; margin-top: 6pt;">€ 2,1M</p><p style="margin-top: 6pt;">Aannames in één regel.</p></div>
-</div>
-```
-
-## Evidence stack / lagenmodel
-
-```html
-<div class="col" style="justify-content: center; gap: 6pt;">
-  <div style="background: var(--sfnl-navy); border-radius: 4pt; padding: 8pt 14pt;"><p style="color: #FFFFFF;"><b>Impact</b> — maatschappelijk resultaat</p></div>
-  <div style="background: var(--sfnl-royal); border-radius: 4pt; padding: 8pt 14pt; margin: 0 24pt;"><p style="color: #FFFFFF;"><b>Outcomes</b> — gedragsverandering</p></div>
-  <div style="background: var(--sfnl-sky); border-radius: 4pt; padding: 8pt 14pt; margin: 0 48pt;"><p style="color: #FFFFFF;"><b>Output</b> — geleverde trajecten</p></div>
-</div>
-```
-
-## Cyclus / mechanisme
-
-Posities absoluut binnen een relatief gepositioneerde container; verbindingslijnen als dunne
-`<div>`s (bv. `height: 1.5pt; background: var(--sfnl-grey-70);`), knopen als cirkels
-(`border-radius: 50%`). Pijlpunten: PNG via Sharp (`build/raster.js`).
-
-## Assessment-tabel
-
-Gebruik geen HTML `<table>` (niet ondersteund) — bouw rijen als flex-divs:
-
-```html
-<div class="col" style="gap: 4pt;">
-  <div style="display: flex; gap: 4pt;">
-    <div style="flex: 2; background: var(--sfnl-navy); padding: 5pt 8pt;"><p class="label" style="color: #FFFFFF;">CRITERIUM</p></div>
-    <div style="flex: 1; background: var(--sfnl-navy); padding: 5pt 8pt;"><p class="label" style="color: #FFFFFF;">OORDEEL</p></div>
-  </div>
-  <div style="display: flex; gap: 4pt;">
-    <div style="flex: 2; background: var(--sfnl-grey-95); padding: 5pt 8pt;"><p>Haalbaarheid</p></div>
-    <div style="flex: 1; background: var(--sfnl-emerald-tint60); padding: 5pt 8pt;"><p><b>Sterk</b></p></div>
+<div class="col" style="gap: 10pt;">
+  <div class="frame-band"><p>Mechanisme: eerder contact verkort de escalatieketen met drie beslismomenten.</p></div>
+  <div class="col" style="flex-direction: row; gap: 10pt;">
+    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">1. DATA</p><p>Signaal uit achterstand, school of inkomensloket.</p></div>
+    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">2. CONTACT</p><p>Warme overdracht naar begeleiding binnen tien werkdagen.</p></div>
+    <div class="frame-panel" style="flex: 1; border-color: var(--sfnl-sky);"><p class="kicker">3. ACTIE</p><p>Budgetafspraak voorkomt extra incassokosten.</p></div>
+    <div class="frame-panel orange" style="flex: 1;"><p class="kicker">4. RESULTAAT</p><p>Wettelijk traject blijft uit.</p></div>
   </div>
 </div>
 ```
 
-Complexe tabellen kunnen ook native: via de per-deck hook (`slide.addTable`, zie authoring guide).
+## Scenario-kaders
 
-## Iconen
+Scenario's zijn besliskaders. Gebruik Gotham Bold alleen voor de korte bedragen of indexen, niet voor de volledige tekst.
 
-Rasterize react-icons naar merkkleur-PNGs in de workspace `assets/` (zie authoring guide,
-`build/raster.js`) en plaats met `<img style="width: 22pt; height: 22pt;">`. Iconen zijn inhoud,
-geen decoratie: kies op betekenis.
+```html
+<div class="col" style="flex-direction: row; gap: 10pt;">
+  <div class="frame-panel royal" style="flex: 1;">
+    <p class="kicker">VOORZICHTIG</p>
+    <p class="big-number" style="font-size: 24pt; color: var(--sfnl-navy);">€ 0,8M</p>
+    <p class="body-dense">Alleen harde wettelijke trajectkosten meegeteld.</p>
+  </div>
+  <div class="frame-panel orange" style="flex: 1;">
+    <p class="kicker">BASIS</p>
+    <p class="big-number" style="font-size: 24pt;">€ 1,2M</p>
+    <p class="body-dense">Wettelijke trajectkosten plus aantoonbare uitvoeringsbesparing.</p>
+  </div>
+  <div class="frame-panel emerald" style="flex: 1;">
+    <p class="kicker">OPSCHALING</p>
+    <p class="big-number" style="font-size: 24pt; color: var(--sfnl-emerald);">€ 1,7M</p>
+    <p class="body-dense">Effect blijft stabiel bij drie extra gemeenten.</p>
+  </div>
+</div>
+```
+
+## Native hook en iconen
+
+Complexe tabellen kunnen native via de per-deck hook (`slide.addTable`, zie authoring guide). Iconen horen alleen in een slide als ze inhoud dragen, bijvoorbeeld een bronsoort, doelgroep of beslisstatus.
+
+```html
+<div class="frame-panel royal" style="flex: 2;">
+  <p class="label">NATIVE HOOK</p>
+  <p>Gebruik de hook voor echte tabellen, speciale vormen of PowerPoint-native elementen die HTML niet betrouwbaar bouwt.</p>
+</div>
+<div class="evidence-box" style="flex: 1;">
+  <p class="label" style="color: var(--sfnl-dark-slate);">ICOON</p>
+  <p style="color: var(--sfnl-dark-slate);">Alleen gebruiken wanneer het icoon een betekenislabel ondersteunt; geen decoratieve iconenrijen.</p>
+</div>
+```

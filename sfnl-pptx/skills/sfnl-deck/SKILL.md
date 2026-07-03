@@ -13,7 +13,10 @@ een bewerkbare .pptx via html2pptx + PptxGenJS. Lees vóór het bouwen altijd
 
 Idee → research → outline → storyboard → HTML+deck.json → build → visuele loop → review → proof:
 
-1. **Intake.** Brief, outline of brondocumenten. Detecteer taal (NL/EN).
+1. **Intake.** Brief, outline of brondocumenten. Detecteer taal (NL/EN). Vraag/capture ook
+   of er een optioneel **reference file / referentiebestand** is dat laat zien hoe de deck qua
+   look of structuur ongeveer moet aanvoelen. Noteer pad, korte samenvatting en welke elementen
+   richtinggevend zijn; dit is input voor outline/design, geen vervanging van SFNL brandregels.
 2. **Research.** Hand off naar `sfnl-deck-research`: bronnendossier (feiten, cijfers, bronnen,
    viz-kandidaten) vóór er een slide bestaat. Skip alleen wanneer de gebruiker compleet,
    gebronmerkt materiaal aanlevert — noteer dat als bron. Elk cijfer op een slide traceert naar
@@ -21,13 +24,16 @@ Idee → research → outline → storyboard → HTML+deck.json → build → vi
 3. **Outline.** Hand off naar `sfnl-deck-outline`: een geschaalde vraagronde over inhoud en
    structuur (0-20 vragen, met skip-optie), gevolgd door een per-slide content-outline
    (`output/<YYYY-MM-DD>-<slug>/outline.md`) die de gebruiker becommentarieert en goedkeurt
-   vóór er storyboard- of HTML-werk begint. Lees `engine/reference/voice.md` voor de
+   vóór er storyboard- of HTML-werk begint. Geef een eventueel reference file / referentiebestand
+   mee als handoff-veld met pad en samenvatting. Lees `engine/reference/voice.md` voor de
    SCQA-narrative- en action-title-regels die de outline moet volgen.
 4. **Storyboard.** Hand off naar `sfnl-deck-design`: leest de goedgekeurde outline en werkt 'm
    uit tot per-slide layoutcompositie (regio's, hiërarchie, patroon uit `patterns.md` of
    archetype, accentgebruik, chart-kandidaten) als tekst-storyboard, goedgekeurd vóór er HTML
    wordt geschreven. Content- of structuurwijzigingen op dit moment gaan terug naar de outline,
-   niet naar het storyboard. Voor een klein aantal sleutelslides (bespoke composities of
+   niet naar het storyboard. Als de outline een reference file / referentiebestand noemt, neemt
+   design de herbruikbare structuur-/stijlcue's mee en verwerpt conflicterende cue's expliciet
+   wanneer SFNL brandregels of officiële archetypes voorgaan. Voor een klein aantal sleutelslides (bespoke composities of
    narratief cruciale slides) volgt daarna een visuele review met snelle HTML-mockups in één
    Artifact (stap 2.5 van `sfnl-deck-design`), tenzij de deck triviaal klein is of de gebruiker
    dat overslaat.
@@ -38,10 +44,15 @@ Idee → research → outline → storyboard → HTML+deck.json → build → vi
    uit de authoring guide (alle tekst in tekst-tags, geen gradients, ALL CAPS-titels getypt,
    geen logo/paginanummer in HTML).
 6. **Build + visuele loop (verplicht, elke build).** `node engine/web/build/build_deck.js
-   output/<datum>-<slug>`. Faalt de validatie: alle fouten in één keer fixen. Daarna renderen
-   (`python -m scripts.render … renders/` vanuit `engine/`), elke PNG inspecteren of de
-   `deck-visual-reviewer` dispatchen, HTML fixen, rebuilden — tot schoon. Draai ook
-   `python -m scripts.qa_text` en los criticals op.
+   output/<datum>-<slug>`. De build embedt automatisch de officiële SFNL-layoutgalerij uit
+   `engine/assets/sfnl-sjabloon.potx` en faalt hard als die merge niet lukt. Faalt de validatie:
+   alle fouten in één keer fixen. Daarna renderen (`python -m scripts.render … renders/` vanuit
+   `engine/`), elke PNG inspecteren of de `deck-visual-reviewer` dispatchen, HTML fixen,
+   rebuilden — tot schoon. Als PowerPoint COM niet beschikbaar is, gebruik de Codex
+   presentations artifact-tool renderer voor diagnostische PPTX-screenshots/contact sheets, maar
+   markeer delivery nog steeds als `GEBLOKKEERD OP RENDER`. Draai ook `python -m scripts.qa_text`,
+   en wanneer PowerPoint COM beschikbaar is `python -m scripts.render --assert-layouts <deck.pptx> 31`;
+   los criticals op.
 7. **Review + proof.** Hand off naar `sfnl-deck-review` (adaptieve QA) en vóór klantoplevering
    naar `sfnl-deck-proof` (volledige eindproef). Pas opleveren bij "klaar voor oplevering".
 

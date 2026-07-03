@@ -17,8 +17,8 @@ rekenformule):
 - **Omvang**: verwacht aantal slides — expliciet genoemd, of afgeleid uit scope ("kort
   statusupdate" ≈ 5-8, "volledig voorstel" ≈ 15-25).
 - **Ambiguïteit**: hoeveel van {doelgroep, doel/ask, structuurvoorkeur, toon, must-include
-  onderdelen, tijdlijn/deadline-context, gevoelige onderwerpen} al beantwoord zijn door de brief
-  of het dossier.
+  onderdelen, tijdlijn/deadline-context, gevoelige onderwerpen, optioneel reference file /
+  referentiebestand voor look of structuur} al beantwoord zijn door de brief of het dossier.
 - **Complexiteit**: meerdere stakeholders, onderling afhankelijke onderdelen, genuanceerde asks.
 
 Deze drie factoren bepalen samen een doelaantal vragen tussen **0 en 20**. Een heldere,
@@ -41,6 +41,8 @@ ingeschatte aantal, en sla een topic over als de brief het al beantwoordt:
 - Doelgroep & hun voorkennis
 - Primair doel/ask van de deck
 - Gewenste structuur/secties
+- Optioneel reference file / referentiebestand voor look of structuur: pad, kerncue's en wat
+  alleen richtinggevend is
 - Toon-uitzonderingen op de standaardregels in `engine/reference/voice.md`
 - Must-include vs. optioneel materiaal
 - Gevoeligheden of onderwerpen om te vermijden
@@ -61,6 +63,11 @@ Schrijf naar `output/<YYYY-MM-DD>-<slug>/outline.md`:
 ## Narrative (SCQA)
 <Situation → Complication → Question → Answer in een paar zinnen>
 
+## Reference file handoff
+- **Reference path / referentiepad**: <pad of "geen">
+- **Summary / samenvatting**: <herbruikbare structuur-/stijlcues, of "niet aangeleverd">
+- **Status**: guidance only; SFNL brandregels en officiële archetypes blijven leidend.
+
 ## Slides
 
 ### 1. <werktitel / concept action title>
@@ -70,6 +77,10 @@ Schrijf naar `output/<YYYY-MM-DD>-<slug>/outline.md`:
 - **Archetype-hint**: content | cover | divider | quote
 
 ### 2. ...
+
+## Cross-slide consistentieregels
+<invarianten die build/proof moeten bewaren, bv. "slides 6, 11 en 13 gebruiken allemaal de
+voorzichtige scenariowaarde €1,01m"; geen open vragen, maar proof obligations>
 
 ## Open vragen / aannames
 <wat is geskipt, welke aannames zijn gemaakt, wat de gebruiker eventueel nog moet aanleveren>
@@ -82,6 +93,11 @@ Regels:
   van `sfnl-deck-design` in de volgende stap.
 - Elk cijfer dat in "Kernpunten" staat, verwijst naar een dossierregel uit
   `output/research/<slug>-dossier.md` (zelfde regel als `sfnl-deck-research` Stap 4.1).
+- Als intake een reference file / referentiebestand noemt, behoud het pad en een korte summary in
+  `Reference file handoff`; dit is een handoff-veld voor design, geen vrijbrief om SFNL
+  brandregels te negeren.
+- Cross-slide consistentieregels zijn geen open vragen; het zijn proof obligations voor build,
+  review en proof.
 
 ## Stap 4: review- en commentaarloop
 

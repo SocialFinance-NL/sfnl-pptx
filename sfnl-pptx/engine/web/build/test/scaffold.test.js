@@ -26,7 +26,7 @@ test('scaffold converts cleanly with title chrome', async () => {
   const py = spawnSync('python', ['-c', `
 import zipfile, sys
 x = zipfile.ZipFile(sys.argv[1]).read('ppt/slides/slide1.xml').decode('utf-8')
-assert "Gotham Bold" in x
+assert "Lato Light" in x
 assert "ACTION TITLE" in x
 assert "F87F4F" in x  # orange dash shape
 print("ok")

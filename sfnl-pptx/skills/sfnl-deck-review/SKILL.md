@@ -14,18 +14,26 @@ slides**, niet alleen "sensitive" slides.
 1. **Tekst-QA, alle slides.** `python -m scripts.qa_text <deck.pptx>` (vanuit `engine/`):
    leftover scaffold-tekst, niet-ALL-CAPS-titels, off-brand fonts/kleuren (buiten
    `engine/web/tokens.json`), lege slides. Elke `critical` blokkeert: HTML fixen, rebuilden.
-2. **Visuele loop, alle slides.** Render alles:
+2. **Layoutgalerij-QA.** Als PowerPoint COM beschikbaar is:
+   `python -m scripts.render --assert-layouts <deck.pptx> 31`. Dit opent de deck in echte
+   PowerPoint en bewijst dat de officiële SFNL-layouts zichtbaar zijn voor Nieuwe dia/Layout.
+   Faalt dit: rebuild of sjabloonmerge fixen vóór visuele review.
+   If `scripts.render --check` reports PowerPoint COM unavailable, do not mark the review clear.
+   Use the Codex presentations artifact-tool renderer for diagnostic PPTX screenshots/contact
+   sheets when available; HTML screenshots are a weaker fallback. Final status remains
+   `GEBLOKKEERD: render niet beschikbaar`.
+3. **Visuele loop, alle slides.** Render alles:
    `python -m scripts.render <deck.pptx> <workspace>/renders`. Dispatch de
    `deck-visual-reviewer` (hele-deck-pass) of inspecteer elke PNG zelf op: tekst-cutoff,
    overlap, onbalans, dode witruimte, contrast, **chrome-integriteit** (titel + dash, logo,
    paginanummer aanwezig en op hun plek), half-lege slides, monotonie. Elke bevinding: fix de
    HTML (of deck.json/chartspec) → `node engine/web/build/build_deck.js <workspace>` →
    re-render → opnieuw beoordelen. **Herhaal tot schoon.**
-3. **Exhibit-check.** Elke contentslide draagt een echte exhibit die het canvas vult (kaarten,
+4. **Exhibit-check.** Elke contentslide draagt een echte exhibit die het canvas vult (kaarten,
    big numbers, chart, swimlanes, matrix, diagram). Tekst-zonder-exhibit blokkeert tenzij de
    notes uitleggen waarom dat bewust is. Check de build tegen het storyboard van
    `sfnl-deck-design`.
-4. **Coherence.** Action titles in volgorde (ghost-deck-test); accentgebruik consistent met het
+5. **Coherence.** Action titles in volgorde (ghost-deck-test); accentgebruik consistent met het
    gekozen kleurmodel.
 
 ## Output

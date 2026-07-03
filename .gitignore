@@ -1,6 +1,8 @@
 output/
 node_modules/
+.codex-tmp/
 *.tmp
+debug.log
 .DS_Store
 Thumbs.db
 __pycache__/
@@ -9,3 +11,5 @@ __pycache__/
 
 *.potx
 *.pptx
+!sfnl-pptx/engine/assets/*.potx
+!sfnl-pptx/engine/assets/*.pptx

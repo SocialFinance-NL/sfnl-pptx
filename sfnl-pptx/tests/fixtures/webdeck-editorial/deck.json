@@ -1,0 +1,18 @@
+{
+  "title": "EDITORIAL FIXTURE",
+  "slug": "webdeck-editorial",
+  "language": "nl",
+  "author": "Social Finance NL",
+  "accent": "orange",
+  "hooks": null,
+  "slides": [
+    { "file": "slides/01-cover.html", "chrome": "none", "notes": "Bron: R1" },
+    { "file": "slides/02-frame-kpi.html", "chrome": "light", "notes": "Bron: R2, R3" },
+    { "file": "slides/03-chart-verdict.html", "chrome": "light", "notes": "Bron: R4",
+      "charts": [{ "placeholder": "chart-main", "type": "column",
+        "series": [{ "name": "Instroom", "labels": ["M1", "M2"], "values": [20, 28] },
+                   { "name": "Uitstroom", "labels": ["M1", "M2"], "values": [0, 4] }],
+        "axis": { "catTitle": "Maand", "valTitle": "Aantal" },
+        "colors": ["neutral", "result"] }] }
+  ]
+}

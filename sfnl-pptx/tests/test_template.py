@@ -1,8 +1,23 @@
 from pptx.util import Emu
+import pytest
+
+from scripts.merge_template import TEMPLATE as SJABLOON_PATH, TemplateMergeError, merge
 from scripts.office.template import load_template_presentation, TEMPLATE_PATH
+
 
 def test_template_path_exists():
     assert TEMPLATE_PATH.exists()
+
+
+def test_sjabloon_source_is_bundled():
+    assert SJABLOON_PATH.exists()
+
+
+def test_merge_fails_loudly_when_sjabloon_is_missing(tmp_path):
+    missing_template = tmp_path / "missing-sjabloon.potx"
+    with pytest.raises(TemplateMergeError, match="SFNL sjabloon not bundled"):
+        merge(tmp_path / "deck.pptx", template_path=missing_template)
+
 
 def test_loads_as_clean_widescreen_presentation():
     prs = load_template_presentation()

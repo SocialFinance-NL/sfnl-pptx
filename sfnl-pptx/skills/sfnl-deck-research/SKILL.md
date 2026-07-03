@@ -46,6 +46,10 @@ websearch en aangeleverde documenten. Regels:
 
 Schrijf het dossier naar `output/research/<slug>-dossier.md` met deze structuur per thema:
 
+Use stable row IDs in the format `T<slide-number>.<row-number>` (`T#.#`) when the dossier
+follows a known slide list. Every downstream number, claim, and visual candidate refers to these
+IDs.
+
 ```markdown
 ## <Thema / slide-onderwerp>
 
@@ -57,9 +61,10 @@ Schrijf het dossier naar `output/research/<slug>-dossier.md` met deze structuur 
 
 - **Betrouwbaarheid**: hoog (primaire bron/CBS/peer-reviewed), middel (sectorrapport,
   onderzoeksbureau), laag (nieuwsbericht, enkele casus), aanname (geen bron).
-- **Viz?**: markeer welke regels zich lenen voor visualisatie en met welk component:
-  `kpi` (big numbers/stat-banner), `chart` (native chart via chartspec), `proces`, `schema`, of `-`.
-  Dit voedt de storyboard-stap van `sfnl-deck-design` direct.
+- **Viz?**: markeer welke regels zich lenen voor visualisatie met exact deze labels:
+  `kpi`, `chart`, `proces`, `funnel`, `timeline`, `matrix`, `scenario`, `quote`, `schema`, `-`.
+  This viz enum is shared with `sfnl-deck-design`; use these exact labels unless a new label is
+  added to both docs.
 - Sluit af met een sectie **Gaten en aannames**: wat is niet gevonden, welke aannames zijn
   gedaan, en wat de gebruiker eventueel zelf moet aanleveren.
 

@@ -11,9 +11,22 @@ const TYPE_MAP = {
   scatter: ['SCATTER', { lineSize: 0, lineDataSymbol: 'circle', lineDataSymbolSize: 6 }],
 };
 
+const COLOR_ALIASES = {
+  neutral: 'dark slate',
+  grey: 'dark slate',
+  gray: 'dark slate',
+  risk: 'grapefruit',
+  positive: 'emerald',
+  result: 'orange',
+};
+
 function colorHex(palette, name) {
-  const slot = palette.by_name[name];
-  if (!slot) throw new Error(`unknown color name "${name}" (allowed: ${Object.keys(palette.by_name).join(', ')})`);
+  const resolved = COLOR_ALIASES[name] || name;
+  const slot = palette.by_name[resolved];
+  if (!slot) {
+    const allowed = [...Object.keys(palette.by_name), ...Object.keys(COLOR_ALIASES)].join(', ');
+    throw new Error(`unknown color name "${name}" (allowed: ${allowed})`);
+  }
   return palette.by_slot[slot].hex.toUpperCase();
 }
 

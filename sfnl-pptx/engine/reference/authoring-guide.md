@@ -1,7 +1,8 @@
 # SFNL deck authoring guide (html2pptx pipeline)
 
 Eén HTML-bestand per slide + één `deck.json` per deck. De build converteert naar een `.pptx`
-met bewerkbare tekstvakken, echte shapes en native charts.
+met bewerkbare tekstvakken, echte shapes, native charts en de officiële SFNL
+PowerPoint-layoutgalerij uit het gebundelde sjabloon.
 
 ## Workspace
 
@@ -28,6 +29,11 @@ gegenereerd uit het officiële sjabloon (`engine/assets/sfnl-slides.pptx`, via
 alleen de slotteksten, en verplaats of herstijl de slots niet. `cover-02`/`cover-03` hebben geen
 tekstslots (opening/afsluiter). De catalogus met beschrijvingen en het `chrome`-advies per
 variant staat in `engine/web/assets/chrome/manifest.json`.
+
+Before choosing a cover/divider/quote archetype, compare required text fields with
+`assets/chrome/manifest.json`. If the slide needs title + subtitle + metadata, choose a variant
+with those slots or move metadata to notes. Do not add extra text boxes to official archetype
+slides unless the manifest explicitly provides a matching slot.
 
 ## HTML-regels (hard — de build faalt of verliest tekst bij overtreding)
 
@@ -72,6 +78,8 @@ variant staat in `engine/web/assets/chrome/manifest.json`.
 - `accent`: één accent per deck (default `orange`); `colors` per chart alleen bij betekenisvol
   kleurgebruik (categorieën), namen uit `palette.json` (`orange`, `grapefruit`, `royal`, `sky`,
   `emerald`, `navy`, `dark slate`).
+  Chart colors accept palette names plus aliases: `neutral`/`grey`/`gray` → `dark slate`,
+  `result` → `orange`, `risk` → `grapefruit`, `positive` → `emerald`.
 - `chrome`: `"light"` (default: logo + oranje paginanummer), `"dark"` (wit paginanummer, geen
   logo — voor dividers), `"number"` (alleen oranje paginanummer — voor sjabloonslides die hun
   logo al in het ontwerp dragen, zoals `quote-01`), `"none"` (cover/closing). Voor archetypes:
@@ -90,12 +98,22 @@ node engine/web/build/build_deck.js output/<datum>-<slug>       # bouwt <slug>.p
 # vanuit sfnl-pptx/engine:
 python -m scripts.render ../../output/<datum>-<slug>/<slug>.pptx ../../output/<datum>-<slug>/renders
 python -m scripts.qa_text ../../output/<datum>-<slug>/<slug>.pptx
+python -m scripts.render --assert-layouts ../../output/<datum>-<slug>/<slug>.pptx 31
 ```
 
 Elke build eindigt pas na de visuele loop: render → elke PNG bekijken (cutoff, overlap,
 onbalans, dode witruimte, contrast, chrome-integriteit) → HTML fixen → rebuild → re-render,
 tot schoon. De buildvalidatie (overflow, gradients, tekst-buiten-tags, maatafwijking) is de
-eerste QA-poort en faalt luid met alle fouten tegelijk.
+eerste QA-poort en faalt luid met alle fouten tegelijk. `build_deck.js` embedt na het schrijven
+automatisch de masters/layouts uit `engine/assets/sfnl-sjabloon.potx`; ontbreekt die asset of
+faalt de OOXML-merge, dan faalt de build. De `--assert-layouts` check opent de deck via echte
+PowerPoint-COM en is de gezaghebbende controle wanneer PowerPoint beschikbaar is.
+
+If `python -m scripts.render --check` reports PowerPoint COM unavailable, the build is not visually
+cleared. Use the Codex presentations `container_tools/render_slides.py` artifact-tool renderer
+when available to create diagnostic PPTX screenshots/contact sheets, or HTML screenshots as a
+weaker fallback. The status remains `GEBLOKKEERD OP RENDER` until a PowerPoint render succeeds.
+Report the skipped PowerPoint render explicitly in build QA, review, and proof.
 
 ## Eenmalige setup (per machine)
 

@@ -4,12 +4,14 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { spawnSync } = require('child_process');
 const pptxgen = require('pptxgenjs');
 const html2pptx = require('./html2pptx');
 const { chartArgs } = require('./chart_spec');
 
 const palette = require(path.join(__dirname, '..', '..', 'assets', 'palette.json'));
 const LOGO = path.join(__dirname, '..', 'assets', 'sfnl-logo.png');
+const ENGINE = path.resolve(__dirname, '..', '..');
 // Geometry from the sjabloon master, scaled 0.75 to the 10in x 5.625in canvas.
 const LOGO_POS = { x: 0.27, y: 5.3025, w: 0.825, h: 0.225 };
 const PAGE_POS = { x: 9.45, y: 5.34, w: 0.465, h: 0.18 };
@@ -66,11 +68,25 @@ async function buildDeck(workspace) {
   }
   const out = path.join(workspace, `${deck.slug}.pptx`);
   await pptx.writeFile({ fileName: out });
+  mergeTemplate(out);
   return out;
+}
+
+function mergeTemplate(pptxPath) {
+  const python = process.env.PYTHON || 'python';
+  const res = spawnSync(python, ['-m', 'scripts.merge_template', pptxPath], {
+    cwd: ENGINE,
+    encoding: 'utf-8',
+  });
+  if (res.status !== 0) {
+    const detail = [res.stderr, res.stdout].filter(Boolean).join('\n').trim();
+    throw new Error(`SFNL sjabloon layout merge failed for ${pptxPath}`
+      + (detail ? `:\n${detail}` : ''));
+  }
 }
 
 if (require.main === module) {
   buildDeck(process.argv[2]).then((out) => console.log('wrote', out))
     .catch((e) => { console.error(e.message); process.exit(1); });
 }
-module.exports = { buildDeck };
+module.exports = { buildDeck, mergeTemplate };

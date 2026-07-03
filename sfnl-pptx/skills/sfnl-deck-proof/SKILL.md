@@ -13,12 +13,16 @@ sensitive slides" — alles wordt gerenderd en bekeken.
 
 1. **Voorwaarden.** De deck is gebouwd en heeft `sfnl-deck-review` doorlopen zonder critical
    findings. Zo niet: eerst terug naar review.
-2. **Volledige render.** Run `python -m scripts.render --check`; bij beschikbare PowerPoint COM
+2. **PowerPoint-validatie + volledige render.** Run `python -m scripts.render --check`; bij
+   beschikbare PowerPoint COM eerst
+   `python -m scripts.render --assert-layouts <deck.pptx> 31` om de ingebedde SFNL-layoutgalerij
+   in echte PowerPoint te valideren. Daarna
    render álle slides: `python -m scripts.render <deck.pptx> <workspace>/renders` (workspace =
    `output/<datum>-<slug>/`). Is COM niet beschikbaar
-   (geen Windows/PowerPoint), meld dan expliciet dat de visuele eindproef niet kon draaien en
-   dat de deck is opgeleverd op basis van tekst-QA en spec-review alleen — lever nooit stil op
-   zonder deze melding.
+   (geen Windows/PowerPoint), meld dan expliciet dat de visuele eindproef niet kon draaien.
+   Lever niet op: geen PowerPoint-render = verdict `GEBLOKKEERD`. A fallback based on Codex artifact-tool PPTX
+   screenshots, HTML screenshots, or text QA must be listed under `Niet uitgevoerd` and cannot be
+   called ready for delivery; note this as `render niet beschikbaar`.
 3. **Visuele proef, hele deck.** Dispatch de `deck-visual-reviewer` subagent met het .pptx-pad
    en expliciet **alle** slide-indices (proof-modus). De agent beoordeelt elke slide op overflow,
    overlap, uitlijning, merkregels, kale slides, monotonie en accent-consistentie, en rapporteert
