@@ -168,12 +168,22 @@ function addElements(slideData, targetSlide, pres) {
         line: { color: el.color, width: el.width }
       });
     } else if (el.type === 'shape') {
+      const st = el.shape.shapeType;
+      let pptxShape;
+      if (st === 'pill') {
+        pptxShape = pres.ShapeType.roundRect;
+      } else if (st) {
+        pptxShape = pres.ShapeType[st];
+      } else {
+        pptxShape = el.shape.rectRadius > 0 ? pres.ShapeType.roundRect : pres.ShapeType.rect;
+      }
+
       const shapeOptions = {
         x: el.position.x,
         y: el.position.y,
         w: el.position.w,
         h: el.position.h,
-        shape: el.shape.rectRadius > 0 ? pres.ShapeType.roundRect : pres.ShapeType.rect
+        shape: pptxShape
       };
 
       if (el.shape.fill) {
@@ -181,7 +191,11 @@ function addElements(slideData, targetSlide, pres) {
         if (el.shape.transparency != null) shapeOptions.fill.transparency = el.shape.transparency;
       }
       if (el.shape.line) shapeOptions.line = el.shape.line;
-      if (el.shape.rectRadius > 0) shapeOptions.rectRadius = el.shape.rectRadius;
+      if (st === 'pill') {
+        shapeOptions.rectRadius = el.position.h / 2;
+      } else if (el.shape.rectRadius > 0) {
+        shapeOptions.rectRadius = el.shape.rectRadius;
+      }
       if (el.shape.shadow) shapeOptions.shadow = el.shape.shadow;
 
       targetSlide.addText(el.text || '', shapeOptions);
@@ -693,6 +707,21 @@ async function extractSlideData(page) {
         const computed = window.getComputedStyle(el);
         const hasBg = computed.backgroundColor && computed.backgroundColor !== 'rgba(0, 0, 0, 0)';
 
+        // Native autoshape vocabulary via data-shape (chevron, pill, circle, block arrows)
+        const SHAPE_MAP = {
+          'chevron': 'chevron', 'pill': 'pill', 'circle': 'ellipse',
+          'arrow-right': 'rightArrow', 'arrow-left': 'leftArrow',
+          'arrow-up': 'upArrow', 'arrow-down': 'downArrow'
+        };
+        let shapeType = null;
+        const hasDataShape = !!(el.dataset && el.dataset.shape);
+        if (hasDataShape) {
+          shapeType = SHAPE_MAP[el.dataset.shape];
+          if (!shapeType) {
+            errors.push(`Unknown data-shape "${el.dataset.shape}". Allowed: ${Object.keys(SHAPE_MAP).join(', ')}.`);
+          }
+        }
+
         // Validate: Check for unwrapped text content in DIV
         for (const node of el.childNodes) {
           if (node.nodeType === Node.TEXT_NODE) {
@@ -776,13 +805,13 @@ async function extractSlideData(page) {
           }
         }
 
-        if (hasBg || hasBorder) {
+        if (hasBg || hasBorder || hasDataShape) {
           const rect = el.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) {
             const shadow = parseBoxShadow(computed.boxShadow);
 
-            // Only add shape if there's background or uniform border
-            if (hasBg || hasUniformBorder) {
+            // Only add shape if there's background, uniform border, or an explicit data-shape
+            if (hasBg || hasUniformBorder || hasDataShape) {
               elements.push({
                 type: 'shape',
                 text: '',  // Shape only - child text elements render on top
@@ -793,6 +822,7 @@ async function extractSlideData(page) {
                   h: pxToInch(rect.height)
                 },
                 shape: {
+                  shapeType,
                   fill: hasBg ? rgbToHex(computed.backgroundColor) : null,
                   transparency: hasBg ? extractAlpha(computed.backgroundColor) : null,
                   line: hasUniformBorder ? {
