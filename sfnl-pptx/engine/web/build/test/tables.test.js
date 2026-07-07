@@ -54,7 +54,7 @@ test('sfnl-table presets style header, section, total and value cells', async ()
   assert.equal(rows[0][0].options.fill.color.toUpperCase(), '201B5C');   // navy header
   assert.equal(rows[0][0].options.color.toUpperCase(), 'FEFFFF');
   assert.equal(rows[1][0].options.colspan, 3);                            // section row spans
-  assert.ok(rows[1][0].options.fill, 'section row is tinted');
+  assert.equal(rows[1][0].options.fill.color.toUpperCase(), 'C6C3ED');    // section row --sfnl-navy-tint80
   assert.equal(rows[2][1].options.align, 'right');                        // col-num
   assert.equal(rows[2][1].options.color.toUpperCase(), 'F95D63');         // val-cost grapefruit
   assert.equal(rows[3][1].options.color.toUpperCase(), '6AC6BA');         // val-benefit emerald

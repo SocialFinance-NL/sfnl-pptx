@@ -124,7 +124,7 @@ h1, h2, h3 { font-family: "Lato Light", "Lato", Arial, sans-serif; color: var(--
   color: var(--sfnl-dark-slate); text-align: left; padding: 5pt 7pt;
 }
 .sfnl-table th {
-  font-family: 'Montserrat Light', sans-serif; color: #FEFFFF;
+  font-family: 'Montserrat Light', sans-serif; color: var(--sfnl-white);
   text-transform: uppercase; letter-spacing: 0.06em;
 }
 .sfnl-table.orange th { background: var(--sfnl-orange); }
@@ -140,7 +140,7 @@ h1, h2, h3 { font-family: "Lato Light", "Lato", Arial, sans-serif; color: var(--
 .sfnl-table.teal   tr.section-row td { background: var(--sfnl-emerald-tint80); }
 .sfnl-table.navy   tr.section-row td { background: var(--sfnl-navy-tint80); }
 .sfnl-table tr.total-row td {
-  background: var(--sfnl-navy); color: #FEFFFF; font-weight: 700; border-bottom: none;
+  background: var(--sfnl-navy); color: var(--sfnl-white); font-weight: 700; border-bottom: none;
 }
 .sfnl-table .col-num { text-align: right; }
 .sfnl-table .val-cost { color: var(--sfnl-grapefruit); font-weight: 600; }
