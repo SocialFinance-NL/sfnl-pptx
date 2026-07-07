@@ -23,6 +23,192 @@
 
 ---
 
+### Task 0: anonimiseer de exhibit-galerij (template-tekst, layout blijft)
+
+De 18 exhibit-PNG's in `sfnl-pptx/engine/reference/exhibits/` zijn gerenderd uit echte
+klantdeliverables (Hartstichting, WoR Venlo). De galerij gaat om **layout**, niet om inhoud:
+vervang klantidentificerende tekst en echte cijfers door generieke template-tekst en render de
+18 slides opnieuw. Let op: de originele PNG's zitten al in git-history (commit c354421); zolang
+de repo privé blijft is dat acceptabel — history-rewrite is buiten scope, noteer dit in de PR/
+het eindrapport.
+
+**Files:**
+- Create: `<scratchpad>/anonymize_exhibits.py` (wegwerpscript, niet committen)
+- Modify: `sfnl-pptx/engine/reference/exhibits/*.png` (18 stuks, overschrijven)
+- Modify: `sfnl-pptx/engine/reference/exhibits/manifest.md` (vertrouwelijkheidsnoot bijwerken)
+
+**Interfaces:**
+- Consumes: bronbestanden (alleen lezen, nooit wijzigen):
+  - `C:\Users\XavierFriesen\Social Finance NL\SP_Data - Documenten\01 Projecten\03 Actief\Welzijn op recept - Venlo\04 Eind deliverables\Impact meetplan Welzijn op Recept.pptx`
+  - `C:\Users\XavierFriesen\Social Finance NL\SP_Data - Documenten\01 Projecten\03 Actief\Hartstichting MBC Postmortale diagnostiek\01 Werkmap implementatie\Hartstichting SFNL GEDEELDE MAP\20260626 Conceptslides eindrapport.pptx`
+  - render: `python -m scripts.render <pptx> <dir>` (vanuit `sfnl-pptx/engine`)
+- Produces: 18 geanonimiseerde PNG's met identieke bestandsnamen; latere taken (6, 7) verwijzen
+  ongewijzigd naar de galerij.
+
+Slide→exhibit-mapping (bron → bestandsnaam):
+
+| Bron | Slide | Exhibit |
+|---|---|---|
+| Hartstichting | 6 | chevron-process.png |
+| Hartstichting | 8 | letter-chips.png |
+| Hartstichting | 9 | hero-stat-kpi.png |
+| Hartstichting | 10 | stat-cards-totalband.png |
+| Hartstichting | 13 | stat-cards-arrow.png |
+| Hartstichting | 14 | stakeholder-ladder.png |
+| Hartstichting | 15 | outcome-ledger-table.png |
+| Hartstichting | 19 | veranderttheorie-map.png |
+| Hartstichting | 23 | effectenkaart-matrix.png |
+| Hartstichting | 26 | scenario-decision-tree.png |
+| Hartstichting | 31 | overview-table-orange.png |
+| Hartstichting | 35 | stakeholder-matrix-table.png |
+| Hartstichting | 55 | financial-table-sections.png |
+| Hartstichting | 77 | sensitivity-table-navy.png |
+| WoR Venlo | 5 | icon-tiles-bullets.png |
+| WoR Venlo | 6 | icon-tile-grid.png |
+| WoR Venlo | 10 | numbered-card-columns.png |
+| WoR Venlo | 11 | table-section-chips.png |
+
+- [ ] **Step 1: Schrijf het anonimisatiescript**
+
+`<scratchpad>/anonymize_exhibits.py` — kopieert beide decks naar de scratchpad, vervangt tekst
+op run-niveau (formatting/layout blijft intact), perturbeert bedragen en aantallen:
+
+```python
+"""Anonimiseer exhibit-brondecks: klanttermen -> generiek, cijfers -> templatewaarden."""
+import copy, re, shutil, sys
+from pathlib import Path
+from pptx import Presentation
+
+SUBS = [
+    # klant- en projectidentificatie -> generiek (case-sensitive eerst, dan varianten)
+    (r"Hartstichting", "Stichting Voorbeeld"),
+    (r"Dutch\s*CardioVascular\s*Alliance|DCVA", "landelijke werkgroep"),
+    (r"[Pp]ostmortale diagnostiek", "de interventie"),
+    (r"hart-?\s*en\s*vaatziekten|hart-?\s*of\s*vaatziekte[n]?", "de aandoening"),
+    (r"Welzijn op Recept|WoR", "Programma X"),
+    (r"Venlo|Noord-?\s*en\s*Midden-?Limburg", "Regio Voorbeeld"),
+    (r"LEEFH|NODOV|NODOK|PRECISE|ZorgDomein", "Systeem Y"),
+    (r"welzijnscoach(es)?", "begeleider"),
+    (r"[Hh]uisarts(en)?(praktijk)?", "verwijzer"),
+    (r"nabestaanden", "betrokkenen"),
+    (r"familieleden|familieonderzoek", "doelgroeponderzoek"),
+    # persoonsnamen / bronnen -> generieke bron
+    (r"(Ranthe|Van der Valk|Von Kodolitsch|Versmissen|Moss|Perez|Ingles|Wordsworth|Owens)[^,;)]*", "Bron et al."),
+    # bedragen en aantallen -> vaste templatewaarden (layoutbreedte blijft vergelijkbaar)
+    (r"€\s?[\d\.,]+\s?(mln|miljoen|K)?", "€ 1,2 mln"),
+    (r"\b\d{1,3}(\.\d{3})+\b", "12.345"),
+    (r"\b\d{1,2},\d\b", "3,6"),
+    (r"\b\d{2,4}\b", "123"),
+    (r"\b\d{1,3}%", "45%"),
+]
+
+def anonymize_text(s: str) -> str:
+    for pat, repl in SUBS:
+        s = re.sub(pat, repl, s)
+    return s
+
+def walk_shapes(shapes):
+    for sh in shapes:
+        if sh.shape_type == 6:  # GROUP
+            yield from walk_shapes(sh.shapes)
+        else:
+            yield sh
+
+def anonymize(src: str, dst: str):
+    shutil.copy(src, dst)
+    prs = Presentation(dst)
+    for slide in prs.slides:
+        for sh in walk_shapes(slide.shapes):
+            if sh.has_text_frame:
+                for para in sh.text_frame.paragraphs:
+                    for run in para.runs:
+                        run.text = anonymize_text(run.text)
+            if getattr(sh, "has_table", False) and sh.has_table:
+                for row in sh.table.rows:
+                    for cell in row.cells:
+                        for para in cell.text_frame.paragraphs:
+                            for run in para.runs:
+                                run.text = anonymize_text(run.text)
+    prs.save(dst)
+
+if __name__ == "__main__":
+    anonymize(sys.argv[1], sys.argv[2])
+```
+
+Controleer het script kritisch: regexvolgorde is betekenisvol (specifiek vóór generiek;
+bedragen vóór kale getallen).
+
+- [ ] **Step 2: Draai het script op beide decks**
+
+```powershell
+python <scratchpad>/anonymize_exhibits.py "<bronpad WoR>" <scratchpad>/wor-anon.pptx
+python <scratchpad>/anonymize_exhibits.py "<bronpad Hartstichting>" <scratchpad>/hs-anon.pptx
+```
+
+Expected: beide bestanden geschreven; bronbestanden onaangeroerd (verifieer met `git status`-
+achtige check dat je alleen in de scratchpad schreef).
+
+- [ ] **Step 3: Verifieer dat geen klanttermen overblijven**
+
+```powershell
+python - <<'PY'
+from pptx import Presentation
+import re, sys
+FORBIDDEN = re.compile(r"Hartstichting|DCVA|Welzijn op Recept|WoR\b|Venlo|Limburg|LEEFH|NODOV|postmortale", re.I)
+for f in [r"<scratchpad>/wor-anon.pptx", r"<scratchpad>/hs-anon.pptx"]:
+    prs = Presentation(f)
+    hits = []
+    for i, slide in enumerate(prs.slides, 1):
+        for sh in slide.shapes:
+            if sh.has_text_frame and FORBIDDEN.search(sh.text_frame.text):
+                hits.append((f, i, sh.text_frame.text[:60]))
+    print(f, "OK" if not hits else hits)
+PY
+```
+
+Expected: `OK` voor beide. Hits → mapping in Step 1 uitbreiden en opnieuw draaien.
+(Groepsshapes: gebruik dezelfde `walk_shapes`-recursie als in het script.)
+
+- [ ] **Step 4: Render en vervang de 18 exhibit-PNG's**
+
+```powershell
+cd sfnl-pptx/engine
+python -m scripts.render <scratchpad>/wor-anon.pptx <scratchpad>/renders-wor-anon
+python -m scripts.render <scratchpad>/hs-anon.pptx <scratchpad>/renders-hs-anon
+```
+
+Kopieer daarna volgens de mappingtabel hierboven (bv. `renders-hs-anon/slide_06.png` →
+`exhibits/chevron-process.png`), alle 18.
+
+- [ ] **Step 5: Visuele controle van alle 18 PNG's**
+
+Bekijk (Read) elke nieuwe PNG: layout identiek aan origineel, geen tekstoverflow door langere
+vervangtermen, geen gemiste klanttermen in beeld (iconen/logo's van derden — bv. het
+Hartstichting-logo op HS slide 5 komt niet voor in de 18 gekozen slides, verifieer dit).
+Overflow door een te lange vervangterm → kortere term in de mapping en opnieuw vanaf Step 2.
+
+- [ ] **Step 6: Werk manifest.md bij**
+
+Vervang in `sfnl-pptx/engine/reference/exhibits/manifest.md` de vertrouwelijkheidszin door:
+
+```markdown
+De exhibits zijn **geanonimiseerd**: layout, kleurrollen en dichtheid komen uit echte
+deliverables, maar namen en cijfers zijn vervangen door templatewaarden. De galerij leert
+uitsluitend de vormentaal.
+```
+
+en verwijder de zin "Inhoud van deze slides is klantvertrouwelijk … nooit tekst/cijfers
+overnemen" (de instructie "grammatica herbouwen, niet kopiëren" blijft staan).
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add sfnl-pptx/engine/reference/exhibits
+git commit -m "docs(sfnl-pptx): anonymize exhibit gallery (template text, layout preserved)"
+```
+
+---
+
 ### Task 1: `<table>` → native PptxGenJS-tabel (extractie + rendering + validatie)
 
 **Files:**
@@ -990,7 +1176,7 @@ In de sectie "HTML-regels": vervang de regel over `<table>` ("wordt niet onderst
 
 - [ ] **Step 3: README + versiebump**
 
-- README: sectie "Complexe visuals" met de vier capabilities + galerijverwijzing + vertrouwelijkheidsnoot ("exhibits bevatten klantmateriaal; galerij niet publiceren buiten de privé-repo").
+- README: sectie "Complexe visuals" met de vier capabilities + galerijverwijzing + noot dat de exhibits geanonimiseerd zijn (Task 0) maar dat de layoutherkomst uit klantprojecten komt — de git-history van vóór de anonimisatie blijft een reden om de repo privé te houden.
 - `.claude-plugin/plugin.json`: `"version": "0.6.0"`. Doe hetzelfde in `.codex-plugin` als daar een versie staat (`grep -rn "0.5.1" sfnl-pptx/.claude-plugin sfnl-pptx/.codex-plugin`).
 
 - [ ] **Step 4: Run de skill/docs-tests**

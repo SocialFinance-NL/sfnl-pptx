@@ -103,8 +103,10 @@ naar en instrueren om de relevante PNG's daadwerkelijk te bekijken (Read) wannee
 tabel, diagram of statcompositie nodig heeft. Regels:
 
 - Grammatica herbouwen en aanpassen op de inhoud — nooit pixel-voor-pixel kopiëren.
-- Inhoud is klantvertrouwelijk (Hartstichting, WoR Venlo): alleen stijlreferentie, nooit
-  tekst/cijfers overnemen; de galerij blijft lokaal in de pluginrepo.
+- De exhibits worden **geanonimiseerd** (implementatieplan Task 0): beide bronrapporten gaan
+  om layout, dus klanttermen en echte cijfers worden vervangen door template-tekst en de 18
+  slides worden opnieuw gerenderd. De pre-anonimisatie-PNG's blijven in git-history staan;
+  de repo blijft daarom privé (history-rewrite buiten scope).
 
 ## Testen
 
