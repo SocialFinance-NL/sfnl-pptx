@@ -74,5 +74,11 @@ Idee → research → outline → storyboard → HTML+deck.json → build → vi
   door de viz-kandidaten uit het dossier.
 - Iconen zijn inhoud: rasterize react-icons in merkkleur naar `assets/`
   (`node engine/web/build/raster.js icon …`).
+- Complexe visuals gaan native: `<table class="sfnl-table {orange|royal|teal|navy}">` →
+  bewerkbare pptx-tabel, `<div data-shape="chevron|pill|circle|arrow-*">` → autoshape,
+  `data-connectors` op `<body>` → pijlen tussen node-id's. Kies het patroon uit `patterns.md`
+  (`sfnl-table`, `flow-tree`, `veranderttheorie-map`, `effectenkaart`, `chevron-process`,
+  `stat-cards`, `stakeholder-ladder`, `icon-tiles`, `chips`, `definition-box`) en bekijk (Read)
+  eerst het bijpassende exhibit in `engine/reference/exhibits/` (`manifest.md`).
 - Node-dependencies staan in `engine/web/build/` (`npm install` + `npx playwright install
   chromium` eenmalig). Python-scripts draaien vanuit `sfnl-pptx/engine`.

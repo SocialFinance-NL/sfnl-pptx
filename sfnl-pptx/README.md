@@ -73,6 +73,25 @@ idee ─▶ research (bronnendossier) ─▶ narrative + action titles ─▶ st
 6. **Existing deck edits** use `sfnl-deck-edit`: copy the deck to `original.pptx`, inventory it,
    apply targeted edits, then run the same text-QA and render loop.
 
+## Complexe visuals
+
+Vier native capabilities boven op vrije HTML-compositie:
+
+- **Tabellen** — HTML `<table class="sfnl-table {orange|royal|teal|navy}">` (met
+  `section-row`/`total-row`, `col-num`/`val-cost`/`val-benefit`/`col-source`) converteert naar een
+  echte, bewerkbare PowerPoint-tabel.
+- **Shapes** — `<div data-shape="chevron|pill|circle|arrow-right|arrow-left|arrow-up|arrow-down">`
+  wordt een native autoshape.
+- **Connectors** — `data-connectors` op `<body>` verbindt genoemde node-`id`'s met pijlen
+  (straight/elbow, dashed, labels).
+- **Exhibit-galerij** — `engine/reference/exhibits/` (catalogus: `manifest.md`) is de
+  referentiegrammatica voor tabellen, diagrammen en statcomposities; bekijk (Read) het
+  bijpassende exhibit vóór het bouwen, en herbouw de grammatica in plaats van hem te kopiëren.
+
+De exhibits zijn geanonimiseerd (namen en cijfers zijn templatewaarden), maar de layoutherkomst
+blijft klantprojecten, en de git-geschiedenis van vóór de anonimisatie bevat nog de
+niet-geanonimiseerde PNG's — een reden om deze repo privé te houden.
+
 ## Prerequisites
 
 - **Node.js 20+**. One-time setup: `cd engine/web/build && npm install && npx playwright install chromium`.

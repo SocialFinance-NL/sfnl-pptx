@@ -32,7 +32,16 @@ slides**, niet alleen "sensitive" slides.
 4. **Exhibit-check.** Elke contentslide draagt een echte exhibit die het canvas vult (kaarten,
    big numbers, chart, swimlanes, matrix, diagram). Tekst-zonder-exhibit blokkeert tenzij de
    notes uitleggen waarom dat bewust is. Check de build tegen het storyboard van
-   `sfnl-deck-design`.
+   `sfnl-deck-design`. Voor tabellen/shapes/connectors gelden vijf extra criteria (kritisch):
+   1. **Connectors** raken hun nodes exact — geen zwevende of half-verbonden pijlen.
+   2. **Tabellen**: geen celoverflow, consistente rij-banding, kloppende kleurrol
+      (rood=kost, teal=baat), header in caps.
+   3. **Chevrons/pijlen** wijzen in leesrichting (links→rechts of top→down, nooit tegen de
+      leesstroom in).
+   4. **Statgetallen** staan in Gotham Bold met de correcte accentkleur voor hun rol.
+   5. **Twijfelgevallen** vergelijk je met het bijpassende exhibit uit
+      `engine/reference/exhibits/manifest.md` — wijkt de slide structureel af zonder reden, dan
+      is dat een bevinding.
 5. **Coherence.** Action titles in volgorde (ghost-deck-test); accentgebruik consistent met het
    gekozen kleurmodel.
 

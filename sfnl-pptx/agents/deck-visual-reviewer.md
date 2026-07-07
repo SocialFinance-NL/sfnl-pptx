@@ -45,6 +45,17 @@ You run in one of two modes:
      composition (same pattern, same colors) — vary the rhythm.
    - **Multi-accent consistency:** if the deck maps categories to accents, confirm the same
      category renders in the same color everywhere; flag deviations.
+   - **Connector attachment:** connectors must touch their nodes exactly at both ends — a
+     floating or half-attached arrow is a critical defect.
+   - **Table integrity:** no cell text overflow, consistent row banding, correct color role
+     (red/grapefruit = cost, teal/emerald = benefit), header row in caps.
+   - **Chevron/arrow direction:** chevrons and directional arrows must point in reading order
+     (left-to-right or top-to-bottom); a shape pointing against the reading flow is a defect.
+   - **Stat numbers:** big numbers must render in Gotham Bold with the accent color matching
+     their semantic role (input vs. outcome vs. result).
+   - **Exhibit comparison:** for tables/diagrams/stat compositions, compare borderline cases
+     against the matching reference image in `engine/reference/exhibits/` (catalog:
+     `manifest.md`) — a structural deviation without a stated reason is a finding.
 4. **Report.** For each finding: slide number/index, one-line defect description, severity
    (`critical` = blocks delivery: overflow, off-brand color/font, unreadable text, missing
    chrome; `major` = should fix: misalignment, half-empty slide, broken rhythm; `minor` =

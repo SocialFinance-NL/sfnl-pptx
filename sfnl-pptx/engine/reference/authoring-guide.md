@@ -40,8 +40,18 @@ slides unless the manifest explicitly provides a matching slot.
 - Canvas exact `width: 720pt; height: 405pt` op `<body>`.
 - **Alle tekst in `<p>`, `<h1>`–`<h6>`, `<ul>` of `<ol>`** — tekst los in een `<div>`/`<span>`
   verdwijnt geluidloos.
-- Achtergrond/rand/schaduw alleen op `<div>`; `<table>` wordt niet ondersteund (flex-rijen of
-  native via hook).
+- Achtergrond/rand/schaduw alleen op `<div>`.
+- Tabellen: gebruik HTML `<table class="sfnl-table {orange|royal|teal|navy}">` met
+  `section-row`/`total-row`-rijen en `col-num`/`val-cost`/`val-benefit`/`col-source`-cellen;
+  de build converteert naar een native, bewerkbare PowerPoint-tabel. Minimaal 10pt celtekst,
+  geen geneste tabellen, onderrand ≥0.3in boven de slide-rand.
+- Shapes: `<div data-shape="chevron|pill|circle|arrow-right|arrow-left|arrow-up|arrow-down">`
+  wordt een native autoshape; styling (fill/border) via CSS zoals bij gewone divs.
+- Connectors: geef nodes een `id` en declareer op `<body>`
+  `data-connectors='[{"from":"a","to":"b","route":"elbow","dashed":true,"label":"50%"}]'`
+  (defaults: straight, navy, 1.5pt, arrow aan). Onbekende id's laten de build falen.
+- Exhibit-galerij: bekijk vóór het bouwen van tabellen/diagrammen/statcomposities het
+  bijpassende referentiebeeld in `engine/reference/exhibits/` (catalogus: `manifest.md`).
 - **Nooit CSS-gradients** — pre-render PNG via `node engine/web/build/raster.js gradient …`.
 - Iconen: `node engine/web/build/raster.js icon fa FaUsers F87F4F 256 assets/users.png`, dan `<img>`.
 - Tekst > 12pt eindigt ≥ 0.5in boven de onderrand (de `.content`-marges regelen dit).
