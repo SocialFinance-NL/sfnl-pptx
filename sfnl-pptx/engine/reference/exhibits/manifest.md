@@ -7,8 +7,10 @@ slide een tabel, diagram, infographic of statcompositie nodig heeft.
 
 **Niet pixel-voor-pixel kopiëren** — de galerij leert de grammatica (vormentaal, kleurrollen,
 dichtheid, afronding, hiërarchie), die je herbouwt en aanpast op de inhoud van de nieuwe deck.
-Inhoud van deze slides is klantvertrouwelijk: alleen als stijlreferentie gebruiken, nooit
-tekst/cijfers overnemen.
+
+De exhibits zijn **geanonimiseerd**: layout, kleurrollen en dichtheid komen uit echte
+deliverables, maar namen en cijfers zijn vervangen door templatewaarden. De galerij leert
+uitsluitend de vormentaal.
 
 ## Tabellen
 
