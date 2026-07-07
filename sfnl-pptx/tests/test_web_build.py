@@ -133,12 +133,10 @@ def test_visuals_table_is_native(built_visuals):
 
 
 def test_visuals_diagram_has_shapes_and_connectors(built_visuals):
+    import re
     from pptx.enum.shapes import MSO_SHAPE_TYPE
     slide = list(built_visuals.slides)[1]
     autos = [s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE]
-    names = {s.name for s in autos}
-    # chevron + 3 nodes komen als autoshapes binnen
-    assert len(autos) >= 4, f"expected >=4 autoshapes, got {len(autos)}: {names}"
 
     # pptxgenjs serialiseert connectorlijnen NIET als MSO_SHAPE_TYPE.LINE maar
     # als AUTO_SHAPE met <a:prstGeom prst="line"/>: python-pptx classificeert
@@ -147,9 +145,18 @@ def test_visuals_diagram_has_shapes_and_connectors(built_visuals):
     # prstGeom-waarde is de betrouwbare marker voor "dit is een connectorlijn".
     assert not any(s.shape_type == MSO_SHAPE_TYPE.LINE for s in slide.shapes), (
         "verrassing: pptxgenjs levert nu wel MSO_SHAPE_TYPE.LINE op, "
-        "assertie hieronder moet herzien worden"
+        "asserties hieronder moeten herzien worden"
     )
-    line_segments = [s for s in autos if 'prst="line"' in s._element.xml]
+    line_prst = re.compile(r'prstGeom\s+prst="line"')
+    line_segments = [s for s in autos if line_prst.search(s._element.xml)]
+    shapes_only = [s for s in autos if not line_prst.search(s._element.xml)]
+
+    # chevron + 3 nodes, geteld ZONDER de connectorsegmenten (die komen ook
+    # als AUTO_SHAPE binnen en zouden verdwenen nodes anders maskeren)
+    assert len(shapes_only) >= 4, (
+        f"expected >=4 non-line autoshapes (chevron + 3 nodes), "
+        f"got {len(shapes_only)}: {[s.name for s in shapes_only]}"
+    )
     assert len(line_segments) >= 4, (
         f"expected >=4 line-geometry autoshapes (straight(1) + elbow(3) "
         f"connector segments), got {len(line_segments)}: "
