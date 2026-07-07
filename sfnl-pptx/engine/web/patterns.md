@@ -1,191 +1,270 @@
-# SFNL layout patterns — editorial kadergrid
+# SFNL layout patterns — referentiegrammatica
 
-Default style: every content slide has a deliberate frame structure. Avoid loose pale cards floating in whitespace. Use one full-canvas exhibit with colored kaders, bands, sidebars, evidence boxes, and clear hierarchy.
+De maatstaf is de exhibit-galerij: `engine/reference/exhibits/` (zie `manifest.md`).
+Bekijk (Read) het bijpassende exhibit vóór je een tabel, diagram of statcompositie bouwt.
+Herbouw de grammatica op de nieuwe inhoud; kopieer nooit tekst of cijfers uit een exhibit.
 
-- Body text is normally 16pt Lato Light; use 18pt for sparse explanatory slides and 14pt only for dense matrices.
-- Titles and subtitles remain ALL CAPS because this is a company requirement; keep them short and spacious so the caps read as brand voice.
-- Gotham Bold is reserved for big numbers, official archetype slots, and short display emphasis. Do not use it as the default body/title voice.
-- The orange dash is a brand marker, not the composition. The slide should still work if the dash is removed.
-- Use 2pt square-ish frames and colored bands more often than soft cards.
-- Semantic color mapping: orange = result/recommendation, royal/sky = process/system, emerald = managed/positive, grapefruit = risk/leak.
-- Run the squint test: blurred or viewed small, the primary takeaway should still be the strongest element, followed by support and metadata.
-- Every frame has a role: evidence, mechanism, risk, decision, result, or ask. Decoration-only frames fail review.
+Fragmenten hieronder horen binnen het scaffold-`<main class="content">` van een contentslide.
+Covers, sectiedividers en quotes zijn geen patroon maar een gegeven: gebruik altijd de
+officiële archetypes (`archetypes/cover-*`, `divider-*`, `quote-*`; catalogus in
+`assets/chrome/manifest.json`) en vervang alleen de slotteksten. Ontwerp ze nooit zelf.
 
-Fragmenten hieronder horen binnen het scaffold's `<main class="content">` en gelden alleen voor contentslides. Covers, sectiedividers en quotes zijn geen patroon maar een gegeven: gebruik de officiële archetypes (`archetypes/cover-*`, `divider-*`, `quote-*`; catalogus in `assets/chrome/manifest.json`) en vervang alleen de slotteksten.
+## Stijlconstanten (door alle exhibits heen)
 
-Gebruik geen HTML `<table>`; bouw matrices als flex-rijen of gebruik de native per-deck hook (`slide.addTable`, zie authoring guide). Registreer chart-placeholders altijd in `deck.json` → `slides[].charts[]`. Iconen zijn inhoud, geen decoratie: rasterize betekenisvolle react-icons naar merkkleur-PNGs in de workspace `assets/` en plaats ze met `<img>`.
+- Afgeronde hoeken (~9pt) op kaarten, tiles en chips; tabellen strak rechthoekig.
+- Pasteltinten (`--sfnl-*-tint80`) als vlakvulling; volle merkkleur voor headers, chips en
+  accenten. Nooit hex hardcoden — altijd de tokens uit `sfnl.css`.
+- Semantische kleurrollen: grapefruit/rood = kosten/risico, emerald/teal = baten/positief,
+  navy = totaal/gewicht, oranje = resultaat/accent, royal/sky = proces/structuur.
+- Witte tekst en witte lijniconen op volle merkkleur; navy/dark-slate tekst op wit of pastel.
+- Titels en subtitels **getypt** in ALL CAPS (`text-transform` telt niet mee in de conversie).
+  Houd ze kort en ruim, zodat de caps als merkstem lezen.
+- De oranje dash is een merkmarker, geen compositie: de slide moet ook zonder dash werken.
+- Alle tekst in `<p>`/`<h1>`-`<h6>`/`<ul>`/`<ol>`; achtergrond/rand alleen op `<div>`; geen
+  CSS-gradiënten. Tekst >12pt eindigt ≥0.5in boven de onderrand.
+- Iconen dragen betekenis (bronsoort, doelgroep, beslisstatus), geen decoratie. Rasterize
+  betekenisvolle react-icons naar merkkleur-PNG's met `node engine/web/build/raster.js icon …`
+  en plaats ze met `<img>`. Charts als `<div class="placeholder">` + registratie in
+  `deck.json` → `slides[].charts[]`.
 
-`.card` is alleen een lower-emphasis fallback voor kleine metadata of restinformatie. De default voor herhaalde of dragende elementen is een kader, band, sidebar, evidence box, matrixrij of verdict box.
+## Proceschecks (elke slide)
 
-## Framed KPI band
+- **Squint test:** klein of onscherp bekeken is de belangrijkste boodschap het sterkste
+  element, daarna de ondersteuning, dan de metadata.
+- **Rol per frame:** elk vlak heeft een rol — bewijs, mechanisme, risico, besluit, resultaat of
+  vraag. Decoratieve vlakken zonder rol vallen door de review.
+- **Kies de juiste grammatica:** match de inhoud aan het patroon hieronder en het bijbehorende
+  exhibit; verzin geen nieuwe vormentaal.
+
+## Tabellen (`sfnl-table`) — exhibits: outcome-ledger-table, financial-table-sections, overview-table-orange, sensitivity-table-navy
+
+Grootboek-/overzichts-/inputtabel: caps-headerregel in merkkleur, getinte sectieregels,
+€-kolom rechts uitgelijnd met rood=kost / teal=baat, navy totaalband onderaan, kleine bronkolom.
+Bekijk (Read) `engine/reference/exhibits/outcome-ledger-table.png`. Kies de preset-klasse
+(`orange|royal|teal|navy`) op de kleurrol van de tabel. `<table>` wordt native en bewerkbaar.
 
 ```html
-<div class="col" style="gap: 10pt;">
-  <div class="frame-band"><p class="body-large">De businesscase draait op één hard criterium: vermeden escalatie.</p></div>
-  <div class="col" style="flex-direction: row; gap: 10pt;">
-    <div class="frame-panel royal" style="flex: 1;"><p class="big-number">8.400</p><p class="label">JONGEREN</p><p>Beginnende betalingsachterstand.</p></div>
-    <div class="frame-panel" style="flex: 1;"><p class="big-number" style="color: var(--sfnl-navy);">€ 4.700</p><p class="label">SCHULD</p><p>Gemiddeld bij 21 jaar.</p></div>
-    <div class="verdict-box" style="flex: 1;"><p class="big-number" style="color: #FEFFFF;">€ 12.000</p><p class="label" style="color: #FEFFFF;">VERMEDEN KOSTEN</p><p>Per voorkomen wettelijk traject.</p></div>
+<div class="col">
+  <table class="sfnl-table orange">
+    <tr><th>Effect</th><th>Stakeholder</th><th class="col-num">Waarde</th><th class="col-source">Bron</th></tr>
+    <tr class="section-row"><td colspan="4">Kosten</td></tr>
+    <tr><td>Zorgkosten diagnostiek</td><td>Zorgverzekeraar</td><td class="col-num val-cost">€ 679.745</td><td class="col-source">NZa 2025</td></tr>
+    <tr class="section-row"><td colspan="4">Baten</td></tr>
+    <tr><td>Vermeden zorgkosten</td><td>Zorgverzekeraar</td><td class="col-num val-benefit">€ 260.590</td><td class="col-source">NZa 2025</td></tr>
+    <tr class="total-row"><td>Netto maatschappelijk resultaat</td><td></td><td class="col-num">€ 4,0 mln</td><td></td></tr>
+  </table>
+</div>
+```
+
+## Flow-tree / beslisboom — exhibit: scenario-decision-tree
+
+Beslisboom: gekleurde nodes (`border-radius`), pijlen met percentagelabels op de takken,
+gestippelde takken, chevron-fasekop. Bekijk (Read)
+`engine/reference/exhibits/scenario-decision-tree.png`. De pijlen komen uit `data-connectors`
+op `<body>` (from/to + `route:"straight"|"elbow"`, `dashed`, `label`); elke node krijgt een `id`.
+
+```html
+<!-- Zet de connectors op de <body>-tag van deze slide: -->
+<!-- <body data-connectors='[{"from":"d1","to":"d2","label":"60%"},{"from":"d1","to":"d3","route":"elbow","dashed":true,"label":"40%"}]'> -->
+<div class="col" style="position: relative;">
+  <div data-shape="chevron" style="position:absolute;left:14pt;top:4pt;width:160pt;height:36pt;background:var(--sfnl-orange);">
+    <p style="color:var(--sfnl-white);font-size:11pt;padding:6pt;">FASE 1</p>
+  </div>
+  <div id="d1" style="position:absolute;left:34pt;top:86pt;width:150pt;height:46pt;border-radius:6pt;background:var(--sfnl-royal);">
+    <p style="color:var(--sfnl-white);font-size:11pt;padding:6pt;">Uitvoering diagnostiek</p>
+  </div>
+  <div id="d2" style="position:absolute;left:320pt;top:56pt;width:150pt;height:46pt;border-radius:6pt;background:var(--sfnl-emerald);">
+    <p style="color:var(--sfnl-white);font-size:11pt;padding:6pt;">Erfelijke oorzaak aantoonbaar</p>
+  </div>
+  <div id="d3" style="position:absolute;left:320pt;top:176pt;width:150pt;height:46pt;border-radius:6pt;background:var(--sfnl-sky);">
+    <p style="color:var(--sfnl-white);font-size:11pt;padding:6pt;">Geen vervolgonderzoek</p>
   </div>
 </div>
 ```
 
-## Sidebar + exhibit
+## Veranderttheorie-map — exhibit: veranderttheorie-map
 
-Gebruik de sidebar als lens, vraag of conclusie; het hoofdvlak draagt de exhibit. De slide moet ook zonder dash leesbaar en gebalanceerd blijven.
+Volvlak-infographic: navy zijpaneel met het maatschappelijk vraagstuk, dan kolommen met
+pill-headers in merkkleur (`data-shape="pill"`), gestapelde getinte nodes eronder, en een
+onderband voor aannames/randvoorwaarden. Bekijk (Read)
+`engine/reference/exhibits/veranderttheorie-map.png`. Verbind kolommen desgewenst met
+`data-connectors` op `<body>` (geef de nodes dan een `id`).
 
 ```html
-<div class="frame-sidebar">
-  <p class="label" style="color: #FEFFFF;">BESLISLENS</p>
-  <p class="body-large">Waar lekt waarde uit de keten?</p>
-</div>
-<div class="col" style="gap: 10pt;">
-  <div class="frame-band"><p>Drie momenten bepalen of preventie omzet in vermeden escalatie.</p></div>
-  <div class="col" style="flex-direction: row; gap: 10pt; flex: 1;">
-    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">1. SIGNALEREN</p><p>Vroege betalingsachterstand wordt zichtbaar voordat formele schuld ontstaat.</p></div>
-    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">2. ACTIVEREN</p><p>Jongere accepteert hulp binnen het eerste contactvenster.</p></div>
-    <div class="frame-panel orange" style="flex: 1;"><p class="kicker">3. VOORKOMEN</p><p>Wettelijk traject blijft uit; besparing is meetbaar per cohort.</p></div>
+<div class="col" style="flex-direction: row; gap: 8pt;">
+  <div class="card-soft" style="width: 120pt; background: var(--sfnl-navy);">
+    <p class="label" style="color: var(--sfnl-white);">MAATSCHAPPELIJK VRAAGSTUK</p>
+    <p style="color: var(--sfnl-white); font-size: 11pt;">Doodsoorzaken bij jong, onverwacht overlijden blijven vaak onbekend en structureel ongefinancierd.</p>
+  </div>
+  <div class="col" style="flex: 1; gap: 6pt;">
+    <div class="col" style="flex-direction: row; gap: 6pt; flex: 1;">
+      <div class="col" style="gap: 6pt;">
+        <div data-shape="pill" style="height: 26pt; background: var(--sfnl-emerald);"><p style="color: var(--sfnl-white); font-size: 10pt; text-align: center;">ACTIVITEITEN</p></div>
+        <div class="card-soft" style="flex: 1; background: var(--sfnl-emerald-tint80);"><p style="font-size: 11pt;">Landelijke structuur, communicatie en uitvoering van de interventie.</p></div>
+      </div>
+      <div class="col" style="gap: 6pt;">
+        <div data-shape="pill" style="height: 26pt; background: var(--sfnl-sky);"><p style="color: var(--sfnl-white); font-size: 10pt; text-align: center;">OUTPUTS</p></div>
+        <div class="card-soft" style="flex: 1; background: var(--sfnl-sky-tint80);"><p style="font-size: 11pt;">Meer en preciezere diagnostiek; betere data over doodsoorzaken.</p></div>
+      </div>
+      <div class="col" style="gap: 6pt;">
+        <div data-shape="pill" style="height: 26pt; background: var(--sfnl-grapefruit);"><p style="color: var(--sfnl-white); font-size: 10pt; text-align: center;">OUTCOMES</p></div>
+        <div class="card-soft" style="flex: 1; background: var(--sfnl-grapefruit-tint80);"><p style="font-size: 11pt;">Minder onnodige diagnostiek; verbeterde kennis en richtlijnen.</p></div>
+      </div>
+      <div class="col" style="gap: 6pt;">
+        <div data-shape="pill" style="height: 26pt; background: var(--sfnl-orange);"><p style="color: var(--sfnl-white); font-size: 10pt; text-align: center;">IMPACT</p></div>
+        <div class="card-soft" style="flex: 1; background: var(--sfnl-orange-tint80);"><p style="font-size: 11pt;">Doodsoorzaken beter vastgesteld; onnodige zorg voorkomen.</p></div>
+      </div>
+    </div>
+    <div class="card-soft" style="background: var(--sfnl-dark-slate-tint80);"><p style="font-size: 10pt;"><b>AANNAMES &amp; RANDVOORWAARDEN:</b> aantoonbare meerwaarde, structurele financiering, juridische kaders en toepassing door zorgprofessionals.</p></div>
   </div>
 </div>
 ```
 
-## Evidence stack met gekleurde kaders
+## Effectenkaart — exhibit: effectenkaart-matrix
 
-Gebruik de stack om bewijsgewicht te ordenen: brondata, mechanisme, resultaat. Kleur ondersteunt de rol; tekst en positie blijven leidend.
-
-```html
-<div class="col" style="gap: 8pt;">
-  <div class="evidence-box" style="border-left-color: var(--sfnl-royal);">
-    <p class="label" style="color: var(--sfnl-dark-slate);">EVIDENCE</p>
-    <p style="color: var(--sfnl-dark-slate);">Gemeentedata tonen dat eerste achterstanden geconcentreerd zijn in de overgang 18-21 jaar.</p>
-  </div>
-  <div class="evidence-box" style="border-left-color: var(--sfnl-sky);">
-    <p class="label" style="color: var(--sfnl-dark-slate);">MECHANISME</p>
-    <p style="color: var(--sfnl-dark-slate);">Snelle begeleiding voorkomt stapeling van incasso, afsluitkosten en formele schuldhulp.</p>
-  </div>
-  <div class="evidence-box" style="border-left-color: var(--sfnl-orange);">
-    <p class="label" style="color: var(--sfnl-dark-slate);">RESULTAAT</p>
-    <p style="color: var(--sfnl-dark-slate);">De businesscase telt alleen vermeden escalatie mee, niet generieke contactmomenten.</p>
-  </div>
-</div>
-<div class="frame-panel orange" style="width: 170pt;">
-  <p class="big-number">72%</p>
-  <p class="label">VROEG BEREIKT</p>
-  <p>Bereikt voor formele aanmelding schuldhulp.</p>
-</div>
-```
-
-## Verdict met ask-blok
-
-Gebruik een verdict-box voor de uitkomst en een apart ask-kader voor het besluit dat nodig is. Vermijd een gecentreerde losse conclusiekaart.
+Matrix van gekleurde pills per kolom (outcome → KPI → financiële waarde → stakeholder), met een
+geroteerd groepslabel links (`writing-mode: vertical-rl`) dat de stakeholdergroep codeert en
+gestippelde verticale scheiders (`border-left: 1pt dashed`) tussen de kolomblokken. Bekijk (Read)
+`engine/reference/exhibits/effectenkaart-matrix.png`.
 
 ```html
-<div class="col" style="flex: 2; gap: 10pt;">
-  <div class="verdict-box" style="flex: 1;">
-    <p class="label" style="color: #FEFFFF;">VERDICT</p>
-    <p class="body-large">Opschalen is verdedigbaar als instroomkwaliteit en escalatiemeting maandelijks worden bewaakt.</p>
-  </div>
-  <div class="frame-panel emerald">
-    <p class="kicker">BEHEERSING</p>
-    <p>Stop/go per kwartaal op bereik, conversie en vermeden wettelijke trajecten.</p>
-  </div>
-</div>
-<div class="frame-panel orange" style="flex: 1;">
-  <p class="label">ASK</p>
-  <p class="body-large">Besluit vandaag over fase 2: drie gemeenten, één meetprotocol, vaste escalatie-definitie.</p>
-</div>
-```
-
-## Risicomatrix met functionele kleur
-
-Gebruik grapefruit voor risico/lekkage en emerald voor beheersing/positieve status. Bouw de matrix met flex-rijen; gebruik geen HTML table.
-
-```html
-<div class="col" style="gap: 5pt;">
-  <div style="display: flex; gap: 5pt;">
-    <div class="frame-band" style="flex: 2;"><p class="label" style="color: #FEFFFF;">RISICO</p></div>
-    <div class="frame-band" style="flex: 1;"><p class="label" style="color: #FEFFFF;">STATUS</p></div>
-    <div class="frame-band" style="flex: 2;"><p class="label" style="color: #FEFFFF;">MAATREGEL</p></div>
-  </div>
-  <div style="display: flex; gap: 5pt;">
-    <div class="frame-panel grapefruit" style="flex: 2;"><p class="body-dense">Bereik blijft onder kritieke massa.</p></div>
-    <div class="frame-panel grapefruit" style="flex: 1;"><p class="body-dense"><b>LEK</b></p></div>
-    <div class="frame-panel emerald" style="flex: 2;"><p class="body-dense">Referral-afspraak met vaste terugkoppeling per wijkteam.</p></div>
-  </div>
-  <div style="display: flex; gap: 5pt;">
-    <div class="frame-panel royal" style="flex: 2;"><p class="body-dense">Kosten per traject verschuiven door casemix.</p></div>
-    <div class="frame-panel emerald" style="flex: 1;"><p class="body-dense"><b>BEHEERST</b></p></div>
-    <div class="frame-panel emerald" style="flex: 2;"><p class="body-dense">Maandelijkse cohortcontrole op zwaarte en doorlooptijd.</p></div>
+<div class="col" style="gap: 6pt;">
+  <div class="col" style="flex-direction: row; gap: 6pt; align-items: stretch;">
+    <div style="width: 22pt; background: var(--sfnl-grapefruit); border-radius: 4pt; display: flex; align-items: center; justify-content: center;">
+      <p style="writing-mode: vertical-rl; transform: rotate(180deg); color: var(--sfnl-white); font-size: 10pt;">ZORGKOSTEN</p>
+    </div>
+    <div class="col" style="flex: 1; gap: 6pt;">
+      <div class="col" style="flex-direction: row; gap: 6pt;">
+        <div class="card-soft" style="flex: 2; background: var(--sfnl-grapefruit);"><p style="color: var(--sfnl-white); font-size: 11pt;">Zorgkosten interventie</p></div>
+        <div class="card-soft" style="flex: 2; background: var(--sfnl-grapefruit);"><p style="color: var(--sfnl-white); font-size: 11pt;"># gerelateerde onderzoeken</p></div>
+        <div style="width: 1pt; border-left: 1pt dashed var(--sfnl-navy);"></div>
+        <div class="card-soft" style="flex: 2; background: var(--sfnl-grapefruit-tint80);"><p style="font-size: 11pt;">Salaris- en zorgkosten</p></div>
+        <div class="card-soft" style="flex: 1; background: var(--sfnl-grapefruit-tint80);"><p style="font-size: 10pt;">Zorgverzekeraar</p></div>
+      </div>
+      <div class="col" style="flex-direction: row; gap: 6pt;">
+        <div class="card-soft" style="flex: 2; background: var(--sfnl-grapefruit);"><p style="color: var(--sfnl-white); font-size: 11pt;">Vermeden acute events</p></div>
+        <div class="card-soft" style="flex: 2; background: var(--sfnl-grapefruit);"><p style="color: var(--sfnl-white); font-size: 11pt;"># voorkomen events</p></div>
+        <div style="width: 1pt; border-left: 1pt dashed var(--sfnl-navy);"></div>
+        <div class="card-soft" style="flex: 2; background: var(--sfnl-grapefruit-tint80);"><p style="font-size: 11pt;">Besparing acute zorg</p></div>
+        <div class="card-soft" style="flex: 1; background: var(--sfnl-grapefruit-tint80);"><p style="font-size: 10pt;">Zorgverzekeraar</p></div>
+      </div>
+    </div>
   </div>
 </div>
 ```
 
-## Chart + conclusieband
+## Chevron-procesband — exhibit: chevron-process
 
-Plaats de chart als exhibit, niet als decoratie. Registreer `chart-main` in `deck.json` → `slides[].charts[]`; de conclusieband maakt de interpretatie expliciet.
-
-```html
-<div class="col" style="flex: 3; gap: 10pt;">
-  <div id="chart-main" class="placeholder" style="flex: 1;"></div>
-  <div class="frame-band"><p>Conclusie: uitstroom stijgt pas wanneer signalering en activatie in dezelfde maand plaatsvinden.</p></div>
-</div>
-<div class="col" style="flex: 1; gap: 10pt;">
-  <div class="evidence-box"><p class="label" style="color: var(--sfnl-dark-slate);">BRON</p><p class="body-dense" style="color: var(--sfnl-dark-slate);">Cohortmonitor M1-M6, n=312.</p></div>
-  <div class="frame-panel orange"><p class="label">BESLUIT</p><p class="body-dense">Stuur op maandelijkse activatie, niet op jaargemiddelde instroom.</p></div>
-</div>
-```
-
-## Procesband met mechanismen
-
-Voor proces en systeemlogica zijn royal/sky de dragende kleuren. Gebruik frames per mechanisme, niet een rij pale kaarten.
-
-```html
-<div class="col" style="gap: 10pt;">
-  <div class="frame-band"><p>Mechanisme: eerder contact verkort de escalatieketen met drie beslismomenten.</p></div>
-  <div class="col" style="flex-direction: row; gap: 10pt;">
-    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">1. DATA</p><p>Signaal uit achterstand, school of inkomensloket.</p></div>
-    <div class="frame-panel royal" style="flex: 1;"><p class="kicker">2. CONTACT</p><p>Warme overdracht naar begeleiding binnen tien werkdagen.</p></div>
-    <div class="frame-panel" style="flex: 1; border-color: var(--sfnl-sky);"><p class="kicker">3. ACTIE</p><p>Budgetafspraak voorkomt extra incassokosten.</p></div>
-    <div class="frame-panel orange" style="flex: 1;"><p class="kicker">4. RESULTAAT</p><p>Wettelijk traject blijft uit.</p></div>
-  </div>
-</div>
-```
-
-## Scenario-kaders
-
-Scenario's zijn besliskaders. Gebruik Gotham Bold alleen voor de korte bedragen of indexen, niet voor de volledige tekst.
+Drie fasepijlen (`data-shape="chevron"`) in achtereenvolgende merkkleuren met witte caps-titel,
+elk met een getinte detailbox eronder (`.definition-box`); betekenisdragende iconen erboven
+(optioneel, via `raster.js` → `<img>`). Bekijk (Read) `engine/reference/exhibits/chevron-process.png`.
 
 ```html
 <div class="col" style="flex-direction: row; gap: 10pt;">
-  <div class="frame-panel royal" style="flex: 1;">
-    <p class="kicker">VOORZICHTIG</p>
-    <p class="big-number" style="font-size: 24pt; color: var(--sfnl-navy);">€ 0,8M</p>
-    <p class="body-dense">Alleen harde wettelijke trajectkosten meegeteld.</p>
+  <div class="col" style="gap: 8pt;">
+    <div data-shape="chevron" style="height: 44pt; background: var(--sfnl-orange);"><p style="color: var(--sfnl-white); font-size: 12pt; text-align: center;">FASE 1: VERANDERTHEORIE</p></div>
+    <div class="definition-box" style="flex: 1;"><p>Breng gezamenlijk de verandertheorie en effectenkaart in kaart; selecteer de relevante effecten.</p></div>
   </div>
-  <div class="frame-panel orange" style="flex: 1;">
-    <p class="kicker">BASIS</p>
-    <p class="big-number" style="font-size: 24pt;">€ 1,2M</p>
-    <p class="body-dense">Wettelijke trajectkosten plus aantoonbare uitvoeringsbesparing.</p>
+  <div class="col" style="gap: 8pt;">
+    <div data-shape="chevron" style="height: 44pt; background: var(--sfnl-emerald);"><p style="color: var(--sfnl-white); font-size: 12pt; text-align: center;">FASE 2: BUSINESSCASE</p></div>
+    <div class="definition-box" style="flex: 1;"><p>Vertaal de effecten naar financiële posten en monetariseer ze op stakeholderniveau.</p></div>
   </div>
-  <div class="frame-panel emerald" style="flex: 1;">
-    <p class="kicker">OPSCHALING</p>
-    <p class="big-number" style="font-size: 24pt; color: var(--sfnl-emerald);">€ 1,7M</p>
-    <p class="body-dense">Effect blijft stabiel bij drie extra gemeenten.</p>
+  <div class="col" style="gap: 8pt;">
+    <div data-shape="chevron" style="height: 44pt; background: var(--sfnl-royal);"><p style="color: var(--sfnl-white); font-size: 12pt; text-align: center;">FASE 3: EINDRAPPORT</p></div>
+    <div class="definition-box" style="flex: 1;"><p>Breng de resultaten samen en ga met stakeholders in gesprek over duurzame financiering.</p></div>
   </div>
 </div>
 ```
 
-## Native hook en iconen
+## Statcomposities — exhibits: hero-stat-kpi, stat-cards-arrow, stat-cards-totalband
 
-Complexe tabellen kunnen native via de per-deck hook (`slide.addTable`, zie authoring guide). Iconen horen alleen in een slide als ze inhoud dragen, bijvoorbeeld een bronsoort, doelgroep of beslisstatus.
+Navy statkaarten (`.stat-card`) met een groot Gotham-getal (`.stat-number`, oranje voor input,
+teal voor uitkomst) en witte subtekst; input→effect-groepen verbonden door een grote lichte
+achtergrondpijl (`data-shape="arrow-right"`); afgesloten met een navy totaalband met oranje
+resultaat. Bekijk (Read) `engine/reference/exhibits/stat-cards-arrow.png` en `hero-stat-kpi.png`.
 
 ```html
-<div class="frame-panel royal" style="flex: 2;">
-  <p class="label">NATIVE HOOK</p>
-  <p>Gebruik de hook voor echte tabellen, speciale vormen of PowerPoint-native elementen die HTML niet betrouwbaar bouwt.</p>
+<div class="col" style="gap: 10pt;">
+  <div class="col" style="flex-direction: row; gap: 10pt; align-items: center; flex: 1;">
+    <div class="stat-card" style="flex: 1;"><p class="stat-number">123</p><p>Extra gerichte doelgroeponderzoeken</p></div>
+    <div class="stat-card" style="flex: 1;"><p class="stat-number">123</p><p>Extra preventieve behandelingen</p></div>
+    <div data-shape="arrow-right" style="width: 60pt; height: 60pt; background: var(--sfnl-sky-tint80);"></div>
+    <div class="stat-card" style="flex: 1;"><p class="stat-number" style="color: var(--sfnl-emerald);">123+</p><p>Voorkomen aandoeningen per jaar</p></div>
+  </div>
+  <div class="frame-band" style="display: flex; align-items: center; justify-content: space-between;">
+    <p>Netto maatschappelijk resultaat</p>
+    <p class="display" style="color: var(--sfnl-orange); font-size: 24pt;">€ 4,0 mln</p>
+  </div>
 </div>
-<div class="evidence-box" style="flex: 1;">
-  <p class="label" style="color: var(--sfnl-dark-slate);">ICOON</p>
-  <p style="color: var(--sfnl-dark-slate);">Alleen gebruiken wanneer het icoon een betekenislabel ondersteunt; geen decoratieve iconenrijen.</p>
+```
+
+## Stakeholder-ladder — exhibit: stakeholder-ladder
+
+Resultaatladder: lichte rijen (`.ladder-row`) met links label + toelichting en rechts een groot
+gekleurd bedrag (grapefruit=kost, emerald=baat), afgesloten met een navy totaalrij
+(`.ladder-row.total`); conclusiezin eronder. Bekijk (Read)
+`engine/reference/exhibits/stakeholder-ladder.png`.
+
+```html
+<div class="col" style="gap: 8pt;">
+  <div class="ladder-row" style="justify-content: space-between;">
+    <div><p style="font-size: 14pt;">Zorgverzekeraar / VWS</p><p class="label">Coördinatie, diagnostiek en behandeling</p></div>
+    <p class="display" style="color: var(--sfnl-grapefruit); font-size: 20pt;">+ € 1,2 mln</p>
+  </div>
+  <div class="ladder-row" style="justify-content: space-between;">
+    <div><p style="font-size: 14pt;">Doelgroeponderzoek</p><p class="label">Minder ziektelast door voorkomen incidenten</p></div>
+    <p class="display" style="color: var(--sfnl-emerald); font-size: 20pt;">€ 2,1 mln</p>
+  </div>
+  <div class="ladder-row total" style="justify-content: space-between;">
+    <p style="color: var(--sfnl-white); font-size: 14pt;">Netto maatschappelijk resultaat</p>
+    <p class="display" style="color: var(--sfnl-orange); font-size: 20pt;">€ 4,0 mln</p>
+  </div>
+  <p class="label">De grootste baten vallen buiten het zorgbudget, bij doelgroeponderzoek en de maatschappij.</p>
+</div>
+```
+
+## Icon-tiles & chips — exhibits: icon-tiles-bullets, icon-tile-grid, letter-chips, numbered-card-columns
+
+Icon-tiles (`.icon-tile`, afgeronde gekleurde vierkanten met wit lijnicoon + caps-label) naast
+bullettekst; letter-/nummer-chips (`.chip`) + titel + toelichting met chipkleur door het palet;
+en genummerde kaartkolommen (`.card-soft` in pasteltint met cirkelnummer-badge en gekleurde
+titel). Bekijk (Read) `engine/reference/exhibits/icon-tiles-bullets.png`, `letter-chips.png` en
+`numbered-card-columns.png`. Iconen genereer je met `raster.js` (wit lijnicoon op de tilekleur).
+
+```html
+<div class="col" style="flex-direction: row; gap: 14pt;">
+  <div class="col" style="flex: 1; gap: 8pt;">
+    <div class="col" style="flex-direction: row; gap: 10pt; align-items: center;">
+      <div class="icon-tile" style="background: var(--sfnl-grapefruit);">
+        <img src="assets/icon-communicatie.png" alt="">
+        <p>COMMUNICATIE</p>
+      </div>
+      <ul style="font-size: 12pt;"><li>Drempels verlagen voor deelname en doorverwijzing.</li><li>Laten zien wat het programma oplevert.</li></ul>
+    </div>
+    <div class="col" style="flex-direction: row; gap: 10pt; align-items: center;">
+      <div class="chip" style="background: var(--sfnl-royal);"><p>A</p></div>
+      <div><p style="font-size: 14pt;">Verandertheorie</p><p class="label">Hoe de interventie tot impact leidt.</p></div>
+    </div>
+  </div>
+  <div class="card-soft" style="flex: 1; background: var(--sfnl-sky-tint80);">
+    <div class="chip" style="border-radius: 17pt; background: var(--sfnl-navy);"><p>1</p></div>
+    <p style="color: var(--sfnl-navy); font-size: 14pt; margin-top: 6pt;">Vragenlijst bij intake</p>
+    <p class="label">WANNEER — eerste gesprek</p>
+    <ul style="font-size: 11pt;"><li>Demografische gegevens</li><li>Nulmeting welbevinden</li></ul>
+  </div>
+</div>
+```
+
+## Native hook
+
+Complexe elementen die HTML niet betrouwbaar bouwt (bijzondere vormen, PowerPoint-native
+constructies) kunnen via de per-deck hook (`slide.addTable`, `slide.addShape`; zie de authoring
+guide). Tabellen hoeven **niet** meer via de hook: `<table class="sfnl-table …">` wordt native en
+bewerkbaar geconverteerd. Gebruik de hook alleen wanneer een patroon hierboven niet volstaat.
+
+```html
+<div class="frame-panel royal" style="flex: 1;">
+  <p class="label">NATIVE HOOK</p>
+  <p>Gebruik de hook voor speciale vormen of PowerPoint-native elementen buiten deze grammatica; documenteer waarom een standaardpatroon niet volstaat.</p>
 </div>
 ```

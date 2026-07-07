@@ -43,10 +43,20 @@ def test_dash_is_not_the_only_brand_marker():
     _declaration_block(css, ".slide-title")
 
 
-def test_patterns_document_editorial_kadergrid():
+def test_patterns_document_exhibit_grammar():
     text = PATTERNS.read_text(encoding="utf-8").lower()
-    assert "editorial kadergrid" in text
-    assert "16pt" in text
+    # New contract: patterns.md leads with the exhibit-derived grammar.
+    assert "referentiegrammatica" in text
+    assert "exhibit" in text
+    assert "--sfnl-" in text          # colors via tokens, never hardcoded hex
+    assert "pasteltint" in text
+    # Process rules that must survive the rewrite.
     assert "squint test" in text
     assert "all caps" in text
-    assert "kader" in text
+    assert "archetype" in text        # covers/dividers/quotes always from official archetypes
+    # New component/pattern vocabulary is documented.
+    for needle in ("sfnl-table", "data-shape", "stat-card", "ladder-row", ".chip"):
+        assert needle in text, needle
+    # Retired rules are gone.
+    assert "editorial kadergrid" not in text
+    assert "geen html `<table>`" not in text

@@ -117,7 +117,7 @@ h1, h2, h3 { font-family: "Lato Light", "Lato", Arial, sans-serif; color: var(--
    `chrome-slot` is gereserveerd voor deze slots (soepelere ondermarge-validatie). */
 .chrome-slot { position: absolute; margin: 0; line-height: 1.15; }
 
-/* ── SFNL tabellen (grammatica uit engine/reference/exhibits/) ─────────── */
+/* ---- SFNL tabellen (grammatica uit engine/reference/exhibits/) ---- */
 .sfnl-table { border-collapse: collapse; }
 .sfnl-table th, .sfnl-table td {
   font-family: 'Lato Light', sans-serif; font-size: 11pt;
@@ -146,3 +146,24 @@ h1, h2, h3 { font-family: "Lato Light", "Lato", Arial, sans-serif; color: var(--
 .sfnl-table .val-cost { color: var(--sfnl-grapefruit); font-weight: 600; }
 .sfnl-table .val-benefit { color: var(--sfnl-emerald); font-weight: 600; }
 .sfnl-table .col-source { font-size: 10.5pt; color: var(--sfnl-dark-slate-tint40); }
+
+/* ---- Componenten (grammatica uit engine/reference/exhibits/) ---- */
+.card-soft { border-radius: 9pt; padding: 10pt 12pt; }
+.icon-tile {
+  border-radius: 9pt; width: 72pt; height: 72pt;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.icon-tile p { color: var(--sfnl-white); font-size: 10pt; margin: 2pt 0 0 0; }
+.icon-tile img { width: 36pt; height: 36pt; }
+.chip {
+  border-radius: 4pt; width: 34pt; height: 34pt;
+  display: flex; align-items: center; justify-content: center;
+}
+.chip p { color: var(--sfnl-white); font-family: 'Gotham Bold', sans-serif; font-size: 14pt; margin: 0; }
+.stat-card { border-radius: 9pt; background: var(--sfnl-navy); padding: 14pt; text-align: center; }
+.stat-card .stat-number { font-family: 'Gotham Bold', sans-serif; font-size: 40pt; color: var(--sfnl-orange); margin: 0; }
+.stat-card p { color: var(--sfnl-white); font-size: 11pt; }
+.ladder-row { background: var(--sfnl-dark-slate-tint80); border-radius: 4pt; padding: 8pt 12pt; display: flex; align-items: center; }
+.ladder-row.total { background: var(--sfnl-navy); }
+.definition-box { background: var(--sfnl-navy-tint80); border: 1pt solid var(--sfnl-navy); padding: 6pt 8pt; }
+.definition-box p { font-size: 10pt; color: var(--sfnl-dark-slate); }
