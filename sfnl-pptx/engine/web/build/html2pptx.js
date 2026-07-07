@@ -149,6 +149,16 @@ function addElements(slideData, targetSlide, pres) {
         w: el.position.w,
         h: el.position.h
       });
+    } else if (el.type === 'table') {
+      const tableOptions = {
+        x: el.position.x,
+        y: el.position.y,
+        w: el.position.w,
+        rowH: el.rowH,
+        autoPage: false
+      };
+      if (el.colW) tableOptions.colW = el.colW;
+      targetSlide.addTable(el.rows, tableOptions);
     } else if (el.type === 'line') {
       targetSlide.addShape(pres.ShapeType.line, {
         x: el.x1,
@@ -599,6 +609,79 @@ async function extractSlideData(page) {
           processed.add(el);
           return;
         }
+      }
+
+      // Extract <table> as native pptx table
+      if (el.tagName === 'TABLE') {
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) { processed.add(el); return; }
+
+        if (el.querySelector('table')) {
+          errors.push('Nested tables are not supported. Flatten the inner table.');
+          processed.add(el);
+          el.querySelectorAll('*').forEach((child) => processed.add(child));
+          return;
+        }
+
+        const bottomEdgeIn = pxToInch(rect.top + rect.height);
+        const slideHeightIn = document.body.getBoundingClientRect().height / PX_PER_IN;
+        if (slideHeightIn - bottomEdgeIn < 0.3) {
+          errors.push(`Table ends too close to bottom edge (${(slideHeightIn - bottomEdgeIn).toFixed(2)}" from bottom, minimum 0.3" required)`);
+        }
+
+        const trs = Array.from(el.querySelectorAll('tr'));
+        const rows = [];
+        const rowH = [];
+        let colW = null;
+
+        trs.forEach((tr) => {
+          const cells = Array.from(tr.children).filter((c) => c.tagName === 'TD' || c.tagName === 'TH');
+          if (!cells.length) return;
+          rowH.push(pxToInch(tr.getBoundingClientRect().height));
+          if (!colW && !cells.some((c) => c.colSpan > 1)) {
+            colW = cells.map((c) => pxToInch(c.getBoundingClientRect().width));
+          }
+          const row = cells.map((cell) => {
+            const cs = window.getComputedStyle(cell);
+            const fontSize = pxToPoints(cs.fontSize);
+            if (fontSize < 10) {
+              errors.push(`Table cell "${cell.textContent.trim().substring(0, 30)}" uses ${fontSize.toFixed(1)}pt; minimum 10pt in tables.`);
+            }
+            const cellTransform = cs.textTransform;
+            const runs = parseInlineFormatting(cell, {}, [], (s) => applyTextTransform(s, cellTransform));
+            const border = ['Top', 'Right', 'Bottom', 'Left'].map((side) => {
+              const w = parseFloat(cs[`border${side}Width`]) || 0;
+              return w > 0
+                ? { type: 'solid', color: rgbToHex(cs[`border${side}Color`]), pt: w * PT_PER_PX }
+                : { type: 'none' };
+            });
+            const isBold = cs.fontWeight === 'bold' || parseInt(cs.fontWeight) >= 600;
+            const hasBg = cs.backgroundColor && cs.backgroundColor !== 'rgba(0, 0, 0, 0)';
+            const options = {
+              color: rgbToHex(cs.color),
+              bold: isBold,
+              fontSize,
+              fontFace: cs.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
+              align: cs.textAlign === 'start' ? 'left' : cs.textAlign,
+              valign: 'middle',
+              border,
+              margin: [pxToPoints(cs.paddingLeft), pxToPoints(cs.paddingRight), pxToPoints(cs.paddingBottom), pxToPoints(cs.paddingTop)]
+            };
+            if (hasBg) options.fill = { color: rgbToHex(cs.backgroundColor) };
+            if (cell.colSpan > 1) options.colspan = cell.colSpan;
+            return { text: runs.length ? runs : [{ text: '', options: {} }], options };
+          });
+          rows.push(row);
+        });
+
+        elements.push({
+          type: 'table',
+          position: { x: pxToInch(rect.left), y: pxToInch(rect.top), w: pxToInch(rect.width), h: pxToInch(rect.height) },
+          colW, rowH, rows
+        });
+        el.querySelectorAll('*').forEach((child) => processed.add(child));
+        processed.add(el);
+        return;
       }
 
       // Extract DIVs with backgrounds/borders as shapes
