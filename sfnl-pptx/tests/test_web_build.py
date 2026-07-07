@@ -112,3 +112,46 @@ def test_overflow_deck_fails_loudly(tmp_path):
     res = _build(ws)
     assert res.returncode != 0
     assert "overflows body" in (res.stderr + res.stdout)
+
+
+@pytest.fixture(scope="module")
+def built_visuals(tmp_path_factory):
+    ws = _workspace(tmp_path_factory.mktemp("webdeck-visuals"), "webdeck-visuals")
+    res = _build(ws)
+    assert res.returncode == 0, res.stderr + res.stdout
+    return Presentation(str(ws / "webdeck-visuals.pptx"))
+
+
+def test_visuals_table_is_native(built_visuals):
+    slide = list(built_visuals.slides)[0]
+    tables = [s for s in slide.shapes if s.has_table]
+    assert len(tables) == 1
+    tbl = tables[0].table
+    assert len(tbl.rows) == 6
+    assert "RESULTAAT" not in tbl.cell(0, 0).text  # titel staat buiten de tabel
+    assert "679.745" in tbl.cell(2, 2).text
+
+
+def test_visuals_diagram_has_shapes_and_connectors(built_visuals):
+    from pptx.enum.shapes import MSO_SHAPE_TYPE
+    slide = list(built_visuals.slides)[1]
+    autos = [s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE]
+    names = {s.name for s in autos}
+    # chevron + 3 nodes komen als autoshapes binnen
+    assert len(autos) >= 4, f"expected >=4 autoshapes, got {len(autos)}: {names}"
+
+    # pptxgenjs serialiseert connectorlijnen NIET als MSO_SHAPE_TYPE.LINE maar
+    # als AUTO_SHAPE met <a:prstGeom prst="line"/>: python-pptx classificeert
+    # elke <p:sp> als AUTO_SHAPE, los van de onderliggende prstGeom-waarde. Er
+    # is geen enkele echte MSO_SHAPE_TYPE.LINE shape in de output; de
+    # prstGeom-waarde is de betrouwbare marker voor "dit is een connectorlijn".
+    assert not any(s.shape_type == MSO_SHAPE_TYPE.LINE for s in slide.shapes), (
+        "verrassing: pptxgenjs levert nu wel MSO_SHAPE_TYPE.LINE op, "
+        "assertie hieronder moet herzien worden"
+    )
+    line_segments = [s for s in autos if 'prst="line"' in s._element.xml]
+    assert len(line_segments) >= 4, (
+        f"expected >=4 line-geometry autoshapes (straight(1) + elbow(3) "
+        f"connector segments), got {len(line_segments)}: "
+        f"{[s.name for s in line_segments]}"
+    )

@@ -1,0 +1,12 @@
+{
+  "title": "VISUALS FIXTURE",
+  "slug": "webdeck-visuals",
+  "language": "nl",
+  "author": "Social Finance NL",
+  "accent": "orange",
+  "hooks": null,
+  "slides": [
+    { "file": "slides/01-tables.html", "notes": "tabel fixture" },
+    { "file": "slides/02-diagram.html", "notes": "diagram fixture" }
+  ]
+}

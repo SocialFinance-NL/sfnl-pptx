@@ -941,7 +941,25 @@ async function extractSlideData(page) {
 
       const computed = window.getComputedStyle(el);
       const rotation = getRotation(computed.transform, computed.writingMode);
-      const { x, y, w, h } = getPositionAndSize(el, rect, rotation);
+      let { x, y, w, h } = getPositionAndSize(el, rect, rotation);
+
+      // Chevron autoshapes carve a concave notch into the left edge and a
+      // matching convex point on the right (OOXML "chevron" preset, default
+      // adj1 = 50%): notch depth = min(width, height) / 2. Overlaid text is a
+      // separate text box rendered on top of the shape (not the shape's own
+      // native text body), so it does not get PowerPoint's automatic text
+      // inset and would otherwise visually overlap the notch/point. Inset the
+      // text box on both sides so it stays within the shape's flat midsection.
+      const shapeParent = el.parentElement;
+      if (shapeParent && shapeParent.dataset && shapeParent.dataset.shape === 'chevron') {
+        const parentRect = shapeParent.getBoundingClientRect();
+        const notch = Math.min(parentRect.width, parentRect.height) / 2;
+        const clampedNotch = Math.min(notch, w / 2 - 1);
+        if (clampedNotch > 0) {
+          x += clampedNotch;
+          w -= clampedNotch * 2;
+        }
+      }
 
       const baseStyle = {
         fontSize: pxToPoints(computed.fontSize),
