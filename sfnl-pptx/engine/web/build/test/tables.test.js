@@ -23,6 +23,18 @@ test('converts <table> to a native pptx table with styled cells', async () => {
   // inline bold survives as run
   const boldCell = rows[2][1];
   assert.ok(boldCell.text.some((r) => r.options && r.options.bold), 'bold run expected');
+  // asymmetric padding maps to pptxgenjs margin order [top, right, bottom, left]
+  // fixture: padding: 4px 10px 6px 2px → pt = px * 0.75
+  assert.deepEqual(rows[1][0].options.margin, [3, 7.5, 4.5, 1.5]);
+});
+
+test('table ending too close to the bottom edge fails loudly', async () => {
+  const pptx = new pptxgen();
+  pptx.layout = 'LAYOUT_16x9';
+  await assert.rejects(
+    () => html2pptx(fixture('table-bottom-overflow.html'), pptx),
+    /too close to bottom edge/i
+  );
 });
 
 test('nested tables and sub-10pt cell text fail loudly', async () => {

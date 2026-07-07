@@ -665,7 +665,10 @@ async function extractSlideData(page) {
               align: cs.textAlign === 'start' ? 'left' : cs.textAlign,
               valign: 'middle',
               border,
-              margin: [pxToPoints(cs.paddingLeft), pxToPoints(cs.paddingRight), pxToPoints(cs.paddingBottom), pxToPoints(cs.paddingTop)]
+              // NOTE: pptxgenjs TableCellProps.margin order is [top, right, bottom, left]
+              // (types/index.d.ts) — this differs from the [left, right, bottom, top]
+              // order used for TEXT elements elsewhere in this file.
+              margin: [pxToPoints(cs.paddingTop), pxToPoints(cs.paddingRight), pxToPoints(cs.paddingBottom), pxToPoints(cs.paddingLeft)]
             };
             if (hasBg) options.fill = { color: rgbToHex(cs.backgroundColor) };
             if (cell.colSpan > 1) options.colspan = cell.colSpan;
