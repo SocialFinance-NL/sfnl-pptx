@@ -30,6 +30,7 @@ const path = require('path');
 const sharp = require('sharp');
 const os = require('os');
 const { pathToFileURL, fileURLToPath } = require('url');
+const { planConnector } = require('./connectors');
 
 // Convert a file:// URL (as produced by the browser DOM) back to an OS path.
 function fileUrlToPath(src) {
@@ -1015,7 +1016,28 @@ async function extractSlideData(page) {
       processed.add(el);
     });
 
-    return { background, elements, placeholders, errors };
+    // Collect node rects (elements with an id) and connector spec from <body>
+    const nodes = {};
+    document.querySelectorAll('[id]').forEach((n) => {
+      const r = n.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        nodes[n.id] = { x: pxToInch(r.left), y: pxToInch(r.top), w: pxToInch(r.width), h: pxToInch(r.height) };
+      }
+    });
+    let connectors = [];
+    if (document.body.dataset.connectors) {
+      try {
+        connectors = JSON.parse(document.body.dataset.connectors);
+      } catch (e) {
+        errors.push(`data-connectors is not valid JSON: ${e.message}`);
+      }
+      for (const c of connectors) {
+        if (!nodes[c.from]) errors.push(`data-connectors: unknown node id "${c.from}"`);
+        if (!nodes[c.to]) errors.push(`data-connectors: unknown node id "${c.to}"`);
+      }
+    }
+
+    return { background, elements, placeholders, errors, nodes, connectors };
   });
 }
 
@@ -1092,6 +1114,29 @@ async function html2pptx(htmlFile, pres, options = {}) {
 
     await addBackground(slideData, targetSlide, tmpDir);
     addElements(slideData, targetSlide, pres);
+
+    for (const c of slideData.connectors || []) {
+      const { segments, labelPos } = planConnector(slideData.nodes[c.from], slideData.nodes[c.to], { route: c.route });
+      segments.forEach((s, idx) => {
+        const isLast = idx === segments.length - 1;
+        const line = { color: c.color || '201B5C', width: c.width || 1.5 };
+        if (c.dashed) line.dashType = 'dash';
+        if (isLast && c.arrow !== false) line.endArrowType = 'triangle';
+        targetSlide.addShape(pres.ShapeType.line, {
+          x: Math.min(s.x1, s.x2), y: Math.min(s.y1, s.y2),
+          w: Math.abs(s.x2 - s.x1), h: Math.abs(s.y2 - s.y1),
+          flipH: s.x2 < s.x1, flipV: s.y2 < s.y1,
+          line
+        });
+      });
+      if (c.label) {
+        targetSlide.addText(c.label, {
+          x: labelPos.x - 0.35, y: labelPos.y - 0.22, w: 0.7, h: 0.2,
+          fontSize: 9, fontFace: 'Montserrat Light', align: 'center',
+          color: c.color || '201B5C'
+        });
+      }
+    }
 
     return { slide: targetSlide, placeholders: slideData.placeholders };
   } catch (error) {
