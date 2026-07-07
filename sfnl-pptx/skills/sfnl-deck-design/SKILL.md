@@ -60,7 +60,9 @@ de grammatica, kopieer nooit inhoud.
 Schrijf dit als markdown-tabel vóór er HTML bestaat. Bespoke composities (funnel,
 geldstroom-diagram, stakeholderkaart, parallelle tijdlijnen) zijn welkom: schets regio's en
 elementen in het storyboard zodat de HTML-stap mechanisch wordt. Complexe native elementen
-(tabellen e.d.) kunnen via de per-deck hook — noteer dat expliciet.
+waarvoor geen standaardpatroon of tabel-syntax volstaat, kunnen via de per-deck hook — noteer
+dat expliciet (tabellen hoeven níét via de hook: `<table class="sfnl-table …">` wordt native en
+bewerkbaar, zie `patterns.md`).
 
 Default content-slide approach is editorial kadergrid, not loose cards. Every content slide must
 name its frame model. Prefer colored frames, bands, sidebars, evidence boxes, and verdict blocks.
