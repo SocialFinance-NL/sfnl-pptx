@@ -116,3 +116,33 @@ h1, h2, h3 { font-family: "Lato Light", "Lato", Arial, sans-serif; color: var(--
    is de officiële PNG, tekstslots staan op de sjabloon-placeholderposities.
    `chrome-slot` is gereserveerd voor deze slots (soepelere ondermarge-validatie). */
 .chrome-slot { position: absolute; margin: 0; line-height: 1.15; }
+
+/* ── SFNL tabellen (grammatica uit engine/reference/exhibits/) ─────────── */
+.sfnl-table { border-collapse: collapse; }
+.sfnl-table th, .sfnl-table td {
+  font-family: 'Lato Light', sans-serif; font-size: 11pt;
+  color: var(--sfnl-dark-slate); text-align: left; padding: 5pt 7pt;
+}
+.sfnl-table th {
+  font-family: 'Montserrat Light', sans-serif; color: #FEFFFF;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.sfnl-table.orange th { background: var(--sfnl-orange); }
+.sfnl-table.royal  th { background: var(--sfnl-royal); }
+.sfnl-table.teal   th { background: var(--sfnl-emerald); }
+.sfnl-table.navy   th { background: var(--sfnl-navy); }
+.sfnl-table td { border-bottom: 1pt solid var(--sfnl-dark-slate-tint80); }
+.sfnl-table tr.section-row td {
+  font-family: 'Montserrat Light', sans-serif; font-weight: 600; border-bottom: none;
+}
+.sfnl-table.orange tr.section-row td { background: var(--sfnl-orange-tint80); }
+.sfnl-table.royal  tr.section-row td { background: var(--sfnl-royal-tint80); }
+.sfnl-table.teal   tr.section-row td { background: var(--sfnl-emerald-tint80); }
+.sfnl-table.navy   tr.section-row td { background: var(--sfnl-navy-tint80); }
+.sfnl-table tr.total-row td {
+  background: var(--sfnl-navy); color: #FEFFFF; font-weight: 700; border-bottom: none;
+}
+.sfnl-table .col-num { text-align: right; }
+.sfnl-table .val-cost { color: var(--sfnl-grapefruit); font-weight: 600; }
+.sfnl-table .val-benefit { color: var(--sfnl-emerald); font-weight: 600; }
+.sfnl-table .col-source { font-size: 10.5pt; color: var(--sfnl-dark-slate-tint40); }

@@ -45,3 +45,20 @@ test('nested tables and sub-10pt cell text fail loudly', async () => {
     /(nested table|10pt)/i
   );
 });
+
+test('sfnl-table presets style header, section, total and value cells', async () => {
+  const pptx = new pptxgen();
+  pptx.layout = 'LAYOUT_16x9';
+  const { slide } = await html2pptx(fixture('table-styled.html'), pptx);
+  const rows = slide._slideObjects.find((o) => o._type === 'table').arrTabRows;
+  assert.equal(rows[0][0].options.fill.color.toUpperCase(), '201B5C');   // navy header
+  assert.equal(rows[0][0].options.color.toUpperCase(), 'FEFFFF');
+  assert.equal(rows[1][0].options.colspan, 3);                            // section row spans
+  assert.ok(rows[1][0].options.fill, 'section row is tinted');
+  assert.equal(rows[2][1].options.align, 'right');                        // col-num
+  assert.equal(rows[2][1].options.color.toUpperCase(), 'F95D63');         // val-cost grapefruit
+  assert.equal(rows[3][1].options.color.toUpperCase(), '6AC6BA');         // val-benefit emerald
+  assert.equal(rows[4][0].options.fill.color.toUpperCase(), '201B5C');    // navy total band
+  assert.ok(rows[4][0].options.bold, 'total row bold');
+  assert.ok(rows[2][2].options.fontSize <= 10.5, 'source column smaller');
+});
