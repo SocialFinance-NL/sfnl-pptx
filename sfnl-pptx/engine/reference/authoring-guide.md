@@ -47,9 +47,12 @@ slides unless the manifest explicitly provides a matching slot.
   geen geneste tabellen, onderrand ≥0.3in boven de slide-rand.
 - Shapes: `<div data-shape="chevron|pill|circle|arrow-right|arrow-left|arrow-up|arrow-down">`
   wordt een native autoshape; styling (fill/border) via CSS zoals bij gewone divs.
+  Blokpijlen (`arrow-*`) labelvrij houden — tekst-inset geldt alleen voor chevrons.
 - Connectors: geef nodes een `id` en declareer op `<body>`
   `data-connectors='[{"from":"a","to":"b","route":"elbow","dashed":true,"label":"50%"}]'`
   (defaults: straight, navy, 1.5pt, arrow aan). Onbekende id's laten de build falen.
+  Connectors worden statisch gerouteerd op buildposities — na het verschuiven van nodes
+  opnieuw bouwen (geen live glue in PowerPoint).
 - Exhibit-galerij: bekijk vóór het bouwen van tabellen/diagrammen/statcomposities het
   bijpassende referentiebeeld in `engine/reference/exhibits/` (catalogus: `manifest.md`).
 - **Nooit CSS-gradients** — pre-render PNG via `node engine/web/build/raster.js gradient …`.

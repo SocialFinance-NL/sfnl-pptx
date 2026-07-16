@@ -61,4 +61,5 @@ test('sfnl-table presets style header, section, total and value cells', async ()
   assert.equal(rows[4][0].options.fill.color.toUpperCase(), '201B5C');    // navy total band
   assert.ok(rows[4][0].options.bold, 'total row bold');
   assert.ok(rows[2][2].options.fontSize <= 10.5, 'source column smaller');
+  assert.equal(rows[0][2].options.color.toUpperCase(), 'FEFFFF');       // "Bron" header stays white on navy band
 });

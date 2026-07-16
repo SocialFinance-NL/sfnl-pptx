@@ -43,7 +43,7 @@ de grammatica, kopieer nooit inhoud.
 |---|---|
 | `file` | wordt de bestandsnaam `slides/NN-….html` |
 | `action_title` | verbatim uit de narrative-stap |
-| `archetype/patroon` | voor cover/divider/quote: **verplicht** een officiële variant (`cover-01`…`cover-04`, `divider-01`…`divider-10`, `quote-01` — catalogus in `engine/web/assets/chrome/manifest.json`); voor contentslides: patroon uit `patterns.md` (`sfnl-table {orange|royal|teal|navy}`, `flow-tree`, `veranderttheorie-map`, `effectenkaart`, `chevron-process`, `stat-cards`, `stakeholder-ladder`, `icon-tiles`), `stat-banner` of "bespoke" |
+| `archetype/patroon` | voor cover/divider/quote: **verplicht** een officiële variant (`cover-01`…`cover-04`, `divider-01`…`divider-10`, `quote-01` — catalogus in `engine/web/assets/chrome/manifest.json`); voor contentslides: patroon uit `patterns.md` (`sfnl-table {orange|royal|teal|navy}`, `flow-tree`, `veranderttheorie-map`, `effectenkaart`, `chevron-process`, `stat-cards`, `stakeholder-ladder`, `icon-tiles`, `chips`, `definition-box`), `stat-banner` of "bespoke" |
 | `frame model` | editorial kadergrid choice: sidebar, banded exhibit, full matrix, verdict box, evidence stack, chart + conclusion band, or official archetype |
 | `type scale` | body density: 18pt sparse / 16pt default / 14pt dense; justify any 14pt use |
 | `font emphasis` | where Gotham Bold is allowed: big number, official archetype slot, or none |

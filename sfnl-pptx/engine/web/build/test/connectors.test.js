@@ -49,3 +49,24 @@ test('e2e: connectors render as line shapes with arrowheads and label', async ()
   const texts = slide._slideObjects.filter((o) => o._type === 'text');
   assert.ok(texts.some((t) => JSON.stringify(t.text).includes('50%')), 'connector label rendered');
 });
+
+test('invalid JSON in data-connectors fails loudly', async () => {
+  const pptx = new pptxgen();
+  pptx.layout = 'LAYOUT_16x9';
+  await assert.rejects(
+    () => html2pptx(fixture('connectors-invalid-json.html'), pptx),
+    /not valid JSON/i
+  );
+});
+
+test('connector overrides (arrow, color, width) are honored', async () => {
+  const pptx = new pptxgen();
+  pptx.layout = 'LAYOUT_16x9';
+  const { slide } = await html2pptx(fixture('connectors-overrides.html'), pptx);
+  const lines = slide._slideObjects.filter((o) => (o.shape || (o.options && o.options.shape)) === 'line');
+  assert.equal(lines.length, 1, 'one connector segment expected');
+  const { line } = lines[0].options;
+  assert.equal(line.endArrowType, null, 'arrow: false should suppress the arrowhead');
+  assert.equal(line.color.toUpperCase(), 'F87F4F');
+  assert.equal(line.width, 3);
+});
