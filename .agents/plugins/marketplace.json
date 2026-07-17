@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "sfnl-pptx",
-      "version": "0.5.2",
+      "version": "0.7.0",
       "source": {
         "source": "local",
         "path": "./sfnl-pptx"
